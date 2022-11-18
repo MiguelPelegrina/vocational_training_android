@@ -2,9 +2,12 @@ package com.example.proyecto.model;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
+
+import java.util.ArrayList;
 
 public class DBAccess extends SQLiteOpenHelper {
     // Heredamos de la clase SQLiteOpenHelper para disponer de sus métodos que nos ayudan a gestionar
@@ -57,7 +60,7 @@ public class DBAccess extends SQLiteOpenHelper {
      * Metodo que nos permite introducir nuevos registros en nuestra base de datos
      * @param name Nombre del usuario
      * @param password Contrasena del usuario
-     * @return Numero de filas afectadas
+     * @return ID de la fila insertada
      */
     public long insert(String name, String password){
         // Obtenemos permiso de escritura sobre la base de datos
@@ -76,6 +79,38 @@ public class DBAccess extends SQLiteOpenHelper {
         database.close();
 
         return result;
+    }
+
+    /**
+     * Método que nos devuelve una lista con todos los usuarios registrados en la
+     * base de datos
+     * @return Lista de los usuarios
+     */
+    public ArrayList<User> getAllUser(){
+        // Obtenemos permiso de lectura sobre la base de datos
+        SQLiteDatabase database = this.getReadableDatabase();
+        // Nos creamos una lista que guardara posteriormente los usuarios de la tabla
+        ArrayList<User> resultUsers = new ArrayList<>();
+        // Asignamos las columnas cuyos datos queremos obtener
+        String[] columnas = new String[]{ NAME_COLUMN, PASSWORD_COLUMN };
+        // Nos creamos un cursor que recorrera los registros de consulta realizada
+        Cursor cursor = database.query(DB_TABLE_NAME, columnas, null,null,null,null,null);
+
+        if (cursor.moveToFirst()){
+            do{
+                String name = cursor.getString(0);
+                String password = cursor.getString(1);
+                resultUsers.add(new User(name, password));
+            }while (cursor.moveToNext());
+        }
+
+        // Cerramos el cursor
+        cursor.close();
+
+        // Cerramos la base de datos
+        database.close();
+
+        return resultUsers;
     }
 
     /**
