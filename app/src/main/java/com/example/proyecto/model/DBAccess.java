@@ -58,11 +58,10 @@ public class DBAccess extends SQLiteOpenHelper {
 
     /**
      * Metodo que nos permite introducir nuevos registros en nuestra base de datos
-     * @param name Nombre del usuario
-     * @param password Contrasena del usuario
+     * @param user Usuario que se desea insertar en la tabla
      * @return ID de la fila insertada
      */
-    public long insert(String name, String password){
+    public long insert(User user){
         // Obtenemos permiso de escritura sobre la base de datos
         SQLiteDatabase database = this.getWritableDatabase();
         long result = -1;
@@ -70,8 +69,8 @@ public class DBAccess extends SQLiteOpenHelper {
         // Nos creamos un contenedor con las claves y sus respectivos valores correspondiente al
         // registro que deseamos insertar
         ContentValues values = new ContentValues();
-        values.put(NAME_COLUMN, name);
-        values.put(PASSWORD_COLUMN, password);
+        values.put(NAME_COLUMN, user.getName());
+        values.put(PASSWORD_COLUMN, user.getPassword());
         // Introducimos los valores de contenedor y obtenemos el ID del registro introducido
         result = database.insert(DB_TABLE_NAME,null, values);
 
