@@ -15,6 +15,9 @@ import com.example.proyecto.model.User;
 
 import java.util.ArrayList;
 
+/**
+ * Actividad que gestiona el login y el registro del usuario
+ */
 public class MainActivity extends AppCompatActivity {
     //Declaracion de variables
     private Button btnLogin;
@@ -37,10 +40,11 @@ public class MainActivity extends AppCompatActivity {
         // Instanciamos el controlador de la base de datos
         controladorDB = new DBAccess(this);
 
+        // Oyente que gestiona el evento OnClick sobre el botón de login
         btnLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //Intent i = new Intent(MainActivity.this,);
+                Intent intent = new Intent(MainActivity.this, SecondActivity.class);
                 if(comprobarCampos()) {
                     ArrayList<User> users = new ArrayList<>();
                     users = controladorDB.getAllUser();
@@ -50,7 +54,7 @@ public class MainActivity extends AppCompatActivity {
                             if (u.getName().equals(user.getName())) {
                                 if (u.getPassword().equals(user.getPassword())) {
                                     Toast("Login realizado");
-                                    //startActivity();
+                                    startActivity(intent);
                                 } else {
                                     Toast("No se ha podido logear, comprueba el nombre y/o la contraseña");
                                 }
@@ -65,6 +69,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        // Oyente que gestiona el evento OnClick sobre el botón de registro
         btnRegistro.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
