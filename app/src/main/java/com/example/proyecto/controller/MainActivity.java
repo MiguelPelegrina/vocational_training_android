@@ -59,7 +59,7 @@ public class MainActivity extends AppCompatActivity {
         btnRegistro.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                // Seria necesario controlar que los datos sean validos?
+                // TODO ES NECESARIO COMPROBAR QUE LOS CAMPOS NO ESTEN VACIOS
                 User user = new User(txtUsuario.getText().toString(), txtContrasena.getText().toString());
                 long result = controladorDB.insert(user);
                 if (result != -1){

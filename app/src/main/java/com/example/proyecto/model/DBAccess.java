@@ -37,7 +37,7 @@ public class DBAccess extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
         // Nos creamos la instruccion para la creacion de la base de datos
         String CREATE_USER_TABLE = "CREATE TABLE " + DB_TABLE_NAME + "("
-                + NAME_COLUMN + " TEXT, " + PASSWORD_COLUMN + " TEXT)";
+                + NAME_COLUMN + " TEXT primary key, " + PASSWORD_COLUMN + " TEXT)";
         // Ejecutamos la instruccion
         sqLiteDatabase.execSQL(CREATE_USER_TABLE);
         Log("Tablas creadas");
@@ -51,7 +51,7 @@ public class DBAccess extends SQLiteOpenHelper {
         switch (oldVersion){
             case 1:
                 sqLiteDatabase.execSQL("ALTER TABLE " + DB_TABLE_NAME  +" ADD COLUMN " + PASSWORD_COLUMN +" TEXT");
-                Log.i("DB", "BBDD Actualizada a la versión 2");
+                Log.i("DB", "BDD actualizada a la versión 2");
         }
 
     }
