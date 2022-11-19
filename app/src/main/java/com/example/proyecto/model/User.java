@@ -1,5 +1,7 @@
 package com.example.proyecto.model;
 
+import java.util.Objects;
+
 /**
  * Clase modelo que guarda la información del usuario
  */
@@ -36,8 +38,6 @@ public class User {
     }
 
     //setter/mutator
-    // TODO Estos métodos pueden ser usados para modificar los datos del usuario si se decide
-    // todo -> implementar
     /**
      * Método que modifica el nombre del usuario
      * @param name Nombre del usuario
@@ -54,5 +54,21 @@ public class User {
         this.password = password;
     }
 
+    @Override
+    public boolean equals(Object object){
+        boolean esIgual = false;
+        if(object instanceof User){
+            User user = (User) object;
+            if(this.name.equals(user.name)){
+                esIgual = true;
+            }
+        }
 
+        return esIgual;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(name, password);
+    }
 }

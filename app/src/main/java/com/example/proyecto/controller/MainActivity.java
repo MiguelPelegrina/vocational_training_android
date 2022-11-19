@@ -41,17 +41,26 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 //Intent i = new Intent(MainActivity.this,);
-                ArrayList<User> users = new ArrayList<>();
-                users = controladorDB.getAllUser();
-                for(User user : users){
-                    if(user.getName().equals(txtUsuario.getText().toString())
-                            && user.getPassword().equals(txtContrasena.getText().toString())){
-                        Toast("Login realizado");
-                        //startActivity();
-                    }else{
-                        Toast("No se ha podido logear, comprueba que tanto el nombre como la " +
-                                "contraseña sean correctas");
+                if(comprobarCampos()) {
+                    ArrayList<User> users = new ArrayList<>();
+                    users = controladorDB.getAllUser();
+                    User user = new User(txtUsuario.getText().toString(), txtContrasena.getText().toString());
+                    if (users.contains(user)) {
+                        for (User u : users) {
+                            if (u.getName().equals(user.getName())) {
+                                if (u.getPassword().equals(user.getPassword())) {
+                                    Toast("Login realizado");
+                                    //startActivity();
+                                } else {
+                                    Toast("No se ha podido logear, comprueba el nombre y/o la contraseña");
+                                }
+                            }
+                        }
+                    } else {
+                        Toast("No se ha podido logear, debe registrarse primero");
                     }
+                }else{
+                    Toast("Debe introducidr datos válidos");
                 }
             }
         });
@@ -59,13 +68,16 @@ public class MainActivity extends AppCompatActivity {
         btnRegistro.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                // TODO ES NECESARIO COMPROBAR QUE LOS CAMPOS NO ESTEN VACIOS
-                User user = new User(txtUsuario.getText().toString(), txtContrasena.getText().toString());
-                long result = controladorDB.insert(user);
-                if (result != -1){
-                    Toast("Se ha registrado exitosamente");
+                if(comprobarCampos()){
+                    User user = new User(txtUsuario.getText().toString(), txtContrasena.getText().toString());
+                    long result = controladorDB.insert(user);
+                    if (result != -1){
+                        Toast("Se ha registrado exitosamente");
+                    }else{
+                        Toast("No se ha podido registrar, probablemente ya esté registrado");
+                    }
                 }else{
-                    Toast("No se ha podido registrar, probablemente ya esté registrado");
+                    Toast("Debe introducidr datos válidos");
                 }
             }
         });
@@ -77,5 +89,20 @@ public class MainActivity extends AppCompatActivity {
      */
     public void Toast(String msg){
         Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
+    }
+
+    /**
+     * Método que comprueba que los campos de texto no estén vacios
+     * @return Devuelve true si la longitud del texto de los campos de texto es mayor que 0 y sino
+     * devuelve false
+     */
+    public boolean comprobarCampos(){
+        boolean camposValidos = false;
+
+        if(txtUsuario.getText().length() > 0 && txtContrasena.getText().length() > 0){
+            camposValidos = true;
+        }
+
+        return camposValidos;
     }
 }
