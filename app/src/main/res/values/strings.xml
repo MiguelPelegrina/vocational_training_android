@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">Proyecto</string>
+    <!-- String related to login -->
+    <string name="password">Contrasena</string>
+    <string name="login">Login</string>
+    <string name="registro">Registro</string>
+    <string name="name">Nombre</string>
 </resources>

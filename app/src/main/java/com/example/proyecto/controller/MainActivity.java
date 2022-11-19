@@ -46,7 +46,11 @@ public class MainActivity extends AppCompatActivity {
                 for(User user : users){
                     if(user.getName().equals(txtUsuario.getText().toString())
                             && user.getPassword().equals(txtContrasena.getText().toString())){
-
+                        Toast("Login realizado");
+                        //startActivity();
+                    }else{
+                        Toast("No se ha podido logear, comprueba que tanto el nombre como la " +
+                                "contraseña sean correctas");
                     }
                 }
             }
