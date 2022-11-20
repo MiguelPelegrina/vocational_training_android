@@ -2,6 +2,7 @@ package com.example.proyecto.fragments;
 
 import android.os.Bundle;
 
+import androidx.preference.ListPreference;
 import androidx.preference.PreferenceFragmentCompat;
 
 import com.example.proyecto.R;

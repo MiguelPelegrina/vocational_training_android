@@ -3,6 +3,7 @@ package com.example.proyecto.controller;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
 
 import android.os.Bundle;
 import android.view.MenuItem;
@@ -11,11 +12,16 @@ import com.example.proyecto.R;
 import com.example.proyecto.fragments.SettingsFragment;
 
 public class SettingActivity extends AppCompatActivity {
+    private ConstraintLayout constraintLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_setting);
+
+        constraintLayout = findViewById(R.id.setting_container);
+
+        ControllerPreferences.loadPreferences(this, constraintLayout);
         // Introducimos el fragment creado en el contenedor de la vista padre
         getSupportFragmentManager()
                 .beginTransaction()
