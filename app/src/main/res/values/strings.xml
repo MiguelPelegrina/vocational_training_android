@@ -7,5 +7,6 @@
     <string name="name">Nombre</string>
     <!-- String relacionados con las preferencias -->
     <string name="preferencias">Preferencias</string>
+    <string name="email">Correo electrónico</string>
     <string name="colores">Elija el color de fondo</string>
 </resources>
