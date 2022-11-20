@@ -1,22 +1,22 @@
 package com.example.proyecto.controller;
 
-import android.os.Bundle;
-import android.view.MenuItem;
-
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+
+import android.os.Bundle;
+import android.view.MenuItem;
 
 import com.example.proyecto.R;
 import com.example.proyecto.fragments.SettingsFragment;
 
 public class SettingActivity extends AppCompatActivity {
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_setting);
-
-        // Introducimos el fragment creado en el contenedor de la vista padre (activity_setting.xml)
+        // Introducimos el fragment creado en el contenedor de la vista padre
         getSupportFragmentManager()
                 .beginTransaction()
                 .replace(R.id.setting_container, new SettingsFragment())
@@ -41,3 +41,5 @@ public class SettingActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 }
+
+

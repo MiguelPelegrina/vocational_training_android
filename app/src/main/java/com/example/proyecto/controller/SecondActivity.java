@@ -44,7 +44,7 @@ public class SecondActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()){
             case R.id.item_preferencias:
-                Intent i = new Intent(SecondActivity.this, SettingActivity2.class);
+                Intent i = new Intent(SecondActivity.this, SettingActivity.class);
                 startActivity(i);
                 break;
             case android.R.id.home:
