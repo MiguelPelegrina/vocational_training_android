@@ -1,9 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
-    <ListPreference
-        android:defaultValue="1"
-        android:entries="@array/colores"
-        android:entryValues="@array/colores"
-        android:key="list_preference_1"
-        android:title="@string/colores" />
+    <PreferenceCategory android:title="Diseño">
+
+        <ListPreference
+            android:defaultValue="1"
+            android:entries="@array/colores"
+            android:entryValues="@array/colores"
+            android:key="color_preference"
+            android:title="@string/colores" />
+    </PreferenceCategory>
 </PreferenceScreen>
