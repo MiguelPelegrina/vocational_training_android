@@ -6,7 +6,10 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -27,6 +30,32 @@ public class SecondActivity extends AppCompatActivity {
         if(actionBar != null){
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
+
+        loadPreferences();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        loadPreferences();
+    }
+
+    private void loadPreferences() {
+        int numeroColor = Color.WHITE;
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(SecondActivity.this);
+        String color = sharedPreferences.getString("colorPreference","Blanco");
+        switch (color){
+            case "Verde":
+                numeroColor = Color.GREEN;
+                break;
+            case "Azul":
+                numeroColor = Color.BLUE;
+                break;
+            case "Rojo":
+                numeroColor = Color.RED;
+                break;
+        }
+        this.constraintLayout.setBackgroundColor(numeroColor);
     }
 
     // Sobreescribimos el metodo onCreateOptionsMenu para crearnos un menu personalizada
