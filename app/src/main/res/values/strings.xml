@@ -9,4 +9,8 @@
     <string name="preferencias">Preferencias</string>
     <string name="email">Correo electrónico</string>
     <string name="colores">Elija el color de fondo</string>
+    <!-- String relacionados con el custom_item_list -->
+    <string name="imagen">Imagen</string>
+    <string name="nombrePersonaje">Nombre</string>
+    <string name="actor">Actor</string>
 </resources>
