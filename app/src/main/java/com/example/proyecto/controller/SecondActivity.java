@@ -6,14 +6,12 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.graphics.Color;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.view.Menu;
 import android.view.MenuItem;
 
 import com.example.proyecto.R;
+import com.example.proyecto.Util.Utilities;
 
 public class SecondActivity extends AppCompatActivity {
     // Declaracion de variables
@@ -31,13 +29,13 @@ public class SecondActivity extends AppCompatActivity {
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
 
-        ControllerPreferences.loadPreferences(this, constraintLayout);
+        Utilities.loadPreferences(this, constraintLayout);
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        ControllerPreferences.loadPreferences(this, constraintLayout);
+        Utilities.loadPreferences(this, constraintLayout);
     }
 
     // Sobreescribimos el metodo onCreateOptionsMenu para crearnos un menu personalizada

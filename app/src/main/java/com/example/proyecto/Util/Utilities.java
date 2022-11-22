@@ -1,4 +1,4 @@
-package com.example.proyecto.controller;
+package com.example.proyecto.Util;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -7,7 +7,7 @@ import android.preference.PreferenceManager;
 
 import androidx.constraintlayout.widget.ConstraintLayout;
 
-public class ControllerPreferences {
+public class Utilities {
     public static void loadPreferences(Context context, ConstraintLayout layout){
         int numeroColor = Color.WHITE;
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);

@@ -36,7 +36,10 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Recycl
     @NonNull
     @Override
     public RecyclerHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        return null;
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.custom_item_list, parent,false);
+        RecyclerHolder recyclerHolder = new RecyclerHolder(view);
+
+        return recyclerHolder;
     }
 
     @Override
@@ -46,7 +49,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Recycl
 
     @Override
     public int getItemCount() {
-        return 0;
+        return listaPersonajes.size();
     }
 
     /**

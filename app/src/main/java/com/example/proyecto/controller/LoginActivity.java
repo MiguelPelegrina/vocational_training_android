@@ -10,7 +10,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.example.proyecto.R;
-import com.example.proyecto.model.DBAccess;
+import com.example.proyecto.io.DBAccess;
 import com.example.proyecto.model.User;
 
 import java.util.ArrayList;
@@ -18,7 +18,7 @@ import java.util.ArrayList;
 /**
  * Actividad que gestiona el login y el registro del usuario
  */
-public class MainActivity extends AppCompatActivity {
+public class LoginActivity extends AppCompatActivity {
     //Declaracion de variables
     private Button btnLogin;
     private Button btnRegistro;
@@ -44,7 +44,7 @@ public class MainActivity extends AppCompatActivity {
         btnLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(MainActivity.this, SecondActivity.class);
+                Intent intent = new Intent(LoginActivity.this, SecondActivity.class);
                 if(comprobarCampos()) {
                     ArrayList<User> users = new ArrayList<>();
                     users = controladorDB.getAllUser();

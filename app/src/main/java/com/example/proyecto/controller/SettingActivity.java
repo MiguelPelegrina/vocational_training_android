@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.view.MenuItem;
 
 import com.example.proyecto.R;
+import com.example.proyecto.Util.Utilities;
 import com.example.proyecto.fragments.SettingsFragment;
 
 public class SettingActivity extends AppCompatActivity {
@@ -21,7 +22,7 @@ public class SettingActivity extends AppCompatActivity {
 
         constraintLayout = findViewById(R.id.setting_container);
 
-        ControllerPreferences.loadPreferences(this, constraintLayout);
+        Utilities.loadPreferences(this, constraintLayout);
         // Introducimos el fragment creado en el contenedor de la vista padre
         getSupportFragmentManager()
                 .beginTransaction()

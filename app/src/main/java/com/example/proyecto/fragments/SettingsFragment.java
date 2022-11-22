@@ -1,15 +1,11 @@
 package com.example.proyecto.fragments;
 
 import android.os.Bundle;
-import android.view.View;
 
-import androidx.annotation.Nullable;
 import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.preference.ListPreference;
 import androidx.preference.PreferenceFragmentCompat;
 
 import com.example.proyecto.R;
-import com.example.proyecto.controller.ControllerPreferences;
 
 /**
  * Clase que hereda de PreferenceFragmentCompat y que se encarga de 'incrustar' en la ventana el
@@ -32,6 +28,6 @@ public class SettingsFragment extends PreferenceFragmentCompat {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        ControllerPreferences.loadPreferences(constraintLayout.getContext(), constraintLayout);
+        Utilities.loadPreferences(constraintLayout.getContext(), constraintLayout);
     }*/
 }
