@@ -4,6 +4,8 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.os.AsyncTask;
@@ -14,6 +16,7 @@ import android.view.MenuItem;
 
 import com.example.proyecto.R;
 import com.example.proyecto.Util.Utilities;
+import com.example.proyecto.adapter.RecyclerAdapter;
 import com.example.proyecto.io.HttpConnectPersonaje;
 import com.example.proyecto.model.Personaje;
 
@@ -27,7 +30,8 @@ public class SecondActivity extends AppCompatActivity {
     // Declaracion de variables
     private ConstraintLayout constraintLayout;
     private ArrayList<Personaje> listaPersonajes = new ArrayList<>();
-
+    private RecyclerView recyclerView;
+    private RecyclerAdapter recyclerAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,9 +45,17 @@ public class SecondActivity extends AppCompatActivity {
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
 
-
+        // TODO --> AQUI DEBE OBTENER LA INFORMACION DE LA BASE DE DATOS
 
         Utilities.loadPreferences(this, constraintLayout);
+
+        recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
+        recyclerAdapter = new RecyclerAdapter(listaPersonajes);
+
+        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
+
+        recyclerView.setAdapter(recyclerAdapter);
+        recyclerView.setLayoutManager(layoutManager);
     }
 
     @Override
@@ -95,10 +107,11 @@ public class SecondActivity extends AppCompatActivity {
                 try {
                     JSONObject jsonObject = new JSONObject(result);
 
+                    //TODO --> CREAR PERSONAJES A PARTIR DE LA INFORMACIÓN DEL JSON
+                    //listaPersonajes.add(new Personaje());
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
-
             }
         }
     }
