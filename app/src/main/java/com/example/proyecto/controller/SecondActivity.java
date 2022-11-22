@@ -6,16 +6,28 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
 import com.example.proyecto.R;
 import com.example.proyecto.Util.Utilities;
+import com.example.proyecto.io.HttpConnectPersonaje;
+import com.example.proyecto.model.Personaje;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.net.HttpURLConnection;
+import java.util.ArrayList;
 
 public class SecondActivity extends AppCompatActivity {
     // Declaracion de variables
     private ConstraintLayout constraintLayout;
+    private ArrayList<Personaje> listaPersonajes = new ArrayList<>();
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,6 +40,8 @@ public class SecondActivity extends AppCompatActivity {
         if(actionBar != null){
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
+
+
 
         Utilities.loadPreferences(this, constraintLayout);
     }
@@ -62,5 +76,30 @@ public class SecondActivity extends AppCompatActivity {
         }
         //return super.onOptionsItemSelected(item);
         return true;
+    }
+
+    private class taskConnection extends AsyncTask<String, Void, String>{
+        @Override
+        protected String doInBackground(String... strings) {
+            String result = null;
+
+            result = HttpConnectPersonaje.getRequest(strings[1]);
+
+            return result;
+        }
+
+        @Override
+        protected void onPostExecute(String result){
+            if(result != null){
+                Log.d("D","DATOS: "+ result);
+                try {
+                    JSONObject jsonObject = new JSONObject(result);
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+            }
+        }
     }
 }

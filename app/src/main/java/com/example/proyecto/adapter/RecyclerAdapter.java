@@ -44,7 +44,10 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Recycl
 
     @Override
     public void onBindViewHolder(@NonNull RecyclerHolder holder, int position) {
-
+        Personaje personaje = listaPersonajes.get(position);
+        holder.txtViewNombre.setText(personaje.getNombre());
+        holder.txtViewActor.setText(personaje.getActor());
+        holder.imgPersonaje.setImageURI(personaje.getImagen());
     }
 
     @Override
