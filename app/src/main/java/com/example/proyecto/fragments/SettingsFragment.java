@@ -18,16 +18,4 @@ public class SettingsFragment extends PreferenceFragmentCompat {
     public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
         setPreferencesFromResource(R.xml.root_preferences, rootKey);
     }
-
-    /*
-    @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState){
-        constraintLayout = (ConstraintLayout) getView().findViewById(R.id.setting_container);
-    }
-
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        Utilities.loadPreferences(constraintLayout.getContext(), constraintLayout);
-    }*/
 }

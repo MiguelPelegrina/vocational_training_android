@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -20,6 +21,7 @@ import com.example.proyecto.adapter.RecyclerAdapter;
 import com.example.proyecto.io.HttpConnectPersonaje;
 import com.example.proyecto.model.Personaje;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -45,7 +47,7 @@ public class SecondActivity extends AppCompatActivity {
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
 
-        // TODO --> AQUI DEBE OBTENER LA INFORMACION DE LA BASE DE DATOS
+        new taskConnection().execute("GET", "characters");
 
         Utilities.loadPreferences(this, constraintLayout);
 
@@ -103,12 +105,22 @@ public class SecondActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(String result){
             if(result != null){
-                Log.d("D","DATOS: "+ result);
+                Log.d("D","DATOS: " + result);
                 try {
                     JSONObject jsonObject = new JSONObject(result);
+                    JSONArray jsonArray = jsonObject.getJSONArray("results");
 
-                    //TODO --> CREAR PERSONAJES A PARTIR DE LA INFORMACIÓN DEL JSON
-                    //listaPersonajes.add(new Personaje());
+                    String name = "";
+                    String actor = "";
+                    Uri img = null;
+                    for (int i = 0; i < jsonArray.length(); i++){
+                        name = jsonArray.getJSONObject(i).getString("name");
+                        actor = jsonArray.getJSONObject(i).getString("portrayed");
+                        img = Uri.parse(jsonArray.getJSONObject(i).getString("img"));
+                        listaPersonajes.add(new Personaje(name, actor, img));
+                    }
+                    recyclerAdapter.notifyDataSetChanged();
+                    Log.d("D", "Name: " + name + ", Actor: " + actor + " , Uri: " + img);
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }

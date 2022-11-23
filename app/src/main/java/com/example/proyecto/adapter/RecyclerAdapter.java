@@ -11,10 +11,9 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.RecyclerView.ViewHolder;
 import androidx.swiperefreshlayout.widget.CircularProgressDrawable;
 
+import com.bumptech.glide.Glide;
 import com.example.proyecto.R;
 import com.example.proyecto.model.Personaje;
-
-import org.w3c.dom.Text;
 
 import java.util.List;
 
@@ -45,10 +44,22 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Recycl
 
     @Override
     public void onBindViewHolder(@NonNull RecyclerHolder holder, int position) {
+        CircularProgressDrawable progressDrawable;
+        progressDrawable = new CircularProgressDrawable(holder.itemView.getContext());
+        progressDrawable.setStrokeWidth(10f);
+        progressDrawable.setStyle(CircularProgressDrawable.LARGE);
+        progressDrawable.setCenterRadius(30f);
+        progressDrawable.start();
+
         Personaje personaje = listaPersonajes.get(position);
         holder.txtViewNombre.setText(personaje.getNombre());
         holder.txtViewActor.setText(personaje.getActor());
-        holder.imgPersonaje.setImageURI(personaje.getImagen());
+
+        Glide.with(holder.itemView.getContext())
+                        .load(personaje.getImagenUri())
+                        .placeholder(progressDrawable)
+                        .error(R.mipmap.ic_launcher)
+                        .into(holder.imgPersonaje);
     }
 
     @Override
@@ -64,8 +75,6 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Recycl
         ImageView imgPersonaje;
         TextView txtViewNombre;
         TextView txtViewActor;
-        CircularProgressDrawable progressDrawable;
-
 
         /**
          * Constructor por parámetros
@@ -73,18 +82,6 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Recycl
          */
         public RecyclerHolder(@NonNull View itemView) {
             super(itemView);
-            progressDrawable = new CircularProgressDrawable(itemView.getContext());
-            progressDrawable.setStrokeWidth(10f);
-            progressDrawable.setStyle(CircularProgressDrawable.LARGE);
-            progressDrawable.setCenterRadius(30f);
-            progressDrawable.start();
-
-            //TODO --> IMPLEMENTAR GLIDE
-            /*Glide.with(MainActivity.this)
-                    .load("https://as1.ftcdn.net/v2/jpg/01/20/68/68/1000_F_120686889_nDaqiMH8I5AmT5B0hpuJ14ZasdrrgRAK.jpg")
-                    .placeholder(progressDrawable)
-                    .error(R.mipmap.ic_launcher)
-                    .into(imageView);*/
 
             imgPersonaje = (ImageView) itemView.findViewById(R.id.image_item);
             txtViewNombre = (TextView) itemView.findViewById(R.id.txt_nombre_item);

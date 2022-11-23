@@ -29,7 +29,7 @@ public class Personaje {
         return actor;
     }
 
-    public Uri getImagen() {
+    public Uri getImagenUri() {
         return imagen;
     }
 
