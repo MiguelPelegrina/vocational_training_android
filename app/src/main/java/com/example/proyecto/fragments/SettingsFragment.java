@@ -12,8 +12,6 @@ import com.example.proyecto.R;
  * diseño de las preferencias a partir del root_preferences.xml.
  */
 public class SettingsFragment extends PreferenceFragmentCompat {
-    private ConstraintLayout constraintLayout;
-
     @Override
     public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
         setPreferencesFromResource(R.xml.root_preferences, rootKey);

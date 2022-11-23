@@ -14,6 +14,8 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Toast;
 
 import com.example.proyecto.R;
 import com.example.proyecto.Util.Utilities;
@@ -53,6 +55,14 @@ public class SecondActivity extends AppCompatActivity {
 
         recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
         recyclerAdapter = new RecyclerAdapter(listaPersonajes);
+
+        recyclerAdapter.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View view) {
+                Toast.makeText(view.getContext(), "Hola", Toast.LENGTH_SHORT);
+                return false;
+            }
+        });
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
 

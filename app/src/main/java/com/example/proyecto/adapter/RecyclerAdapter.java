@@ -23,6 +23,7 @@ import java.util.List;
 public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.RecyclerHolder> {
     //Atributos de la clase
     private List<Personaje> listaPersonajes;
+    private View.OnLongClickListener listener;
 
     /**
      * Constructor por parámetros
@@ -60,6 +61,15 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Recycl
                         .placeholder(progressDrawable)
                         .error(R.mipmap.ic_launcher)
                         .into(holder.imgPersonaje);
+    }
+
+    /**
+     * Método que permite asignar una listener al adapter a través de la actividad para mantener el
+     * MVC
+     * @param listener Oyente que gestiona el evento de OnLongClick
+     */
+    public void setOnLongClickListener(View.OnLongClickListener listener){
+        this.listener = listener;
     }
 
     @Override
