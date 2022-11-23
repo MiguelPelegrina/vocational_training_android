@@ -107,8 +107,7 @@ public class SecondActivity extends AppCompatActivity {
             if(result != null){
                 Log.d("D","DATOS: " + result);
                 try {
-                    JSONObject jsonObject = new JSONObject(result);
-                    JSONArray jsonArray = jsonObject.getJSONArray("results");
+                    JSONArray jsonArray = new JSONArray(result);
 
                     String name = "";
                     String actor = "";
