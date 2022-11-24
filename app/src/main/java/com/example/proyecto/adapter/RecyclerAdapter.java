@@ -60,7 +60,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Recycl
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(holder.itemView.getContext(),listaPersonajes.get(position).getNombre(),Toast.LENGTH_LONG).show();
+                Toast.makeText(holder.itemView.getContext(),listaPersonajes.get(position).getNombre(),Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -71,11 +71,6 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Recycl
                         .into(holder.imgPersonaje);
     }
 
-    /**
-     * Método que permite asignar una listener al adapter a través de la actividad para mantener el
-     * MVC
-     * @param listener Oyente que gestiona el evento de OnLongClick
-     */
     /*public void setOnItemClickListener(AdapterView.OnClickListener listener){
         this.listener = listener;
     }*/
