@@ -6,7 +6,6 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -26,7 +25,8 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Recycl
     //Atributos de la clase
     private List<Personaje> listaPersonajes;
     //private AdapterView.OnTouchListener listener;
-    private AdapterView.OnClickListener listener;
+    private AdapterView.OnClickListener onClickListener;
+    private AdapterView.OnLongClickListener onLongClickListener;
 
     /**
      * Constructor por parámetros
@@ -59,8 +59,8 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Recycl
         holder.txtViewNombre.setText(personaje.getNombre());
         holder.txtViewActor.setText(personaje.getActor());
         //holder.itemView.setOnTouchListener(listener);
-        holder.itemView.setOnClickListener(listener);
-
+        holder.itemView.setOnClickListener(onClickListener);
+        holder.itemView.setOnLongClickListener(onLongClickListener);
         Glide.with(holder.itemView.getContext())
                         .load(personaje.getImagenUri())
                         .placeholder(progressDrawable)
@@ -69,7 +69,11 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Recycl
     }
 
     public void setOnClickListener(View.OnClickListener listener){
-        this.listener = listener;
+        this.onClickListener = listener;
+    }
+
+    public void setOnLongClickListener(View.OnLongClickListener listener){
+        this.onLongClickListener = listener;
     }
 
     /*public void setOnTouchListener(AdapterView.OnTouchListener listener){
@@ -102,7 +106,8 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Recycl
             txtViewActor = (TextView) itemView.findViewById(R.id.txt_actor_item);
             itemView.setTag(this);
             //itemView.setOnTouchListener(listener);
-            itemView.setOnClickListener(listener);
+            itemView.setOnClickListener(onClickListener);
+            itemView.setOnLongClickListener(onLongClickListener);
         }
     }
 }

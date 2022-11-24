@@ -2,19 +2,20 @@ package com.example.proyecto.controller;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.view.ActionMode;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Toast;
@@ -36,6 +37,13 @@ public class SecondActivity extends AppCompatActivity {
     private ArrayList<Personaje> listaPersonajes = new ArrayList<>();
     private RecyclerView recyclerView;
     private RecyclerAdapter recyclerAdapter;
+    private ActionMode actionMode;
+    private AlertDialog alertDialog;
+    // Variables auxiliares
+    private Personaje personaje;
+    private RecyclerView.ViewHolder viewHolder;
+    private int position;
+    private boolean borrar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,11 +67,26 @@ public class SecondActivity extends AppCompatActivity {
         recyclerAdapter.setOnClickListener(new AdapterView.OnClickListener() {
             @Override
             public void onClick(View view) {
-                RecyclerView.ViewHolder viewHolder = (RecyclerView.ViewHolder) view.getTag();
-                int position = viewHolder.getAdapterPosition();
-                Personaje personaje = listaPersonajes.get(position);
+                viewHolder = (RecyclerView.ViewHolder) view.getTag();
+                position = viewHolder.getAdapterPosition();
+                personaje = listaPersonajes.get(position);
                 Toast.makeText(view.getContext(), personaje.getNombre(), Toast.LENGTH_SHORT).show();
-                Log.d("Personaje",personaje.getNombre());
+            }
+        });
+
+        recyclerAdapter.setOnLongClickListener(new View.OnLongClickListener(){
+            @Override
+            public boolean onLongClick(View view) {
+                boolean res = false;
+                if(actionMode == null){
+                    viewHolder = (RecyclerView.ViewHolder) view.getTag();
+                    position = viewHolder.getAdapterPosition();
+                    personaje = listaPersonajes.get(position);
+                    actionMode = startSupportActionMode(actionCallback);
+                    res = true;
+                }
+
+                return res;
             }
         });
 
@@ -117,6 +140,42 @@ public class SecondActivity extends AppCompatActivity {
         return true;
     }
 
+    private ActionMode.Callback actionCallback = new ActionMode.Callback() {
+        @Override
+        public boolean onCreateActionMode(ActionMode mode, Menu menu) {
+            mode.getMenuInflater().inflate(R.menu.action_menu, menu);
+            mode.setTitle("Action Menu");
+            return true;
+        }
+
+        @Override
+        public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
+            return false;
+        }
+
+        @Override
+        public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
+            switch(item.getItemId()){
+                case R.id.action_menu_item_borrar:
+                    createAlertDialog("Borrar", "¿De verdad quiere borrar el personaje?", item).show();
+                    mode.finish();
+                    break;
+                case R.id.action_menu_item_preferencias:
+                    Intent i = new Intent(SecondActivity.this, SettingActivity.class);
+                    startActivity(i);
+                    mode.finish();
+                    break;
+            }
+
+            return true;
+        }
+
+        @Override
+        public void onDestroyActionMode(ActionMode mode) {
+            actionMode = null;
+        }
+    };
+
     private class taskConnection extends AsyncTask<String, Void, String>{
         @Override
         protected String doInBackground(String... strings) {
@@ -130,7 +189,6 @@ public class SecondActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(String result){
             if(result != null){
-                Log.d("D","DATOS: " + result);
                 try {
                     JSONArray jsonArray = new JSONArray(result);
 
@@ -144,11 +202,42 @@ public class SecondActivity extends AppCompatActivity {
                         listaPersonajes.add(new Personaje(name, actor, img));
                     }
                     recyclerAdapter.notifyDataSetChanged();
-                    Log.d("D", "Name: " + name + ", Actor: " + actor + " , Uri: " + img);
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
             }
+        }
+    }
+
+    public AlertDialog createAlertDialog(String titulo, String mensaje, MenuItem item){
+        AlertDialog.Builder builder = new AlertDialog.Builder(SecondActivity.this);
+
+        builder.setMessage(mensaje).setTitle(titulo);
+
+        builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                borrarPersonaje(false, item);
+            }
+        });
+
+        builder.setPositiveButton("Si", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                borrarPersonaje(true, item);
+            }
+        });
+
+        return builder.create();
+    }
+
+    private void borrarPersonaje(boolean borrar, MenuItem item){
+        if(borrar){
+            listaPersonajes.remove(personaje);
+            recyclerAdapter.notifyDataSetChanged();
+            Toast.makeText(SecondActivity.this, "Se ha borrado el personaje", Toast.LENGTH_SHORT).show();
+        }else{
+            Toast.makeText(SecondActivity.this, "Operación cancelada", Toast.LENGTH_SHORT).show();
         }
     }
 }

@@ -13,4 +13,6 @@
     <string name="imagen">Imagen</string>
     <string name="nombrePersonaje">Nombre</string>
     <string name="actor">Actor</string>
+    <!-- String relacionados con el action_menu_item -->
+    <string name="borrar">Borrar</string>
 </resources>
