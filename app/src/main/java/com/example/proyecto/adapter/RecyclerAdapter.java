@@ -25,7 +25,8 @@ import java.util.List;
 public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.RecyclerHolder> {
     //Atributos de la clase
     private List<Personaje> listaPersonajes;
-    //private AdapterView.OnClickListener listener;
+    //private AdapterView.OnTouchListener listener;
+    private AdapterView.OnClickListener listener;
 
     /**
      * Constructor por parámetros
@@ -57,12 +58,8 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Recycl
         Personaje personaje = listaPersonajes.get(position);
         holder.txtViewNombre.setText(personaje.getNombre());
         holder.txtViewActor.setText(personaje.getActor());
-        holder.itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Toast.makeText(holder.itemView.getContext(),listaPersonajes.get(position).getNombre(),Toast.LENGTH_SHORT).show();
-            }
-        });
+        //holder.itemView.setOnTouchListener(listener);
+        holder.itemView.setOnClickListener(listener);
 
         Glide.with(holder.itemView.getContext())
                         .load(personaje.getImagenUri())
@@ -71,7 +68,11 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Recycl
                         .into(holder.imgPersonaje);
     }
 
-    /*public void setOnItemClickListener(AdapterView.OnClickListener listener){
+    public void setOnClickListener(View.OnClickListener listener){
+        this.listener = listener;
+    }
+
+    /*public void setOnTouchListener(AdapterView.OnTouchListener listener){
         this.listener = listener;
     }*/
 
@@ -99,6 +100,9 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Recycl
             imgPersonaje = (ImageView) itemView.findViewById(R.id.image_item);
             txtViewNombre = (TextView) itemView.findViewById(R.id.txt_nombre_item);
             txtViewActor = (TextView) itemView.findViewById(R.id.txt_actor_item);
+            itemView.setTag(this);
+            //itemView.setOnTouchListener(listener);
+            itemView.setOnClickListener(listener);
         }
     }
 }

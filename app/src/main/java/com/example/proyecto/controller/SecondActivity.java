@@ -14,6 +14,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Toast;
@@ -55,11 +56,26 @@ public class SecondActivity extends AppCompatActivity {
         recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
         recyclerAdapter = new RecyclerAdapter(listaPersonajes);
 
-        /*recyclerAdapter.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        recyclerAdapter.setOnClickListener(new AdapterView.OnClickListener() {
             @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                Toast.makeText(view.getContext(), listaPersonajes.get(i).getNombre(), Toast.LENGTH_SHORT).show();
-                Log.d("Personaje",listaPersonajes.get(i).getNombre());
+            public void onClick(View view) {
+                RecyclerView.ViewHolder viewHolder = (RecyclerView.ViewHolder) view.getTag();
+                int position = viewHolder.getAdapterPosition();
+                Personaje personaje = listaPersonajes.get(position);
+                Toast.makeText(view.getContext(), personaje.getNombre(), Toast.LENGTH_SHORT).show();
+                Log.d("Personaje",personaje.getNombre());
+            }
+        });
+
+        /*recyclerAdapter.setOnTouchListener(new AdapterView.OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent motionEvent) {
+                RecyclerView.ViewHolder viewHolder = (RecyclerView.ViewHolder) view.getTag();
+                int position = viewHolder.getAdapterPosition();
+                Personaje personaje = listaPersonajes.get(position);
+                Toast.makeText(view.getContext(), personaje.getNombre(), Toast.LENGTH_SHORT).show();
+                Log.d("Personaje",personaje.getNombre());
+                return false;
             }
         });*/
 
