@@ -15,19 +15,18 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.Toast;
 
 import com.example.proyecto.R;
-import com.example.proyecto.Util.Utilities;
+import com.example.proyecto.Utilities.Preferences;
 import com.example.proyecto.adapter.RecyclerAdapter;
 import com.example.proyecto.io.HttpConnectPersonaje;
 import com.example.proyecto.model.Personaje;
 
 import org.json.JSONArray;
 import org.json.JSONException;
-import org.json.JSONObject;
 
-import java.net.HttpURLConnection;
 import java.util.ArrayList;
 
 public class SecondActivity extends AppCompatActivity {
@@ -51,18 +50,18 @@ public class SecondActivity extends AppCompatActivity {
 
         new taskConnection().execute("GET", "characters");
 
-        Utilities.loadPreferences(this, constraintLayout);
+        Preferences.loadPreferences(this, constraintLayout);
 
         recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
         recyclerAdapter = new RecyclerAdapter(listaPersonajes);
 
-        recyclerAdapter.setOnLongClickListener(new View.OnLongClickListener() {
+        /*recyclerAdapter.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
-            public boolean onLongClick(View view) {
-                Toast.makeText(view.getContext(), "Hola", Toast.LENGTH_SHORT);
-                return false;
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                Toast.makeText(view.getContext(), listaPersonajes.get(i).getNombre(), Toast.LENGTH_SHORT).show();
+                Log.d("Personaje",listaPersonajes.get(i).getNombre());
             }
-        });
+        });*/
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
 
@@ -73,7 +72,7 @@ public class SecondActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        Utilities.loadPreferences(this, constraintLayout);
+        Preferences.loadPreferences(this, constraintLayout);
     }
 
     // Sobreescribimos el metodo onCreateOptionsMenu para crearnos un menu personalizada

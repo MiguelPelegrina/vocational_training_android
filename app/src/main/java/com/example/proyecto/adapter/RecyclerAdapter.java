@@ -3,8 +3,10 @@ package com.example.proyecto.adapter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -23,7 +25,7 @@ import java.util.List;
 public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.RecyclerHolder> {
     //Atributos de la clase
     private List<Personaje> listaPersonajes;
-    private View.OnLongClickListener listener;
+    //private AdapterView.OnClickListener listener;
 
     /**
      * Constructor por parámetros
@@ -55,6 +57,12 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Recycl
         Personaje personaje = listaPersonajes.get(position);
         holder.txtViewNombre.setText(personaje.getNombre());
         holder.txtViewActor.setText(personaje.getActor());
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Toast.makeText(holder.itemView.getContext(),listaPersonajes.get(position).getNombre(),Toast.LENGTH_LONG).show();
+            }
+        });
 
         Glide.with(holder.itemView.getContext())
                         .load(personaje.getImagenUri())
@@ -68,9 +76,9 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Recycl
      * MVC
      * @param listener Oyente que gestiona el evento de OnLongClick
      */
-    public void setOnLongClickListener(View.OnLongClickListener listener){
+    /*public void setOnItemClickListener(AdapterView.OnClickListener listener){
         this.listener = listener;
-    }
+    }*/
 
     @Override
     public int getItemCount() {
