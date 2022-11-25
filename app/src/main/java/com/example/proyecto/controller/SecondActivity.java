@@ -71,6 +71,9 @@ public class SecondActivity extends AppCompatActivity {
                 position = viewHolder.getAdapterPosition();
                 personaje = listaPersonajes.get(position);
                 Toast.makeText(view.getContext(), personaje.getNombre(), Toast.LENGTH_SHORT).show();
+                Intent i = new Intent(SecondActivity.this, DetailActivity.class);
+                i.putExtra("name", personaje.getNombre());
+                startActivity(i);
             }
         });
 

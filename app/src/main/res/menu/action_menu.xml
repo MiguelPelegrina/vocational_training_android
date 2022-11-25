@@ -4,7 +4,8 @@
 
     <item
         android:id="@+id/action_menu_item_preferencias"
-        android:title="@string/preferencias" />
+        android:title="@string/preferencias"
+        app:showAsAction="never" />
     <item
         android:id="@+id/action_menu_item_borrar"
         android:icon="@android:drawable/ic_menu_delete"
