@@ -93,18 +93,6 @@ public class ListActivity extends AppCompatActivity {
             }
         });
 
-        /*recyclerAdapter.setOnTouchListener(new AdapterView.OnTouchListener() {
-            @Override
-            public boolean onTouch(View view, MotionEvent motionEvent) {
-                RecyclerView.ViewHolder viewHolder = (RecyclerView.ViewHolder) view.getTag();
-                int position = viewHolder.getAdapterPosition();
-                Personaje personaje = listaPersonajes.get(position);
-                Toast.makeText(view.getContext(), personaje.getNombre(), Toast.LENGTH_SHORT).show();
-                Log.d("Personaje",personaje.getNombre());
-                return false;
-            }
-        });*/
-
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
 
         recyclerView.setAdapter(recyclerAdapter);

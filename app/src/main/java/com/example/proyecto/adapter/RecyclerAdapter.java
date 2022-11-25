@@ -24,7 +24,6 @@ import java.util.List;
 public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.RecyclerHolder> {
     //Atributos de la clase
     private List<Personaje> listaPersonajes;
-    //private AdapterView.OnTouchListener listener;
     private AdapterView.OnClickListener onClickListener;
     private AdapterView.OnLongClickListener onLongClickListener;
 
@@ -76,10 +75,6 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Recycl
         this.onLongClickListener = listener;
     }
 
-    /*public void setOnTouchListener(AdapterView.OnTouchListener listener){
-        this.listener = listener;
-    }*/
-
     @Override
     public int getItemCount() {
         return listaPersonajes.size();
@@ -105,7 +100,6 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Recycl
             txtViewNombre = (TextView) itemView.findViewById(R.id.txt_nombre_item);
             txtViewActor = (TextView) itemView.findViewById(R.id.txt_actor_item);
             itemView.setTag(this);
-            //itemView.setOnTouchListener(listener);
             itemView.setOnClickListener(onClickListener);
             itemView.setOnLongClickListener(onLongClickListener);
         }

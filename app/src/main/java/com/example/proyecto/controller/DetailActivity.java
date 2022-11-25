@@ -32,6 +32,7 @@ public class DetailActivity extends AppCompatActivity {
     private ConstraintLayout constraintLayout;
     private ImageView imgPersonajeGrande;
     private EditText txtNombrePersonaje;
+    private EditText txtActorPersonaje;
     private CircularProgressDrawable progressDrawable;
 
     @Override
@@ -41,6 +42,7 @@ public class DetailActivity extends AppCompatActivity {
         constraintLayout = (ConstraintLayout) findViewById(R.id.activity_detail_constraint);
         imgPersonajeGrande = (ImageView) findViewById(R.id.imagenGrande);
         txtNombrePersonaje = (EditText) findViewById(R.id.editTextPersonNameDetalle);
+        txtActorPersonaje = (EditText) findViewById(R.id.editTextPersonajeActorDetalle);
 
         // Activamos el icono de "Volver"(flecha atrás)
         ActionBar actionBar = getSupportActionBar();
@@ -115,7 +117,7 @@ public class DetailActivity extends AppCompatActivity {
                     // ELEGIR INFORMACIÓN QUE SE DESEA MOSTRAR --> todo?
                     String name = jsonObject.getString("name");
                     txtNombrePersonaje.setText(name);
-                    Toast.makeText(DetailActivity.this, jsonObject.getString("name"), Toast.LENGTH_SHORT).show();
+                    String actor = jsonObject.getString("");
                     //actor = jsonObject.getString("portrayed");
                     Glide.with(DetailActivity.this)
                             .load(jsonObject.getString("img"))
