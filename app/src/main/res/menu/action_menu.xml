@@ -8,12 +8,12 @@
         android:title="Item"
         app:showAsAction="always" />
     <item
-        android:id="@+id/action_menu_item_preferencias"
-        android:title="@string/preferencias"
-        app:showAsAction="never" />
-    <item
         android:id="@+id/action_menu_item_borrar"
         android:icon="@android:drawable/ic_menu_delete"
         android:title="@string/borrar"
         app:showAsAction="always" />
+    <item
+        android:id="@+id/action_menu_item_preferencias"
+        android:title="@string/preferencias"
+        app:showAsAction="never" />
 </menu>

@@ -1,6 +1,7 @@
 package com.example.proyecto.controller;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
@@ -33,6 +34,7 @@ import java.util.ArrayList;
 
 public class ListActivity extends AppCompatActivity {
     // Declaracion de variables
+    public static int RESULTCODE_ADD_ACT = 0;
     private ConstraintLayout constraintLayout;
     private ArrayList<Personaje> listaPersonajes = new ArrayList<>();
     private RecyclerView recyclerView;
@@ -121,8 +123,8 @@ public class ListActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()){
             case R.id.item_preferencias:
-                Intent i = new Intent(ListActivity.this, SettingActivity.class);
-                startActivity(i);
+                Intent ver = new Intent(ListActivity.this, SettingActivity.class);
+                startActivity(ver);
                 break;
             case android.R.id.home:
                 onBackPressed();
@@ -151,6 +153,10 @@ public class ListActivity extends AppCompatActivity {
                 case R.id.action_menu_item_borrar:
                     createAlertDialog("Borrar", "¿De verdad quiere borrar el personaje?", item).show();
                     mode.finish();
+                    break;
+                case R.id.action_menu_item_anadir:
+                    Intent anadir = new Intent(ListActivity.this, AddActivity.class);
+                    startActivityForResult(anadir, RESULTCODE_ADD_ACT);
                     break;
                 case R.id.action_menu_item_preferencias:
                     Intent i = new Intent(ListActivity.this, SettingActivity.class);
@@ -222,6 +228,22 @@ public class ListActivity extends AppCompatActivity {
 
         return builder.create();
     }
+    /*
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data){
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if(requestCode == RESULTCODE_ADD_ACT){
+            if(resultCode == RESULT_OK){
+                if(data != null){
+                    String nombre = data.getStringExtra("nombre");
+                    String actor = data.getStringExtra("actor");
+                    Uri imagen = Uri.parse(data.getStringExtra("imagen"));
+                    listaPersonajes.add(new Personaje(nombre,actor, imagen));
+                }
+            }
+        }
+    }*/
 
     private void borrarPersonaje(boolean borrar, MenuItem item){
         if(borrar){
