@@ -126,7 +126,7 @@
         app:layout_constraintTop_toTopOf="@+id/guideline13" />
 
     <EditText
-        android:id="@+id/editTextTextPersonName"
+        android:id="@+id/editTextPersonajeDetalleNacimiento"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:ems="10"
@@ -139,7 +139,7 @@
         app:layout_constraintTop_toTopOf="@+id/guideline14" />
 
     <EditText
-        android:id="@+id/editTextTextPersonName2"
+        android:id="@+id/editTextPersonajeDetalleEstado"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:ems="10"
