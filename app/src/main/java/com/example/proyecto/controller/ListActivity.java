@@ -147,7 +147,7 @@ public class ListActivity extends AppCompatActivity {
         @Override
         public boolean onCreateActionMode(ActionMode mode, Menu menu) {
             mode.getMenuInflater().inflate(R.menu.action_menu, menu);
-            mode.setTitle("Action Menu");
+            mode.setTitle("Borrar");
             return true;
         }
 

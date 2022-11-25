@@ -2,6 +2,8 @@ package com.example.proyecto.model;
 
 import android.net.Uri;
 
+import java.io.Serializable;
+
 public class Personaje {
     // Atributos de la clase
     private String nombre;

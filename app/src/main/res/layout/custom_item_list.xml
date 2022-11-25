@@ -34,11 +34,13 @@
         android:id="@+id/txtNombre"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="194dp"
         android:text="@string/nombrePersonaje"
+        android:textSize="16sp"
         app:layout_constraintBottom_toTopOf="@+id/guideline8"
         app:layout_constraintEnd_toStartOf="@+id/guideline7"
         app:layout_constraintHorizontal_bias="0.50"
-        app:layout_constraintStart_toStartOf="@+id/guideline6"
+        app:layout_constraintStart_toStartOf="@+id/image_item"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.50" />
 
@@ -54,6 +56,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/nombrePersonaje"
+        android:textSize="16sp"
         app:layout_constraintBottom_toTopOf="@+id/guideline8"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
@@ -65,10 +68,12 @@
         android:id="@+id/txtActor"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="180dp"
         android:text="@string/actor"
+        android:textSize="16sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/guideline7"
-        app:layout_constraintStart_toStartOf="@+id/guideline6"
+        app:layout_constraintStart_toStartOf="@+id/image_item"
         app:layout_constraintTop_toTopOf="@+id/guideline8" />
 
     <TextView
@@ -76,6 +81,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/actor"
+        android:textSize="16sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="@+id/guideline7"

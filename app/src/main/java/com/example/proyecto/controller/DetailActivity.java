@@ -13,7 +13,10 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.example.proyecto.R;
@@ -28,6 +31,7 @@ public class DetailActivity extends AppCompatActivity {
     // Declaracion de variables
     private ConstraintLayout constraintLayout;
     private ImageView imgPersonajeGrande;
+    private EditText txtNombrePersonaje;
     private CircularProgressDrawable progressDrawable;
 
     @Override
@@ -36,6 +40,7 @@ public class DetailActivity extends AppCompatActivity {
         setContentView(R.layout.activity_detail);
         constraintLayout = (ConstraintLayout) findViewById(R.id.activity_detail_constraint);
         imgPersonajeGrande = (ImageView) findViewById(R.id.imagenGrande);
+        txtNombrePersonaje = (EditText) findViewById(R.id.editTextPersonNameDetalle);
 
         // Activamos el icono de "Volver"(flecha atrás)
         ActionBar actionBar = getSupportActionBar();
@@ -46,9 +51,9 @@ public class DetailActivity extends AppCompatActivity {
         Preferences.loadPreferences(this, constraintLayout);
 
         progressDrawable = new CircularProgressDrawable(this);
-        progressDrawable.setStrokeWidth(10f);
+        progressDrawable.setStrokeWidth(15f);
         progressDrawable.setStyle(CircularProgressDrawable.LARGE);
-        progressDrawable.setCenterRadius(30f);
+        progressDrawable.setCenterRadius(45f);
         progressDrawable.start();
 
         // Obtenemos el Intent de la activity que inicio esta activity
@@ -108,11 +113,10 @@ public class DetailActivity extends AppCompatActivity {
                     JSONObject jsonObject = jsonArray.getJSONObject(0);
 
                     // ELEGIR INFORMACIÓN QUE SE DESEA MOSTRAR --> todo?
-                    String name = "";
-                    String actor = "";
-                    Uri img = null;
-                    name = jsonObject.getString("name");
-                    actor = jsonObject.getString("portrayed");
+                    String name = jsonObject.getString("name");
+                    txtNombrePersonaje.setText(name);
+                    Toast.makeText(DetailActivity.this, jsonObject.getString("name"), Toast.LENGTH_SHORT).show();
+                    //actor = jsonObject.getString("portrayed");
                     Glide.with(DetailActivity.this)
                             .load(jsonObject.getString("img"))
                             .placeholder(progressDrawable)
