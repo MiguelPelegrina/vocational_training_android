@@ -117,8 +117,8 @@ public class DetailActivity extends AppCompatActivity {
                     // ELEGIR INFORMACIÓN QUE SE DESEA MOSTRAR --> todo?
                     String name = jsonObject.getString("name");
                     txtNombrePersonaje.setText(name);
-                    String actor = jsonObject.getString("");
-                    //actor = jsonObject.getString("portrayed");
+                    String actor = jsonObject.getString("portrayed");
+                    txtActorPersonaje.setText(actor);
                     Glide.with(DetailActivity.this)
                             .load(jsonObject.getString("img"))
                             .placeholder(progressDrawable)
