@@ -119,6 +119,10 @@ public class DetailActivity extends AppCompatActivity {
                     txtNombrePersonaje.setText(name);
                     String actor = jsonObject.getString("portrayed");
                     txtActorPersonaje.setText(actor);
+                    String fecha = jsonObject.getString("birthday");
+
+                    String estado = jsonObject.getString("status");
+
                     Glide.with(DetailActivity.this)
                             .load(jsonObject.getString("img"))
                             .placeholder(progressDrawable)

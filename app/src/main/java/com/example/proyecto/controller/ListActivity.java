@@ -68,6 +68,7 @@ public class ListActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 viewHolder = (RecyclerView.ViewHolder) view.getTag();
+
                 position = viewHolder.getAdapterPosition();
                 personaje = listaPersonajes.get(position);
                 Toast.makeText(view.getContext(), personaje.getNombre(), Toast.LENGTH_SHORT).show();

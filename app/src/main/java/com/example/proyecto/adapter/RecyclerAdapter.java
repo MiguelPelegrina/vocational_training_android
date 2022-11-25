@@ -57,7 +57,6 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Recycl
         Personaje personaje = listaPersonajes.get(position);
         holder.txtViewNombre.setText(personaje.getNombre());
         holder.txtViewActor.setText(personaje.getActor());
-        //holder.itemView.setOnTouchListener(listener);
         holder.itemView.setOnClickListener(onClickListener);
         holder.itemView.setOnLongClickListener(onLongClickListener);
         Glide.with(holder.itemView.getContext())
