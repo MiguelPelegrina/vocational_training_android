@@ -44,7 +44,7 @@ public class LoginActivity extends AppCompatActivity {
         btnLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(LoginActivity.this, SecondActivity.class);
+                Intent intent = new Intent(LoginActivity.this, ListActivity.class);
                 if(comprobarCampos()) {
                     ArrayList<User> users = new ArrayList<>();
                     users = controladorDB.getAllUser();

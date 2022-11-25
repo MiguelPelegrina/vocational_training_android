@@ -26,7 +26,7 @@
             android:name=".controller.SettingActivity"
             android:exported="true" />
         <activity
-            android:name=".controller.SecondActivity"
+            android:name=".controller.ListActivity"
             android:exported="false">
             <meta-data
                 android:name="android.app.lib_name"

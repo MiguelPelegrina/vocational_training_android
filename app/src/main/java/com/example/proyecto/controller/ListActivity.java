@@ -31,7 +31,7 @@ import org.json.JSONException;
 
 import java.util.ArrayList;
 
-public class SecondActivity extends AppCompatActivity {
+public class ListActivity extends AppCompatActivity {
     // Declaracion de variables
     private ConstraintLayout constraintLayout;
     private ArrayList<Personaje> listaPersonajes = new ArrayList<>();
@@ -48,7 +48,7 @@ public class SecondActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_second);
+        setContentView(R.layout.activity_list);
         constraintLayout = (ConstraintLayout) findViewById(R.id.root_constraint_layout);
 
         // Activamos el icono de "Volver"(flecha atrás)
@@ -71,7 +71,7 @@ public class SecondActivity extends AppCompatActivity {
                 position = viewHolder.getAdapterPosition();
                 personaje = listaPersonajes.get(position);
                 Toast.makeText(view.getContext(), personaje.getNombre(), Toast.LENGTH_SHORT).show();
-                Intent i = new Intent(SecondActivity.this, DetailActivity.class);
+                Intent i = new Intent(ListActivity.this, DetailActivity.class);
                 i.putExtra("name", personaje.getNombre());
                 startActivity(i);
             }
@@ -132,7 +132,7 @@ public class SecondActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()){
             case R.id.item_preferencias:
-                Intent i = new Intent(SecondActivity.this, SettingActivity.class);
+                Intent i = new Intent(ListActivity.this, SettingActivity.class);
                 startActivity(i);
                 break;
             case android.R.id.home:
@@ -164,7 +164,7 @@ public class SecondActivity extends AppCompatActivity {
                     mode.finish();
                     break;
                 case R.id.action_menu_item_preferencias:
-                    Intent i = new Intent(SecondActivity.this, SettingActivity.class);
+                    Intent i = new Intent(ListActivity.this, SettingActivity.class);
                     startActivity(i);
                     mode.finish();
                     break;
@@ -213,7 +213,7 @@ public class SecondActivity extends AppCompatActivity {
     }
 
     public AlertDialog createAlertDialog(String titulo, String mensaje, MenuItem item){
-        AlertDialog.Builder builder = new AlertDialog.Builder(SecondActivity.this);
+        AlertDialog.Builder builder = new AlertDialog.Builder(ListActivity.this);
 
         builder.setMessage(mensaje).setTitle(titulo);
 
@@ -238,9 +238,9 @@ public class SecondActivity extends AppCompatActivity {
         if(borrar){
             listaPersonajes.remove(personaje);
             recyclerAdapter.notifyDataSetChanged();
-            Toast.makeText(SecondActivity.this, "Se ha borrado el personaje", Toast.LENGTH_SHORT).show();
+            Toast.makeText(ListActivity.this, "Se ha borrado el personaje", Toast.LENGTH_SHORT).show();
         }else{
-            Toast.makeText(SecondActivity.this, "Operación cancelada", Toast.LENGTH_SHORT).show();
+            Toast.makeText(ListActivity.this, "Operación cancelada", Toast.LENGTH_SHORT).show();
         }
     }
 }
