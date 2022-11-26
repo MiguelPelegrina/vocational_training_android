@@ -90,14 +90,15 @@ public class DataBaseAccess extends SQLiteOpenHelper {
         String[] filter = null;
         SQLiteDatabase database = getReadableDatabase();
         Log.d("Numero parametros", parametros.length + "");
-        if(parametros.length == 1){
-            selection = NAME_COLUMN+"=?";
-            filter = new String[]{parametros[0]};
-        }else{
-            if(parametros.length == 2){
+        switch (parametros.length){
+            case 1:
+                selection = NAME_COLUMN+"=?";
+                filter = new String[]{parametros[0]};
+                break;
+            case 2:
                 selection = NAME_COLUMN + " = ? AND "+ PASSWORD_COLUMN + " = ?";
                 filter = new String[]{parametros[0], parametros[1]};
-            }
+                break;
         }
 
         Cursor cursor = database.query(DB_TABLE_NAME, columns ,selection, filter,null,null,null);
