@@ -88,11 +88,11 @@ public class ListActivity extends AppCompatActivity {
                 if(actionMode == null){
                     viewHolder = (RecyclerView.ViewHolder) view.getTag();
                     // TODO --> Mejorar o quitar
-                    Drawable background = view.getBackground();
+                    /*Drawable background = view.getBackground();
                     if (background instanceof ColorDrawable) {
                         color = ((ColorDrawable) background).getColor();
                     }
-                    view.setBackgroundColor(Color.YELLOW);
+                    view.setBackgroundColor(Color.YELLOW);*/
                     position = viewHolder.getAdapterPosition();
                     personaje = listaPersonajes.get(position);
                     actionMode = startSupportActionMode(actionCallback);

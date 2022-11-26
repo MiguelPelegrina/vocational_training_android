@@ -3,6 +3,7 @@ package com.example.proyecto.io;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
+import android.database.sqlite.SQLiteConstraintException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
@@ -63,7 +64,7 @@ public class DataBaseAccess extends SQLiteOpenHelper {
      * @param user Usuario que se desea insertar en la tabla
      * @return ID de la fila insertada
      */
-    public long insert(User user){
+    public long insert(User user) throws SQLiteConstraintException{
         // Obtenemos permiso de escritura sobre la base de datos
         SQLiteDatabase database = this.getWritableDatabase();
         long result = -1;
@@ -74,7 +75,7 @@ public class DataBaseAccess extends SQLiteOpenHelper {
         values.put(NAME_COLUMN, user.getName());
         values.put(PASSWORD_COLUMN, user.getPassword());
         // Introducimos los valores de contenedor y obtenemos el ID del registro introducido
-        result = database.insert(DB_TABLE_NAME,null, values);
+        result = database.insert(DB_TABLE_NAME, null, values);
 
         // Cerramos la conexion con la base de datos
         database.close();
@@ -82,7 +83,36 @@ public class DataBaseAccess extends SQLiteOpenHelper {
         return result;
     }
 
+    public boolean getUser(String... parametros){
+        boolean existe = false;
+        String selection = "";
+        String[] columns = new String[]{NAME_COLUMN, PASSWORD_COLUMN};
+        String[] filter = null;
+        SQLiteDatabase database = getReadableDatabase();
+        Log.d("Numero parametros", parametros.length + "");
+        if(parametros.length == 1){
+            selection = NAME_COLUMN+"=?";
+            filter = new String[]{parametros[0]};
+        }else{
+            if(parametros.length == 2){
+                selection = NAME_COLUMN + " = ? AND "+ PASSWORD_COLUMN + " = ?";
+                filter = new String[]{parametros[0], parametros[1]};
+            }
+        }
 
+        Cursor cursor = database.query(DB_TABLE_NAME, columns ,selection, filter,null,null,null);
+
+        if(cursor.moveToFirst()){
+            if(cursor.getString(0) != null){
+                existe = true;
+            }
+            cursor.close();
+        }
+
+        database.close();
+
+        return existe;
+    }
 
     /**
      * Método que nos devuelve una lista con todos los usuarios registrados en la
