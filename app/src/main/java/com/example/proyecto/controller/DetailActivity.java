@@ -17,7 +17,7 @@ import android.widget.ImageView;
 import com.bumptech.glide.Glide;
 import com.example.proyecto.R;
 import com.example.proyecto.Utilities.Preferences;
-import com.example.proyecto.io.HttpConnectAPIPersonaje;
+import com.example.proyecto.io.APIConnectionBreakingBad;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -98,7 +98,7 @@ public class DetailActivity extends AppCompatActivity {
         protected String doInBackground(String... strings) {
             String result = null;
 
-            result = HttpConnectAPIPersonaje.getRequest(strings[1]);
+            result = APIConnectionBreakingBad.getRequest(strings[1]);
 
             return result;
         }

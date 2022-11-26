@@ -15,6 +15,8 @@ import com.example.proyecto.model.User;
 
 import java.util.ArrayList;
 
+import es.dmoral.toasty.Toasty;
+
 /**
  * Actividad que gestiona el login y el registro del usuario
  */
@@ -46,25 +48,34 @@ public class LoginActivity extends AppCompatActivity {
             public void onClick(View view) {
                 Intent intent = new Intent(LoginActivity.this, ListActivity.class);
                 if(comprobarCampos()) {
-                    ArrayList<User> users = new ArrayList<>();
+                    ArrayList<User> users;
                     users = controladorDB.getAllUser();
                     User user = new User(txtUsuario.getText().toString(), txtContrasena.getText().toString());
                     if (users.contains(user)) {
                         for (User u : users) {
                             if (u.getName().equals(user.getName())) {
                                 if (u.getPassword().equals(user.getPassword())) {
-                                    Toast("Login realizado");
+                                    Toasty.success(LoginActivity.this,
+                                            "Login realizado", Toasty.LENGTH_SHORT,
+                                            true).show();
                                     startActivity(intent);
                                 } else {
-                                    Toast("No se ha podido logear, comprueba el nombre y/o la contraseña");
+                                    Toasty.error(LoginActivity.this,
+                                            "No se ha podido logear, compruebe el nombre " +
+                                                    "y/o la contraseña", Toasty.LENGTH_LONG,
+                                            true).show();
                                 }
                             }
                         }
                     } else {
-                        Toast("No se ha podido logear, debe registrarse primero");
+                        Toasty.error(LoginActivity.this,
+                                "No se ha podido logear, debe registrarse primero",
+                                Toasty.LENGTH_LONG,true).show();
                     }
                 }else{
-                    Toast("Debe introducidr datos válidos");
+                    Toasty.error(LoginActivity.this,
+                            "Debe introducidr datos válidos", Toasty.LENGTH_LONG,
+                            true).show();
                 }
             }
         });
@@ -77,23 +88,21 @@ public class LoginActivity extends AppCompatActivity {
                     User user = new User(txtUsuario.getText().toString(), txtContrasena.getText().toString());
                     long result = controladorDB.insert(user);
                     if (result != -1){
-                        Toast("Se ha registrado exitosamente");
+                        Toasty.success(LoginActivity.this,
+                                "Se ha registrado exitosamente", Toasty.LENGTH_SHORT,
+                                true).show();
                     }else{
-                        Toast("No se ha podido registrar, probablemente ya esté registrado");
+                        Toasty.error(LoginActivity.this,
+                                "No se ha podido registrar, probablemente ya esté " +
+                                        "registrado", Toasty.LENGTH_LONG,true).show();
                     }
                 }else{
-                    Toast("Debe introducidr datos válidos");
+                    Toasty.error(LoginActivity.this,
+                            "Debe introducidr datos válidos", Toasty.LENGTH_LONG,
+                            true).show();
                 }
             }
         });
-    }
-
-    /**
-     * Método para lanzar un toast con solo el contenido del mensaje como parámetro
-     * @param msg Mensaje que se muestra al usuario
-     */
-    public void Toast(String msg){
-        Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
     }
 
     /**

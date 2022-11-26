@@ -10,7 +10,7 @@ import java.net.URL;
 /**
  * Clase que gestiona la conexión con la base de datos externa
  */
-public class HttpConnectAPIPersonaje {
+public class APIConnectionBreakingBad {
     // Atributos de la clase
     // URL base que no se modificará
     private static final String URL_BASE = "https://www.breakingbadapi.com/api/";

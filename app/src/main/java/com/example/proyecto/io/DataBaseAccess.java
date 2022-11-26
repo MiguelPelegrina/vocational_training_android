@@ -82,11 +82,14 @@ public class DataBaseAccess extends SQLiteOpenHelper {
         return result;
     }
 
+
+
     /**
      * Método que nos devuelve una lista con todos los usuarios registrados en la
      * base de datos
      * @return Lista de los usuarios
      */
+    @Deprecated
     public ArrayList<User> getAllUser(){
         // Obtenemos permiso de lectura sobre la base de datos
         SQLiteDatabase database = this.getReadableDatabase();

@@ -24,7 +24,7 @@ import android.widget.Toast;
 import com.example.proyecto.R;
 import com.example.proyecto.Utilities.Preferences;
 import com.example.proyecto.adapter.RecyclerAdapter;
-import com.example.proyecto.io.HttpConnectAPIPersonaje;
+import com.example.proyecto.io.APIConnectionBreakingBad;
 import com.example.proyecto.model.Personaje;
 
 import org.json.JSONArray;
@@ -199,7 +199,7 @@ public class ListActivity extends AppCompatActivity {
         protected String doInBackground(String... strings) {
             String result = null;
 
-            result = HttpConnectAPIPersonaje.getRequest(strings[1]);
+            result = APIConnectionBreakingBad.getRequest(strings[1]);
 
             return result;
         }
