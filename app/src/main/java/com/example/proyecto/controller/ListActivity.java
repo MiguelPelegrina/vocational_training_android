@@ -38,6 +38,7 @@ import java.util.ArrayList;
 public class ListActivity extends AppCompatActivity {
     // Declaracion de variables
     public static int RESULTCODE_ADD_ACT = 1;
+    public static int RESULTCODE_MOD_ACT = 2;
     private ConstraintLayout constraintLayout;
     private ArrayList<Personaje> listaPersonajes = new ArrayList<>();
     private RecyclerView recyclerView;
@@ -76,8 +77,11 @@ public class ListActivity extends AppCompatActivity {
                 position = viewHolder.getAdapterPosition();
                 personaje = listaPersonajes.get(position);
                 Intent i = new Intent(ListActivity.this, DetailActivity.class);
+                i.putExtra("info", "mod");
                 i.putExtra("name", personaje.getNombre());
-                startActivity(i);
+                i.putExtra("posicion", position);
+                startActivityForResult(i, RESULTCODE_MOD_ACT);
+                //startActivity(i);
             }
         });
 
@@ -118,13 +122,30 @@ public class ListActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-
-        if(requestCode == RESULTCODE_ADD_ACT){
-            if(resultCode == RESULT_OK){
-                String name = data.getStringExtra("name");
-                String actor = data.getStringExtra("actor");
-                listaPersonajes.add(0, new Personaje(name, actor, Uri.parse("https://as1.ftcdn.net/v2/jpg/01/20/68/68/1000_F_120686889_nDaqiMH8I5AmT5B0hpuJ14ZasdrrgRAK.jpg")));
-                recyclerAdapter.notifyDataSetChanged();
+        String name;
+        String actor;
+        if(data != null){
+            if(requestCode == RESULTCODE_ADD_ACT){
+                if(resultCode == RESULT_OK){
+                    name = data.getStringExtra("name");
+                    actor = data.getStringExtra("actor");
+                    listaPersonajes.add(0, new Personaje(name, actor, Uri.parse("https://as1.ftcdn.net/v2/jpg/01/20/68/68/1000_F_120686889_nDaqiMH8I5AmT5B0hpuJ14ZasdrrgRAK.jpg")));
+                    recyclerAdapter.notifyDataSetChanged();
+                }
+            }else{
+                if(requestCode == RESULTCODE_MOD_ACT){
+                    if(resultCode == RESULT_OK){
+                        name = data.getStringExtra("name");
+                        actor = data.getStringExtra("actor");
+                    /*Personaje personajeAux =  listaPersonajes.get(position);
+                    personajeAux.setNombre(name);
+                    personajeAux.setActor(actor);*/
+                        personaje.setNombre(name);
+                        personaje.setActor(actor);
+                        personaje.setImagen(Uri.parse("https://as1.ftcdn.net/v2/jpg/01/20/68/68/1000_F_120686889_nDaqiMH8I5AmT5B0hpuJ14ZasdrrgRAK.jpg"));
+                        recyclerAdapter.notifyDataSetChanged();;
+                    }
+                }
             }
         }
     }
@@ -182,8 +203,10 @@ public class ListActivity extends AppCompatActivity {
                     mode.finish();
                     break;
                 case R.id.action_menu_item_anadir:
-                    Intent anadir = new Intent(ListActivity.this, AddActivity.class);
+                    Intent anadir = new Intent(ListActivity.this, DetailActivity.class);
+                    anadir.putExtra("info", "add");
                     startActivityForResult(anadir, RESULTCODE_ADD_ACT);
+                    mode.finish();
                     break;
                 case R.id.action_menu_item_preferencias:
                     Intent i = new Intent(ListActivity.this, SettingActivity.class);
