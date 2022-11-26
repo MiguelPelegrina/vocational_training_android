@@ -89,7 +89,7 @@ public class DataBaseAccess extends SQLiteOpenHelper {
         String[] columns = new String[]{NAME_COLUMN, PASSWORD_COLUMN};
         String[] filter = null;
         SQLiteDatabase database = getReadableDatabase();
-        Log.d("Numero parametros", parametros.length + "");
+
         switch (parametros.length){
             case 1:
                 selection = NAME_COLUMN+"=?";

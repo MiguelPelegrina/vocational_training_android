@@ -59,6 +59,8 @@ public class DetailActivity extends AppCompatActivity {
         // Obtenemos el mensaje contenido dentro del Intent a través de la clave "INFO"
         String nombre = i.getStringExtra("name");
 
+
+
         new taskConnection().execute("GET", "characters?name="+nombre);
     }
 
