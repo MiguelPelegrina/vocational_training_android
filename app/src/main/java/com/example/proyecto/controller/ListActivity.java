@@ -12,6 +12,9 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -45,13 +48,13 @@ public class ListActivity extends AppCompatActivity {
     private Personaje personaje;
     private RecyclerView.ViewHolder viewHolder;
     private int position;
-    private boolean borrar;
+    private int color;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_list);
-        constraintLayout = (ConstraintLayout) findViewById(R.id.root_constraint_layout);
+        constraintLayout = (ConstraintLayout) findViewById(R.id.constraint_layout_list);
 
         // Activamos el icono de "Volver"(flecha atrás)
         ActionBar actionBar = getSupportActionBar();
@@ -70,10 +73,8 @@ public class ListActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 viewHolder = (RecyclerView.ViewHolder) view.getTag();
-
                 position = viewHolder.getAdapterPosition();
                 personaje = listaPersonajes.get(position);
-                Toast.makeText(view.getContext(), personaje.getNombre(), Toast.LENGTH_SHORT).show();
                 Intent i = new Intent(ListActivity.this, DetailActivity.class);
                 i.putExtra("name", personaje.getNombre());
                 startActivity(i);
@@ -86,6 +87,12 @@ public class ListActivity extends AppCompatActivity {
                 boolean res = false;
                 if(actionMode == null){
                     viewHolder = (RecyclerView.ViewHolder) view.getTag();
+                    // TODO --> Mejorar o quitar
+                    Drawable background = view.getBackground();
+                    if (background instanceof ColorDrawable) {
+                        color = ((ColorDrawable) background).getColor();
+                    }
+                    view.setBackgroundColor(Color.YELLOW);
                     position = viewHolder.getAdapterPosition();
                     personaje = listaPersonajes.get(position);
                     actionMode = startSupportActionMode(actionCallback);
@@ -158,7 +165,7 @@ public class ListActivity extends AppCompatActivity {
         @Override
         public boolean onCreateActionMode(ActionMode mode, Menu menu) {
             mode.getMenuInflater().inflate(R.menu.action_menu, menu);
-            mode.setTitle("Borrar");
+            mode.setTitle("Gestión de elementos");
             return true;
         }
 
