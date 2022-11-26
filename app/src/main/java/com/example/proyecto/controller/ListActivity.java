@@ -82,6 +82,9 @@ public class ListActivity extends AppCompatActivity {
                 i.putExtra("posicion", position);
                 startActivityForResult(i, RESULTCODE_MOD_ACT);
                 //startActivity(i);
+                if(actionBar != null){
+                    actionMode.finish();
+                }
             }
         });
 
