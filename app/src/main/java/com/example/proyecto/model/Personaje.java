@@ -1,5 +1,6 @@
 package com.example.proyecto.model;
 
+import android.app.Person;
 import android.net.Uri;
 
 import java.io.Serializable;
@@ -11,7 +12,7 @@ public class Personaje {
     private Uri imagen;
 
     /**
-     * Constructor por parámetros
+     * Constructor por parámetros con todos los atributos
      * @param nombre Nombre del personaje
      * @param actor Nombre del actor o actriz
      * @param imagen Imagen del personaje

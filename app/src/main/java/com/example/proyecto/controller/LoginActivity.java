@@ -10,7 +10,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.example.proyecto.R;
-import com.example.proyecto.io.DBAccess;
+import com.example.proyecto.io.DataBaseAccess;
 import com.example.proyecto.model.User;
 
 import java.util.ArrayList;
@@ -24,7 +24,7 @@ public class LoginActivity extends AppCompatActivity {
     private Button btnRegistro;
     private EditText txtUsuario;
     private EditText txtContrasena;
-    private DBAccess controladorDB;
+    private DataBaseAccess controladorDB;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,7 +38,7 @@ public class LoginActivity extends AppCompatActivity {
         txtUsuario = (EditText) findViewById(R.id.txtUsuario);
         txtContrasena = (EditText) findViewById(R.id.txtContrasena);
         // Instanciamos el controlador de la base de datos
-        controladorDB = new DBAccess(this);
+        controladorDB = new DataBaseAccess(this);
 
         // Oyente que gestiona el evento OnClick sobre el botón de login
         btnLogin.setOnClickListener(new View.OnClickListener() {

@@ -6,22 +6,18 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.swiperefreshlayout.widget.CircularProgressDrawable;
 
-import android.annotation.SuppressLint;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.example.proyecto.R;
 import com.example.proyecto.Utilities.Preferences;
-import com.example.proyecto.io.HttpConnectPersonaje;
+import com.example.proyecto.io.HttpConnectAPIPersonaje;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -102,7 +98,7 @@ public class DetailActivity extends AppCompatActivity {
         protected String doInBackground(String... strings) {
             String result = null;
 
-            result = HttpConnectPersonaje.getRequest(strings[1]);
+            result = HttpConnectAPIPersonaje.getRequest(strings[1]);
 
             return result;
         }

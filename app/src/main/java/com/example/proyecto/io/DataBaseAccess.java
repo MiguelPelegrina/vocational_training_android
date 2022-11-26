@@ -11,7 +11,7 @@ import com.example.proyecto.model.User;
 
 import java.util.ArrayList;
 
-public class DBAccess extends SQLiteOpenHelper {
+public class DataBaseAccess extends SQLiteOpenHelper {
     // Heredamos de la clase SQLiteOpenHelper para disponer de sus métodos que nos ayudan a gestionar
     // la base de datos local
     // Nombre de la base de datos
@@ -27,10 +27,10 @@ public class DBAccess extends SQLiteOpenHelper {
     private Context context;
 
     /**
-     * Constructor por parametros de la clase DBAccess. Si no existe se crea, sino se conecta.
+     * Constructor por parametros de la clase DataBaseAccess. Si no existe se crea, sino se conecta.
      * @param context Contexto de la aplicacion
      */
-    public DBAccess(Context context) {
+    public DataBaseAccess(Context context) {
         super(context, DB_NAME, null, DB_VERSION);
         this.context = context;
     }

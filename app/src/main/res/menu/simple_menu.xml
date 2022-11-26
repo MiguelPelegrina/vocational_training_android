@@ -3,5 +3,6 @@
 
     <item
         android:id="@+id/item_preferencias"
+        android:iconTint="#000000"
         android:title="@string/preferencias" />
 </menu>

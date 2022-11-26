@@ -4,13 +4,14 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.view.ActionMode;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.swiperefreshlayout.widget.CircularProgressDrawable;
 
@@ -22,6 +23,7 @@ public class AddActivity extends AppCompatActivity {
     private ImageView imgPersonajeGrande;
     private EditText txtNombrePersonaje;
     private EditText txtActorPersonaje;
+    private Button btnGuardar;
     private CircularProgressDrawable progressDrawable;
 
     @Override
@@ -32,6 +34,20 @@ public class AddActivity extends AppCompatActivity {
         imgPersonajeGrande = (ImageView) findViewById(R.id.imagenGrande);
         txtNombrePersonaje = (EditText) findViewById(R.id.editTextPersonNameDetalle);
         txtActorPersonaje = (EditText) findViewById(R.id.editTextPersonajeActorDetalle);
+        btnGuardar = (Button) findViewById(R.id.btnGuardar);
+
+        btnGuardar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i = new Intent();
+
+                i.putExtra("name", txtNombrePersonaje.getText() + "");
+                i.putExtra("actor", txtActorPersonaje.getText() + "");
+                setResult(DetailActivity.RESULT_OK, i);
+
+                finish();
+            }
+        });
 
         // Activamos el icono de "Volver"(flecha atrás)
         ActionBar actionBar = getSupportActionBar();

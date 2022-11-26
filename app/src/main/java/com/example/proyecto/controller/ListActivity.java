@@ -24,7 +24,7 @@ import android.widget.Toast;
 import com.example.proyecto.R;
 import com.example.proyecto.Utilities.Preferences;
 import com.example.proyecto.adapter.RecyclerAdapter;
-import com.example.proyecto.io.HttpConnectPersonaje;
+import com.example.proyecto.io.HttpConnectAPIPersonaje;
 import com.example.proyecto.model.Personaje;
 
 import org.json.JSONArray;
@@ -34,7 +34,7 @@ import java.util.ArrayList;
 
 public class ListActivity extends AppCompatActivity {
     // Declaracion de variables
-    public static int RESULTCODE_ADD_ACT = 0;
+    public static int RESULTCODE_ADD_ACT = 1;
     private ConstraintLayout constraintLayout;
     private ArrayList<Personaje> listaPersonajes = new ArrayList<>();
     private RecyclerView recyclerView;
@@ -100,6 +100,26 @@ public class ListActivity extends AppCompatActivity {
 
         recyclerView.setAdapter(recyclerAdapter);
         recyclerView.setLayoutManager(layoutManager);
+    }
+
+    /**
+     * Método que recibe información de una actividad lanzada anteriormente
+     * @param requestCode Codigo que identifica qué actividad envía el mensaje.
+     * @param resultCode Código que identifica si el mensaje que ha recibido es correcto o no.
+     * @param data Contiene el mensaje.
+     */
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if(requestCode == RESULTCODE_ADD_ACT){
+            if(resultCode == RESULT_OK){
+                String name = data.getStringExtra("name");
+                String actor = data.getStringExtra("actor");
+                listaPersonajes.add(0, new Personaje(name, actor, Uri.parse("https://as1.ftcdn.net/v2/jpg/01/20/68/68/1000_F_120686889_nDaqiMH8I5AmT5B0hpuJ14ZasdrrgRAK.jpg")));
+                recyclerAdapter.notifyDataSetChanged();
+            }
+        }
     }
 
     @Override
@@ -179,7 +199,7 @@ public class ListActivity extends AppCompatActivity {
         protected String doInBackground(String... strings) {
             String result = null;
 
-            result = HttpConnectPersonaje.getRequest(strings[1]);
+            result = HttpConnectAPIPersonaje.getRequest(strings[1]);
 
             return result;
         }
