@@ -178,9 +178,7 @@ public class DetailActivity extends AppCompatActivity {
 
         if(!txtNombrePersonaje.getText().toString().trim().equals("") &&
                 !txtActorPersonaje.getText().toString().trim().equals("") &&
-                !txtFechaNacimiento.getText().toString().trim().equals("")
-                //!sbEstadoPersonaje.getSelectedItem().toString().trim().equals("")
-                ){
+                !txtFechaNacimiento.getText().toString().trim().equals("")){
             vacios = false;
         }
         return vacios;
@@ -191,9 +189,8 @@ public class DetailActivity extends AppCompatActivity {
         if(accion.equals("mod")){
             if(name.equals(txtNombrePersonaje.getText().toString()) &&
                     actor.equals(txtActorPersonaje.getText().toString()) &&
-                    fecha.equals(txtFechaNacimiento.getText().toString())
-                    && estado.equals(sbEstadoPersonaje.getSelectedItem().toString())
-            ){
+                    fecha.equals(txtFechaNacimiento.getText().toString()) &&
+                    estado.equals(sbEstadoPersonaje.getSelectedItem().toString())){
                 diferentes = false;
             }
         }
