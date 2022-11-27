@@ -40,6 +40,9 @@ public class LoginActivity extends AppCompatActivity {
         // Instanciamos el controlador de la base de datos
         controladorDB = new UserDatabaseAccess(this);
 
+        Toasty.info(this,"Para poder hacer login debe registrarse primero",
+                Toasty.LENGTH_LONG, true).show();
+
         // Oyente que gestiona el evento OnClick sobre el botón de login
         btnLogin.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -79,8 +82,8 @@ public class LoginActivity extends AppCompatActivity {
                         long result = controladorDB.insert(user);
                         if (result != -1){
                             Toasty.success(LoginActivity.this,
-                                    "Se ha registrado exitosamente", Toasty.LENGTH_SHORT,
-                                    true).show();
+                                    "Se ha registrado exitosamente, ya puede hacer Login",
+                                    Toasty.LENGTH_SHORT,true).show();
                         }
                     }catch(SQLiteConstraintException e){
                         Toasty.error(LoginActivity.this,

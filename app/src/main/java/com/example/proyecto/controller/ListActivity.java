@@ -32,6 +32,8 @@ import org.json.JSONException;
 
 import java.util.ArrayList;
 
+import es.dmoral.toasty.Toasty;
+
 public class ListActivity extends AppCompatActivity {
     // Declaracion de variables
     public static final int RESULTCODE_ADD_ACT = 1;
@@ -107,6 +109,10 @@ public class ListActivity extends AppCompatActivity {
 
         recyclerView.setAdapter(recyclerAdapter);
         recyclerView.setLayoutManager(layoutManager);
+
+        Toasty.info(this,"Para ver detalles pulse sobre un personaje, podrá " +
+                        "modificarlo posteriormente\nPara añadir o borrar mantenga el dedo " +
+                        "pulsado y elija una opción", Toasty.LENGTH_LONG, true).show();
     }
 
     /**

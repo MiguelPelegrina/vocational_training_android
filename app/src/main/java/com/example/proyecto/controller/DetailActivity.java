@@ -258,13 +258,15 @@ public class DetailActivity extends AppCompatActivity {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 Toasty.error(DetailActivity.this, "Modificación cancelada",
-                        Toasty.LENGTH_LONG,true).show();
+                        Toasty.LENGTH_SHORT,true).show();
             }
         });
 
         builder.setPositiveButton("Si", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
+                Toasty.success(DetailActivity.this, "Modificación realizada",
+                        Toasty.LENGTH_SHORT, true).show();
                 volver();
             }
         });

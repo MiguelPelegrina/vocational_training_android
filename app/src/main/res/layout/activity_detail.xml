@@ -25,6 +25,7 @@
         android:id="@+id/imagenGrande"
         android:layout_width="0dp"
         android:layout_height="0dp"
+        android:autofillHints="Puede insertar una imagen manteniendo el dedo pulsado"
         android:contentDescription="@string/imagen"
         app:layout_constraintBottom_toTopOf="@+id/guideline2"
         app:layout_constraintEnd_toEndOf="parent"
@@ -161,7 +162,7 @@
 
     <Spinner
         android:id="@+id/spEstado"
-        android:layout_width="200dp"
+        android:layout_width="wrap_content"
         android:layout_height="48dp"
         android:contentDescription="@string/estado"
         app:layout_constraintBottom_toTopOf="@+id/guideline10"
