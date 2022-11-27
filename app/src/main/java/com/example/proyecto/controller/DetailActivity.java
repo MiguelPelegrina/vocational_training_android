@@ -109,7 +109,6 @@ public class DetailActivity extends AppCompatActivity {
         txtNombrePersonaje.addTextChangedListener(textWatcher);
         txtActorPersonaje.addTextChangedListener(textWatcher);
         txtFechaNacimiento.addTextChangedListener(textWatcher);
-        //txtEstadoPersonaje.addTextChangedListener(textWatcher);
         sbEstadoPersonaje.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {

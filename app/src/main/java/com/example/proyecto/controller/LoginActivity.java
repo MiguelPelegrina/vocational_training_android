@@ -40,6 +40,10 @@ public class LoginActivity extends AppCompatActivity {
         // Instanciamos el controlador de la base de datos
         controladorDB = new UserDatabaseAccess(this);
 
+        Toasty.Config.getInstance()
+                .setTextSize(20)
+                .apply();
+
         Toasty.info(this,"Para poder hacer login debe registrarse primero",
                 Toasty.LENGTH_LONG, true).show();
 
