@@ -18,9 +18,12 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Spinner;
 
 import com.bumptech.glide.Glide;
 import com.example.proyecto.R;
@@ -40,7 +43,7 @@ public class DetailActivity extends AppCompatActivity {
     private EditText txtNombrePersonaje;
     private EditText txtActorPersonaje;
     private EditText txtFechaNacimiento;
-    private EditText txtEstadoPersonaje;
+    private Spinner sbEstadoPersonaje;
     private Button btnGuardar;
     private CircularProgressDrawable progressDrawable;
     private String accion;
@@ -58,9 +61,13 @@ public class DetailActivity extends AppCompatActivity {
         imgPersonajeGrande = (ImageView) findViewById(R.id.imagenGrande);
         txtNombrePersonaje = (EditText) findViewById(R.id.editTextPersonNameDetalle);
         txtActorPersonaje = (EditText) findViewById(R.id.editTextPersonajeActorDetalle);
-        txtFechaNacimiento = findViewById(R.id.editTextPersonajeDetalleNacimiento);
-        txtEstadoPersonaje = findViewById(R.id.editTextPersonajeDetalleEstado);
+        txtFechaNacimiento = (EditText) findViewById(R.id.editTextPersonajeDetalleNacimiento);
+        sbEstadoPersonaje = (Spinner) findViewById(R.id.spEstado);
         btnGuardar = (Button) findViewById(R.id.btnGuardar);
+
+        ArrayAdapter adapter = ArrayAdapter.createFromResource(this, R.array.estados, android.R.layout.simple_spinner_item);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        sbEstadoPersonaje.setAdapter(adapter);
 
         // Activamos el icono de "Volver"(flecha atrás)
         ActionBar actionBar = getSupportActionBar();
@@ -102,7 +109,18 @@ public class DetailActivity extends AppCompatActivity {
         txtNombrePersonaje.addTextChangedListener(textWatcher);
         txtActorPersonaje.addTextChangedListener(textWatcher);
         txtFechaNacimiento.addTextChangedListener(textWatcher);
-        txtEstadoPersonaje.addTextChangedListener(textWatcher);
+        //txtEstadoPersonaje.addTextChangedListener(textWatcher);
+        sbEstadoPersonaje.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                update();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+                update();
+            }
+        });
         btnGuardar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -157,14 +175,12 @@ public class DetailActivity extends AppCompatActivity {
 
     private boolean comprobarCamposVacios() {
         boolean vacios = true;
-        Log.d("prueba", txtNombrePersonaje.getText().toString().trim());
-        Log.d("prueba", txtActorPersonaje.getText().toString().trim());
-        Log.d("prueba", txtFechaNacimiento.getText().toString().trim());
-        Log.d("prueba", txtEstadoPersonaje.getText().toString().trim());
+
         if(!txtNombrePersonaje.getText().toString().trim().equals("") &&
                 !txtActorPersonaje.getText().toString().trim().equals("") &&
-                !txtFechaNacimiento.getText().toString().trim().equals("") &&
-                !txtEstadoPersonaje.getText().toString().trim().equals("")){
+                !txtFechaNacimiento.getText().toString().trim().equals("")
+                //!sbEstadoPersonaje.getSelectedItem().toString().trim().equals("")
+                ){
             vacios = false;
         }
         return vacios;
@@ -175,8 +191,9 @@ public class DetailActivity extends AppCompatActivity {
         if(accion.equals("mod")){
             if(name.equals(txtNombrePersonaje.getText().toString()) &&
                     actor.equals(txtActorPersonaje.getText().toString()) &&
-                    fecha.equals(txtFechaNacimiento.getText().toString()) &&
-                    estado.equals(txtEstadoPersonaje.getText().toString())){
+                    fecha.equals(txtFechaNacimiento.getText().toString())
+                    && estado.equals(sbEstadoPersonaje.getSelectedItem().toString())
+            ){
                 diferentes = false;
             }
         }
@@ -215,7 +232,19 @@ public class DetailActivity extends AppCompatActivity {
                     fecha = jsonObject.getString("birthday");
                     txtFechaNacimiento.setText(fecha);
                     estado = jsonObject.getString("status");
-                    txtEstadoPersonaje.setText(estado);
+                    //txtEstadoPersonaje.setText(estado);
+                    switch (estado){
+                        case "Alive":
+                            sbEstadoPersonaje.setSelection(0);
+                            break;
+                        case "Presumed dead":
+                            sbEstadoPersonaje.setSelection(1);
+                            break;
+                        case "Dead":
+                            sbEstadoPersonaje.setSelection(2);
+                            break;
+                    }
+                    Log.d("Estado", estado);
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }

@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="estados">
+        <item>Alive</item>
+        <item>Presumed dead</item>
+        <item>Dead</item>
+    </string-array>
+</resources>
