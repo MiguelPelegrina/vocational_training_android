@@ -75,10 +75,9 @@ public class ListActivity extends AppCompatActivity {
                 Intent i = new Intent(ListActivity.this, DetailActivity.class);
                 i.putExtra("info", "mod");
                 i.putExtra("name", personaje.getNombre());
+                i.putExtra("actor",personaje.getActor());
                 i.putExtra("posicion", position);
                 startActivityForResult(i, RESULTCODE_MOD_ACT);
-                //startActivity(i);
-
             }
         });
 

@@ -14,6 +14,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -43,11 +44,11 @@ public class DetailActivity extends AppCompatActivity {
     private Button btnGuardar;
     private CircularProgressDrawable progressDrawable;
     private String accion;
-    private String name;
-    private String actor;
-    private Uri uri;
-    private String fecha;
-    private String estado;
+    private String name = "";
+    private String actor = "";
+    private Uri uri = Uri.parse("");
+    private String fecha = "";
+    private String estado = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -85,29 +86,17 @@ public class DetailActivity extends AppCompatActivity {
         TextWatcher textWatcher = new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                if(!comprobarCamposVacios()){
-                    if(comprobarCamposDiferentes()){
-                        btnGuardar.setEnabled(true);
-                    }
-                }
+                update();
             }
 
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                if(!comprobarCamposVacios()){
-                    if(comprobarCamposDiferentes()){
-                        btnGuardar.setEnabled(true);
-                    }
-                }
+                update();
             }
 
             @Override
             public void afterTextChanged(Editable editable) {
-                if(!comprobarCamposVacios()){
-                    if(comprobarCamposDiferentes()){
-                        btnGuardar.setEnabled(true);
-                    }
-                }
+                update();
             }
         };
         txtNombrePersonaje.addTextChangedListener(textWatcher);
@@ -119,7 +108,7 @@ public class DetailActivity extends AppCompatActivity {
             public void onClick(View view) {
                 if(accion.equals("mod")){
                     if(comprobarCamposDiferentes()){
-                            createAlertDialog("Modificar", "¿De verdad quiere modificar los datos del personaje?").show();
+                        createAlertDialog("Modificar", "¿De verdad quiere modificar los datos del personaje?").show();
                     }
                 }else{
                     if(accion.equals("add")){
@@ -128,6 +117,9 @@ public class DetailActivity extends AppCompatActivity {
                 }
             }
         });
+
+        Toasty.info(DetailActivity.this, "Para poder guardar los cambios los campos" +
+                " no deben estar vacios").show();
 
         new taskConnection().execute("GET", "characters?name="+nombre);
     }
@@ -165,6 +157,10 @@ public class DetailActivity extends AppCompatActivity {
 
     private boolean comprobarCamposVacios() {
         boolean vacios = true;
+        Log.d("prueba", txtNombrePersonaje.getText().toString().trim());
+        Log.d("prueba", txtActorPersonaje.getText().toString().trim());
+        Log.d("prueba", txtFechaNacimiento.getText().toString().trim());
+        Log.d("prueba", txtEstadoPersonaje.getText().toString().trim());
         if(!txtNombrePersonaje.getText().toString().trim().equals("") &&
                 !txtActorPersonaje.getText().toString().trim().equals("") &&
                 !txtFechaNacimiento.getText().toString().trim().equals("") &&
@@ -176,7 +172,7 @@ public class DetailActivity extends AppCompatActivity {
 
     private boolean comprobarCamposDiferentes(){
         boolean diferentes = true;
-        if(accion.equals("mod") && !comprobarCamposVacios()){
+        if(accion.equals("mod")){
             if(name.equals(txtNombrePersonaje.getText().toString()) &&
                     actor.equals(txtActorPersonaje.getText().toString()) &&
                     fecha.equals(txtFechaNacimiento.getText().toString()) &&
@@ -235,7 +231,8 @@ public class DetailActivity extends AppCompatActivity {
         builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
-                Toasty.info(DetailActivity.this, "Modificación cancelada");
+                Toasty.error(DetailActivity.this, "Modificación cancelada",
+                        Toasty.LENGTH_LONG,true).show();
             }
         });
 
@@ -259,5 +256,17 @@ public class DetailActivity extends AppCompatActivity {
         setResult(DetailActivity.RESULT_OK, returnIntent);
 
         finish();
+    }
+
+    private void update(){
+        if(!comprobarCamposVacios()){
+            if(comprobarCamposDiferentes()){
+                btnGuardar.setEnabled(true);
+            }else{
+                btnGuardar.setEnabled(false);
+            }
+        }else{
+            btnGuardar.setEnabled(false);
+        }
     }
 }
