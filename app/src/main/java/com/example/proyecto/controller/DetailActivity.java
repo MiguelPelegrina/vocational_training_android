@@ -9,8 +9,11 @@ import androidx.swiperefreshlayout.widget.CircularProgressDrawable;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -39,8 +42,10 @@ public class DetailActivity extends AppCompatActivity {
     private EditText txtEstadoPersonaje;
     private Button btnGuardar;
     private CircularProgressDrawable progressDrawable;
+    private String accion;
     private String name;
     private String actor;
+    private Uri uri;
     private String fecha;
     private String estado;
 
@@ -73,19 +78,48 @@ public class DetailActivity extends AppCompatActivity {
         // Obtenemos el Intent de la activity que inicio esta activity
         Intent intent = getIntent();
 
-        String accion = intent.getStringExtra("info");
+        accion = intent.getStringExtra("info");
         // Obtenemos el mensaje contenido dentro del Intent a través de la clave "info"
         String nombre = intent.getStringExtra("name");
 
+        TextWatcher textWatcher = new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                if(!comprobarCamposVacios()){
+                    if(comprobarCamposDiferentes()){
+                        btnGuardar.setEnabled(true);
+                    }
+                }
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                if(!comprobarCamposVacios()){
+                    if(comprobarCamposDiferentes()){
+                        btnGuardar.setEnabled(true);
+                    }
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                if(!comprobarCamposVacios()){
+                    if(comprobarCamposDiferentes()){
+                        btnGuardar.setEnabled(true);
+                    }
+                }
+            }
+        };
+        txtNombrePersonaje.addTextChangedListener(textWatcher);
+        txtActorPersonaje.addTextChangedListener(textWatcher);
+        txtFechaNacimiento.addTextChangedListener(textWatcher);
+        txtEstadoPersonaje.addTextChangedListener(textWatcher);
         btnGuardar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if(accion.equals("mod")){
-                    if(!name.equals(txtNombrePersonaje.getText().toString()) ||
-                            !actor.equals(txtActorPersonaje.getText().toString()) ||
-                            !fecha.equals(txtFechaNacimiento.getText().toString()) ||
-                            !estado.equals(txtEstadoPersonaje.getText().toString())){
-                        createAlertDialog("Modificar", "¿De verdad quiere modificar los datos del personaje?").show();
+                    if(comprobarCamposDiferentes()){
+                            createAlertDialog("Modificar", "¿De verdad quiere modificar los datos del personaje?").show();
                     }
                 }else{
                     if(accion.equals("add")){
@@ -109,7 +143,7 @@ public class DetailActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         // Usamos un inflater para construir la vista pasandole el menu por defecto como parámetro
         // para colocarlo en la vista
-        getMenuInflater().inflate(R.menu.simple_menu, menu);
+        getMenuInflater().inflate(R.menu.simple, menu);
 
         return true;
     }
@@ -127,6 +161,31 @@ public class DetailActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    private boolean comprobarCamposVacios() {
+        boolean vacios = true;
+        if(!txtNombrePersonaje.getText().toString().trim().equals("") &&
+                !txtActorPersonaje.getText().toString().trim().equals("") &&
+                !txtFechaNacimiento.getText().toString().trim().equals("") &&
+                !txtEstadoPersonaje.getText().toString().trim().equals("")){
+            vacios = false;
+        }
+        return vacios;
+    }
+
+    private boolean comprobarCamposDiferentes(){
+        boolean diferentes = true;
+        if(accion.equals("mod") && !comprobarCamposVacios()){
+            if(name.equals(txtNombrePersonaje.getText().toString()) &&
+                    actor.equals(txtActorPersonaje.getText().toString()) &&
+                    fecha.equals(txtFechaNacimiento.getText().toString()) &&
+                    estado.equals(txtEstadoPersonaje.getText().toString())){
+                diferentes = false;
+            }
+        }
+
+        return diferentes;
     }
 
     private class taskConnection extends AsyncTask<String, Void, String> {
@@ -151,15 +210,16 @@ public class DetailActivity extends AppCompatActivity {
                     txtNombrePersonaje.setText(name);
                     actor = jsonObject.getString("portrayed");
                     txtActorPersonaje.setText(actor);
+                    uri = Uri.parse(jsonObject.getString("img"));
+                    Glide.with(DetailActivity.this)
+                            .load(uri)
+                            .placeholder(progressDrawable)
+                            .error(R.mipmap.ic_launcher)
+                            .into(imgPersonajeGrande);
                     fecha = jsonObject.getString("birthday");
                     txtFechaNacimiento.setText(fecha);
                     estado = jsonObject.getString("status");
                     txtEstadoPersonaje.setText(estado);
-                    Glide.with(DetailActivity.this)
-                            .load(jsonObject.getString("img"))
-                            .placeholder(progressDrawable)
-                            .error(R.mipmap.ic_launcher)
-                            .into(imgPersonajeGrande);
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -193,18 +253,11 @@ public class DetailActivity extends AppCompatActivity {
         Intent returnIntent = new Intent();
         returnIntent.putExtra("name", txtNombrePersonaje.getText() + "");
         returnIntent.putExtra("actor", txtActorPersonaje.getText() + "");
+        if(uri != null){
+            returnIntent.putExtra("uri", uri.toString());
+        }
         setResult(DetailActivity.RESULT_OK, returnIntent);
-                /*if(accion.equals("add")){
-                    returnIntent.putExtra("name", txtNombrePersonaje.getText() + "");
-                    returnIntent.putExtra("actor", txtActorPersonaje.getText() + "");
-                    setResult(DetailActivity.RESULT_OK, returnIntent);
-                }else{
-                    if(accion.equals("mod")){
-                        returnIntent.putExtra("name", txtNombrePersonaje.getText() + "");
-                        returnIntent.putExtra("actor", txtActorPersonaje.getText() + "");
-                        setResult(DetailActivity.RESULT_OK, returnIntent);
-                    }
-                }*/
+
         finish();
     }
 }

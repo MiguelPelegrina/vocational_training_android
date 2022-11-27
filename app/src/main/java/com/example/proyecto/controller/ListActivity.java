@@ -12,9 +12,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -37,14 +34,13 @@ import java.util.ArrayList;
 
 public class ListActivity extends AppCompatActivity {
     // Declaracion de variables
-    public static int RESULTCODE_ADD_ACT = 1;
-    public static int RESULTCODE_MOD_ACT = 2;
+    public static final int RESULTCODE_ADD_ACT = 1;
+    public static final int RESULTCODE_MOD_ACT = 2;
     private ConstraintLayout constraintLayout;
     private ArrayList<Personaje> listaPersonajes = new ArrayList<>();
     private RecyclerView recyclerView;
     private RecyclerAdapter recyclerAdapter;
     private ActionMode actionMode;
-    private AlertDialog alertDialog;
     // Variables auxiliares
     private Personaje personaje;
     private RecyclerView.ViewHolder viewHolder;
@@ -82,9 +78,7 @@ public class ListActivity extends AppCompatActivity {
                 i.putExtra("posicion", position);
                 startActivityForResult(i, RESULTCODE_MOD_ACT);
                 //startActivity(i);
-                if(actionBar != null){
-                    actionMode.finish();
-                }
+
             }
         });
 
@@ -127,12 +121,14 @@ public class ListActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
         String name;
         String actor;
+        Uri uri;
         if(data != null){
             if(requestCode == RESULTCODE_ADD_ACT){
                 if(resultCode == RESULT_OK){
                     name = data.getStringExtra("name");
                     actor = data.getStringExtra("actor");
-                    listaPersonajes.add(0, new Personaje(name, actor, Uri.parse("https://as1.ftcdn.net/v2/jpg/01/20/68/68/1000_F_120686889_nDaqiMH8I5AmT5B0hpuJ14ZasdrrgRAK.jpg")));
+                    listaPersonajes.add(0, new Personaje(name, actor, Uri.parse(
+                            "android.resource://" + getPackageName() + "/" + R.mipmap.ic_launcher)));
                     recyclerAdapter.notifyDataSetChanged();
                 }
             }else{
@@ -140,12 +136,10 @@ public class ListActivity extends AppCompatActivity {
                     if(resultCode == RESULT_OK){
                         name = data.getStringExtra("name");
                         actor = data.getStringExtra("actor");
-                    /*Personaje personajeAux =  listaPersonajes.get(position);
-                    personajeAux.setNombre(name);
-                    personajeAux.setActor(actor);*/
+                        uri = Uri.parse(data.getStringExtra("uri"));
                         personaje.setNombre(name);
                         personaje.setActor(actor);
-                        personaje.setImagen(Uri.parse("https://as1.ftcdn.net/v2/jpg/01/20/68/68/1000_F_120686889_nDaqiMH8I5AmT5B0hpuJ14ZasdrrgRAK.jpg"));
+                        personaje.setImagen(uri);
                         recyclerAdapter.notifyDataSetChanged();;
                     }
                 }
@@ -164,7 +158,7 @@ public class ListActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         // Usamos un inflater para construir la vista pasandole el menu por defecto como parámetro
         // para colocarlo en la vista
-        getMenuInflater().inflate(R.menu.simple_menu, menu);
+        getMenuInflater().inflate(R.menu.simple, menu);
 
         return true;
     }
@@ -188,7 +182,7 @@ public class ListActivity extends AppCompatActivity {
     private ActionMode.Callback actionCallback = new ActionMode.Callback() {
         @Override
         public boolean onCreateActionMode(ActionMode mode, Menu menu) {
-            mode.getMenuInflater().inflate(R.menu.action_menu, menu);
+            mode.getMenuInflater().inflate(R.menu.action, menu);
             mode.setTitle("Gestión de elementos");
             return true;
         }
@@ -281,22 +275,6 @@ public class ListActivity extends AppCompatActivity {
 
         return builder.create();
     }
-    /*
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data){
-        super.onActivityResult(requestCode, resultCode, data);
-
-        if(requestCode == RESULTCODE_ADD_ACT){
-            if(resultCode == RESULT_OK){
-                if(data != null){
-                    String nombre = data.getStringExtra("nombre");
-                    String actor = data.getStringExtra("actor");
-                    Uri imagen = Uri.parse(data.getStringExtra("imagen"));
-                    listaPersonajes.add(new Personaje(nombre,actor, imagen));
-                }
-            }
-        }
-    }*/
 
     private void borrarPersonaje(boolean borrar, MenuItem item){
         if(borrar){

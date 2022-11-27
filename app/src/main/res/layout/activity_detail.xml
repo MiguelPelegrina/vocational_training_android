@@ -166,6 +166,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:background="#100E0E"
+        android:enabled="false"
         android:text="Guardar"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
