@@ -42,6 +42,9 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Recycl
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.custom_item_list, parent,false);
         RecyclerHolder recyclerHolder = new RecyclerHolder(view);
 
+        view.setOnClickListener(onClickListener);
+        view.setOnLongClickListener(onLongClickListener);
+
         return recyclerHolder;
     }
 
@@ -57,8 +60,9 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Recycl
         Personaje personaje = listaPersonajes.get(position);
         holder.txtViewNombre.setText(personaje.getNombre());
         holder.txtViewActor.setText(personaje.getActor());
-        holder.itemView.setOnClickListener(onClickListener);
-        holder.itemView.setOnLongClickListener(onLongClickListener);
+        //RESIDUOS
+        //holder.itemView.setOnClickListener(onClickListener);
+        //holder.itemView.setOnLongClickListener(onLongClickListener);
         Glide.with(holder.itemView.getContext())
                         .load(personaje.getImagenUri())
                         .placeholder(progressDrawable)
@@ -99,8 +103,9 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Recycl
             txtViewNombre = (TextView) itemView.findViewById(R.id.txt_nombre_item);
             txtViewActor = (TextView) itemView.findViewById(R.id.txt_actor_item);
             itemView.setTag(this);
-            itemView.setOnClickListener(onClickListener);
-            itemView.setOnLongClickListener(onLongClickListener);
+            //RESIDUOS
+            //itemView.setOnClickListener(onClickListener);
+            //itemView.setOnLongClickListener(onLongClickListener);
         }
     }
 }
