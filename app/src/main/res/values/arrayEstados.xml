@@ -3,6 +3,6 @@
     <string-array name="estados">
         <item>Alive</item>
         <item>Presumed dead</item>
-        <item>Dead</item>
+        <item>Deceased</item>
     </string-array>
 </resources>

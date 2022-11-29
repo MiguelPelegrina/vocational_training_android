@@ -51,7 +51,7 @@ public class DetailActivity extends AppCompatActivity {
     private String actor = "";
     private Uri uri = Uri.parse("");
     private String fecha = "";
-    private String estado = "";
+    private String estado = "Alive";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -123,14 +123,15 @@ public class DetailActivity extends AppCompatActivity {
         btnGuardar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(accion.equals("mod")){
-                    if(comprobarCamposDiferentes()){
-                        createAlertDialog("Modificar", "¿De verdad quiere modificar los datos del personaje?").show();
-                    }
-                }else{
-                    if(accion.equals("add")){
+                switch(accion){
+                    case "mod":
+                        if(comprobarCamposDiferentes()){
+                            createAlertDialog("Modificar", "¿De verdad quiere modificar los datos del personaje?").show();
+                        }
+                        break;
+                    case "add":
                         volver();
-                    }
+                        break;
                 }
             }
         });
@@ -172,31 +173,6 @@ public class DetailActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    private boolean comprobarCamposVacios() {
-        boolean vacios = true;
-
-        if(!txtNombrePersonaje.getText().toString().trim().equals("") &&
-                !txtActorPersonaje.getText().toString().trim().equals("") &&
-                !txtFechaNacimiento.getText().toString().trim().equals("")){
-            vacios = false;
-        }
-        return vacios;
-    }
-
-    private boolean comprobarCamposDiferentes(){
-        boolean diferentes = true;
-        if(accion.equals("mod")){
-            if(name.equals(txtNombrePersonaje.getText().toString()) &&
-                    actor.equals(txtActorPersonaje.getText().toString()) &&
-                    fecha.equals(txtFechaNacimiento.getText().toString()) &&
-                    estado.equals(sbEstadoPersonaje.getSelectedItem().toString())){
-                diferentes = false;
-            }
-        }
-
-        return diferentes;
-    }
-
     private class taskConnection extends AsyncTask<String, Void, String> {
         @Override
         protected String doInBackground(String... strings) {
@@ -228,7 +204,6 @@ public class DetailActivity extends AppCompatActivity {
                     fecha = jsonObject.getString("birthday");
                     txtFechaNacimiento.setText(fecha);
                     estado = jsonObject.getString("status");
-                    //txtEstadoPersonaje.setText(estado);
                     switch (estado){
                         case "Alive":
                             sbEstadoPersonaje.setSelection(0);
@@ -236,11 +211,10 @@ public class DetailActivity extends AppCompatActivity {
                         case "Presumed dead":
                             sbEstadoPersonaje.setSelection(1);
                             break;
-                        case "Dead":
+                        case "Deceased":
                             sbEstadoPersonaje.setSelection(2);
                             break;
                     }
-                    Log.d("Estado", estado);
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -248,7 +222,34 @@ public class DetailActivity extends AppCompatActivity {
         }
     }
 
-    public AlertDialog createAlertDialog(String titulo, String mensaje){
+    //Métodos auxiliares
+    private boolean comprobarCamposVacios() {
+        boolean vacios = true;
+
+        if(!txtNombrePersonaje.getText().toString().trim().equals("") &&
+                !txtActorPersonaje.getText().toString().trim().equals("") &&
+                !txtFechaNacimiento.getText().toString().trim().equals("")){
+            vacios = false;
+        }
+        return vacios;
+    }
+
+    private boolean comprobarCamposDiferentes(){
+        boolean diferentes = true;
+        if(accion.equals("mod")){
+            if(name.equals(txtNombrePersonaje.getText().toString()) &&
+                    actor.equals(txtActorPersonaje.getText().toString()) &&
+                    fecha.equals(txtFechaNacimiento.getText().toString()) &&
+                    estado.equals(sbEstadoPersonaje.getSelectedItem().toString())){
+                diferentes = false;
+            }
+        }
+
+        return diferentes;
+    }
+
+    @NonNull
+    private AlertDialog createAlertDialog(String titulo, String mensaje){
         AlertDialog.Builder builder = new AlertDialog.Builder(DetailActivity.this);
 
         builder.setMessage(mensaje).setTitle(titulo);
