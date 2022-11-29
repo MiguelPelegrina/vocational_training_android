@@ -61,8 +61,6 @@ public class ListActivity extends AppCompatActivity {
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
 
-        new taskConnection().execute("GET", "characters");
-
         Preferences.loadPreferences(this, constraintLayout);
 
         recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
@@ -113,6 +111,7 @@ public class ListActivity extends AppCompatActivity {
         Toasty.info(this,"Para ver detalles pulse sobre un personaje, podrá " +
                         "modificarlo posteriormente\nPara añadir o borrar mantenga el dedo " +
                         "pulsado y elija una opción", Toasty.LENGTH_LONG, true).show();
+        new taskConnection().execute("GET", "characters");
     }
 
     /**

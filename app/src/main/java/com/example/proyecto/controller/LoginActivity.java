@@ -1,14 +1,18 @@
 package com.example.proyecto.controller;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.swiperefreshlayout.widget.CircularProgressDrawable;
 
 import android.content.Intent;
 import android.database.sqlite.SQLiteConstraintException;
+import android.media.Image;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 
+import com.bumptech.glide.Glide;
 import com.example.proyecto.R;
 import com.example.proyecto.io.UserDatabaseAccess;
 import com.example.proyecto.model.User;
@@ -25,6 +29,8 @@ public class LoginActivity extends AppCompatActivity {
     private EditText txtUsuario;
     private EditText txtContrasena;
     private UserDatabaseAccess controladorDB;
+    private CircularProgressDrawable progressDrawable;
+    private ImageView imageViewLogo;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,8 +43,15 @@ public class LoginActivity extends AppCompatActivity {
         btnRegistro = (Button) findViewById(R.id.btnRegistro);
         txtUsuario = (EditText) findViewById(R.id.txtUsuario);
         txtContrasena = (EditText) findViewById(R.id.txtContrasena);
+        imageViewLogo = (ImageView) findViewById(R.id.imageViewLogo);
         // Instanciamos el controlador de la base de datos
         controladorDB = new UserDatabaseAccess(this);
+
+        progressDrawable = new CircularProgressDrawable(this);
+        progressDrawable.setStrokeWidth(15f);
+        progressDrawable.setStyle(CircularProgressDrawable.LARGE);
+        progressDrawable.setCenterRadius(45f);
+        progressDrawable.start();
 
         Toasty.Config.getInstance()
                 .setTextSize(20)
@@ -101,6 +114,12 @@ public class LoginActivity extends AppCompatActivity {
                 }
             }
         });
+
+        Glide.with(LoginActivity.this)
+                .load("https://vignette.wikia.nocookie.net/breakingbad/images/7/78/Logo_breaking_bad.png/revision/latest?cb=20180801024750&path-prefix=es")
+                .placeholder(progressDrawable)
+                .error(R.mipmap.ic_launcher)
+                .into(imageViewLogo);
     }
 
     /**
