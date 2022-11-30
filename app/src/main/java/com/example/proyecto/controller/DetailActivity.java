@@ -34,6 +34,10 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 import es.dmoral.toasty.Toasty;
 
 public class DetailActivity extends AppCompatActivity {
@@ -126,11 +130,16 @@ public class DetailActivity extends AppCompatActivity {
                 switch(accion){
                     case "mod":
                         if(comprobarCamposDiferentes()){
-                            createAlertDialog("Modificar", "¿De verdad quiere modificar los datos del personaje?").show();
+                            if(comprobarCampoFecha()){
+                                createAlertDialog("Modificar", "¿De verdad quiere modificar los datos del personaje?").show();
+                            }
                         }
                         break;
                     case "add":
-                        volver();
+                        if(comprobarCampoFecha()){
+                            volver();
+                        }
+
                         break;
                 }
             }
@@ -139,8 +148,13 @@ public class DetailActivity extends AppCompatActivity {
         Toasty.info(DetailActivity.this, "Para poder guardar los cambios los campos" +
                 " no deben estar vacios").show();
 
-        if(accion.equals("mod")){
-            new taskConnection().execute("GET", "characters?name="+nombre);
+        switch (accion){
+            case "mod":
+                new taskConnection().execute("GET", "characters?name="+nombre);
+                break;
+            case "add":
+                imgPersonajeGrande.setImageResource(R.drawable.image_not_found);
+                break;
         }
     }
 
@@ -249,6 +263,40 @@ public class DetailActivity extends AppCompatActivity {
 
         return diferentes;
     }
+
+    @NonNull
+    private String comprobarFecha(String stringFecha) throws ParseException {
+        Date fecha = null;
+        SimpleDateFormat formato = new SimpleDateFormat("MM/dd/yyyy");
+
+        fecha = formato.parse(stringFecha);
+        Toasty.error(DetailActivity.this,"Introducza una fecha válida con el " +
+                    "formato MM/dd/yyyy o unknown si no la conoce").show();
+
+        stringFecha = formato.format(fecha);
+
+        return stringFecha;
+    }
+
+    private boolean comprobarCampoFecha(){
+        boolean valid = false;
+
+        if(txtFechaNacimiento.getText().toString().equalsIgnoreCase("Unknown")){
+            valid = true;
+        }else{
+            try {
+                comprobarFecha(txtFechaNacimiento.getText().toString());
+                valid = true;
+            } catch (ParseException e) {
+                Toasty.error(DetailActivity.this,"Introducza una fecha válida según el " +
+                        "formato MM/dd/yyyy").show();
+            }
+        }
+
+        return valid;
+    }
+
+
 
     @NonNull
     private AlertDialog createAlertDialog(String titulo, String mensaje){

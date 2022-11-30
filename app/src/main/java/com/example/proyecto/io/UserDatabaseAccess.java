@@ -43,18 +43,13 @@ public class UserDatabaseAccess extends SQLiteOpenHelper {
                 + NAME_COLUMN + " TEXT primary key, " + PASSWORD_COLUMN + " TEXT)";
         // Ejecutamos la instruccion
         sqLiteDatabase.execSQL(CREATE_USER_TABLE);
-        Log("Tablas creadas");
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase sqLiteDatabase, int oldVersion, int newVersion) {
-        Log("onUpgrade");
-        Log("oldversion -> "+ oldVersion);
-
-        switch (oldVersion){
+          switch (oldVersion){
             case 1:
                 sqLiteDatabase.execSQL("ALTER TABLE " + DB_TABLE_NAME  +" ADD COLUMN " + PASSWORD_COLUMN +" TEXT");
-                Log.i("DB", "BDD actualizada a la versión 2");
         }
 
     }
