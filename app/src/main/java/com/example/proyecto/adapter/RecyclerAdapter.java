@@ -66,7 +66,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Recycl
         Glide.with(holder.itemView.getContext())
                         .load(personaje.getImagenUri())
                         .placeholder(progressDrawable)
-                        .error(R.mipmap.ic_launcher)
+                        .error(R.drawable.image_not_found)
                         .into(holder.imgPersonaje);
     }
 
@@ -103,9 +103,6 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Recycl
             txtViewNombre = (TextView) itemView.findViewById(R.id.txt_nombre_item);
             txtViewActor = (TextView) itemView.findViewById(R.id.txt_actor_item);
             itemView.setTag(this);
-            //RESIDUOS
-            //itemView.setOnClickListener(onClickListener);
-            //itemView.setOnLongClickListener(onLongClickListener);
         }
     }
 }

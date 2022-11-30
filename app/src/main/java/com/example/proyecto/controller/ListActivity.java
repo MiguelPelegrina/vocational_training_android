@@ -132,7 +132,7 @@ public class ListActivity extends AppCompatActivity {
                     name = data.getStringExtra("name");
                     actor = data.getStringExtra("actor");
                     listaPersonajes.add(0, new Personaje(name, actor, Uri.parse(
-                            "android.resource://" + getPackageName() + "/" + R.mipmap.ic_launcher)));
+                            "android.resource://" + getPackageName() + "/" + R.drawable.image_not_found)));
                     recyclerAdapter.notifyDataSetChanged();
                 }
             }else{

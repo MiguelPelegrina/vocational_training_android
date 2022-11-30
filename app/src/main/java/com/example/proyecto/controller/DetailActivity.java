@@ -139,7 +139,9 @@ public class DetailActivity extends AppCompatActivity {
         Toasty.info(DetailActivity.this, "Para poder guardar los cambios los campos" +
                 " no deben estar vacios").show();
 
-        new taskConnection().execute("GET", "characters?name="+nombre);
+        if(accion.equals("mod")){
+            new taskConnection().execute("GET", "characters?name="+nombre);
+        }
     }
 
     @Override
@@ -199,7 +201,7 @@ public class DetailActivity extends AppCompatActivity {
                     Glide.with(DetailActivity.this)
                             .load(uri)
                             .placeholder(progressDrawable)
-                            .error(R.mipmap.ic_launcher)
+                            .error(R.drawable.image_not_found)
                             .into(imgPersonajeGrande);
                     fecha = jsonObject.getString("birthday");
                     txtFechaNacimiento.setText(fecha);

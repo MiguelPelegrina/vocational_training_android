@@ -83,21 +83,21 @@ public class UserDatabaseAccess extends SQLiteOpenHelper {
         return result;
     }
 
-    public boolean getUser(String... parametros){
+    public boolean getUser(String... parametrosBusqueda){
         boolean existe = false;
         String selection = "";
         String[] columns = new String[]{NAME_COLUMN, PASSWORD_COLUMN};
         String[] filter = null;
         SQLiteDatabase database = getReadableDatabase();
 
-        switch (parametros.length){
+        switch (parametrosBusqueda.length){
             case 1:
                 selection = NAME_COLUMN+"=?";
-                filter = new String[]{parametros[0]};
+                filter = new String[]{parametrosBusqueda[0]};
                 break;
             case 2:
                 selection = NAME_COLUMN + " = ? AND "+ PASSWORD_COLUMN + " = ?";
-                filter = new String[]{parametros[0], parametros[1]};
+                filter = new String[]{parametrosBusqueda[0], parametrosBusqueda[1]};
                 break;
         }
 
