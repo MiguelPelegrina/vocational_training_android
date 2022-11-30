@@ -9,6 +9,7 @@
     <string name="preferencias">Preferencias</string>
     <string name="email">Correo electrónico</string>
     <string name="colores">Elija el color de fondo</string>
+    <string name="guardarPreferencias">Guardar datos</string>
     <!-- String relacionados con el custom_item_list -->
     <string name="imagen">Imagen</string>
     <string name="nombrePersonaje">Nombre</string>

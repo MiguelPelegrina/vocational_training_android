@@ -3,12 +3,16 @@ package com.example.proyecto.controller;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.swiperefreshlayout.widget.CircularProgressDrawable;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.sqlite.SQLiteConstraintException;
 import android.media.Image;
 import android.os.Bundle;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
 
@@ -31,6 +35,11 @@ public class LoginActivity extends AppCompatActivity {
     private UserDatabaseAccess controladorDB;
     private CircularProgressDrawable progressDrawable;
     private ImageView imageViewLogo;
+    //
+    private CheckBox saveLoginCheckBox;
+    private SharedPreferences loginPreferences;
+    private SharedPreferences.Editor loginPreferencesEditor;
+    private Boolean saveLogin;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,6 +55,18 @@ public class LoginActivity extends AppCompatActivity {
         imageViewLogo = (ImageView) findViewById(R.id.imageViewLogo);
         // Instanciamos el controlador de la base de datos
         controladorDB = new UserDatabaseAccess(this);
+
+        //
+        saveLoginCheckBox = (CheckBox) findViewById(R.id.cbPreferencias);
+        loginPreferences = getSharedPreferences("loginPreferences", MODE_PRIVATE);
+        loginPreferencesEditor = loginPreferences.edit();
+
+        saveLogin = loginPreferences.getBoolean("saveLogin",false);
+        if(saveLogin){
+            txtUsuario.setText(loginPreferences.getString("username", ""));
+            txtContrasena.setText(loginPreferences.getString("password",""));
+            saveLoginCheckBox.setChecked(true);
+        }
 
         progressDrawable = new CircularProgressDrawable(this);
         progressDrawable.setStrokeWidth(15f);
@@ -70,6 +91,15 @@ public class LoginActivity extends AppCompatActivity {
                         if (controladorDB.getUser(txtUsuario.getText().toString(), txtContrasena.getText().toString())) {
                             Toasty.success(LoginActivity.this,"Login realizado",
                                     Toasty.LENGTH_SHORT,true).show();
+                                    if(saveLoginCheckBox.isChecked()){
+                                        loginPreferencesEditor.putBoolean("saveLogin", true);
+                                        loginPreferencesEditor.putString("username", txtUsuario.getText().toString());
+                                        loginPreferencesEditor.putString("password", txtContrasena.getText().toString());
+                                        loginPreferencesEditor.commit();
+                                    }else{
+                                        loginPreferencesEditor.clear();
+                                        loginPreferencesEditor.commit();
+                                    }
                                     startActivity(intent);
                         } else {
                             Toasty.error(LoginActivity.this,"No se ha podido logear, " +
