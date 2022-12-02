@@ -267,11 +267,9 @@ public class DetailActivity extends AppCompatActivity {
     @NonNull
     private String comprobarFecha(String stringFecha) throws ParseException {
         Date fecha = null;
-        SimpleDateFormat formato = new SimpleDateFormat("MM/dd/yyyy");
+        SimpleDateFormat formato = new SimpleDateFormat("MM-dd-yyyy");
 
         fecha = formato.parse(stringFecha);
-        Toasty.error(DetailActivity.this,"Introducza una fecha válida con el " +
-                    "formato MM/dd/yyyy o unknown si no la conoce").show();
 
         stringFecha = formato.format(fecha);
 
@@ -281,15 +279,15 @@ public class DetailActivity extends AppCompatActivity {
     private boolean comprobarCampoFecha(){
         boolean valid = false;
 
-        if(txtFechaNacimiento.getText().toString().equalsIgnoreCase("Unknown")){
+        if(txtFechaNacimiento.getText().toString().trim().equalsIgnoreCase("Unknown")){
             valid = true;
         }else{
             try {
-                comprobarFecha(txtFechaNacimiento.getText().toString());
+                comprobarFecha(txtFechaNacimiento.getText().toString().trim());
                 valid = true;
             } catch (ParseException e) {
                 Toasty.error(DetailActivity.this,"Introducza una fecha válida según el " +
-                        "formato MM/dd/yyyy").show();
+                        "formato MM-dd-yyyy").show();
             }
         }
 

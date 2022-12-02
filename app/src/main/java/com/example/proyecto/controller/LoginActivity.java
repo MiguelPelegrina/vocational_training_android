@@ -33,8 +33,6 @@ public class LoginActivity extends AppCompatActivity {
     private EditText txtUsuario;
     private EditText txtContrasena;
     private UserDatabaseAccess controladorDB;
-    private CircularProgressDrawable progressDrawable;
-    private ImageView imageViewLogo;
     //
     private CheckBox saveLoginCheckBox;
     private SharedPreferences loginPreferences;
@@ -52,7 +50,6 @@ public class LoginActivity extends AppCompatActivity {
         btnRegistro = (Button) findViewById(R.id.btnRegistro);
         txtUsuario = (EditText) findViewById(R.id.txtUsuario);
         txtContrasena = (EditText) findViewById(R.id.txtContrasena);
-        imageViewLogo = (ImageView) findViewById(R.id.imageViewLogo);
         // Instanciamos el controlador de la base de datos
         controladorDB = new UserDatabaseAccess(this);
 
@@ -67,12 +64,6 @@ public class LoginActivity extends AppCompatActivity {
             txtContrasena.setText(loginPreferences.getString("password",""));
             saveLoginCheckBox.setChecked(true);
         }
-
-        progressDrawable = new CircularProgressDrawable(this);
-        progressDrawable.setStrokeWidth(15f);
-        progressDrawable.setStyle(CircularProgressDrawable.LARGE);
-        progressDrawable.setCenterRadius(45f);
-        progressDrawable.start();
 
         Toasty.Config.getInstance()
                 .setTextSize(20)
@@ -144,12 +135,6 @@ public class LoginActivity extends AppCompatActivity {
                 }
             }
         });
-
-        Glide.with(LoginActivity.this)
-                .load("https://vignette.wikia.nocookie.net/breakingbad/images/7/78/Logo_breaking_bad.png/revision/latest?cb=20180801024750&path-prefix=es")
-                .placeholder(progressDrawable)
-                .error(R.mipmap.ic_launcher)
-                .into(imageViewLogo);
     }
 
     /**
