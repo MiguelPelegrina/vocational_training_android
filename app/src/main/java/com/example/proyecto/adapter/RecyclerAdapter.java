@@ -36,6 +36,13 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Recycl
         this.listaPersonajes = listaPersonajes;
     }
 
+    /**
+     * Método onCreate que se ejecuta al crear el ViewHolder. Infla el diseño de cada celda, la
+     * rellena con el RecyclerHolder y les asigna los oyentes necesarios
+     * @param parent Vista padre en la cual se mostrará el RecyclerHolder
+     * @param viewType Tipo de vista
+     * @return
+     */
     @NonNull
     @Override
     public RecyclerHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -48,8 +55,16 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Recycl
         return recyclerHolder;
     }
 
+    /**
+     * Método onBind que se encarga rellenar los elementos de la celda creada previamente con la
+     * información de la lista de elementos asignada en el constructor
+     * @param holder RecyclerHolder que contiene los componentes que mostrarán la información
+     * @param position Position del elemento en la lista de elementos
+     */
     @Override
     public void onBindViewHolder(@NonNull RecyclerHolder holder, int position) {
+        // Creacion de un elementos de la clase CircularProgressDrawable para comunicar una espera
+        // al usuario
         CircularProgressDrawable progressDrawable;
         progressDrawable = new CircularProgressDrawable(holder.itemView.getContext());
         progressDrawable.setStrokeWidth(10f);
@@ -57,12 +72,10 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Recycl
         progressDrawable.setCenterRadius(30f);
         progressDrawable.start();
 
+        // Rellenamos los componentes de la celda
         Personaje personaje = listaPersonajes.get(position);
         holder.txtViewNombre.setText(personaje.getNombre());
         holder.txtViewActor.setText(personaje.getActor());
-        //RESIDUOS
-        //holder.itemView.setOnClickListener(onClickListener);
-        //holder.itemView.setOnLongClickListener(onLongClickListener);
         Glide.with(holder.itemView.getContext())
                         .load(personaje.getImagenUri())
                         .placeholder(progressDrawable)
@@ -70,21 +83,34 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Recycl
                         .into(holder.imgPersonaje);
     }
 
+    /**
+     * Setter de onClickListener
+     * @param listener Oyente encargado de captar el evento onClick
+     */
     public void setOnClickListener(View.OnClickListener listener){
         this.onClickListener = listener;
     }
 
+    /**
+     * Setter de onLongClickListener
+     * @param listener Oyente encargado de captar el evento onLongClick
+     */
     public void setOnLongClickListener(View.OnLongClickListener listener){
         this.onLongClickListener = listener;
     }
 
+    /**
+     * Método que devuelve el tamaño de la lista de personajes
+     * @return Devuelve el número de elementos de la lista
+     */
     @Override
     public int getItemCount() {
         return listaPersonajes.size();
     }
 
     /**
-     * Clase que extiende de ViewHolder y asocia los elementos de la vista con el código
+     * Clase de tipo RecyclerHolder que extiende de ViewHolder y asocia los elementos de la vista
+     * con el código
      */
     public class RecyclerHolder extends ViewHolder {
         // Atributos de la clase
@@ -99,9 +125,12 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Recycl
         public RecyclerHolder(@NonNull View itemView) {
             super(itemView);
 
+            // Inicialización de los atributos
             imgPersonaje = (ImageView) itemView.findViewById(R.id.image_item);
             txtViewNombre = (TextView) itemView.findViewById(R.id.txt_nombre_item);
             txtViewActor = (TextView) itemView.findViewById(R.id.txt_actor_item);
+            // Asignamos un tag para posteriormente poder identificar el itemView en la actividad para
+            // la creacion de los oyentes
             itemView.setTag(this);
         }
     }
