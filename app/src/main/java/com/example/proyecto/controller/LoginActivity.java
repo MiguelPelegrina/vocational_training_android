@@ -33,7 +33,8 @@ public class LoginActivity extends AppCompatActivity {
     private EditText txtUsuario;
     private EditText txtContrasena;
     private UserDatabaseAccess controladorDB;
-    //
+    // Variables encargadas de guardar los datos de login del usuario que ha realizado un login
+    // de forma exitosa
     private CheckBox saveLoginCheckBox;
     private SharedPreferences loginPreferences;
     private SharedPreferences.Editor loginPreferencesEditor;

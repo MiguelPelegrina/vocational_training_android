@@ -7,8 +7,8 @@ import androidx.preference.PreferenceFragmentCompat;
 import com.example.proyecto.R;
 
 /**
- * Clase que hereda de PreferenceFragmentCompat y que se encarga de 'incrustar' en la ventana el
- * diseño de las preferencias a partir del root_preferences.xml.
+ * Clase que hereda de PreferenceFragmentCompat y que se encarga de insertar en la ventana el
+ * diseño de las preferencias a partir del preferences.xml.
  */
 public class SettingsFragment extends PreferenceFragmentCompat {
     @Override

@@ -12,6 +12,9 @@ import com.example.proyecto.model.User;
 
 import java.util.ArrayList;
 
+/**
+ * Clase
+ */
 public class UserDatabaseAccess extends SQLiteOpenHelper {
     // Heredamos de la clase SQLiteOpenHelper para disponer de sus métodos que nos ayudan a gestionar
     // la base de datos local
@@ -28,8 +31,9 @@ public class UserDatabaseAccess extends SQLiteOpenHelper {
     private Context context;
 
     /**
-     * Constructor por parametros de la clase UserDatabaseAccess. Si no existe se crea, sino se conecta.
-     * @param context Contexto de la aplicacion
+     * Constructor por par¡ametros de la clase UserDatabaseAccess. Si no existe se crea, sino se
+     * conecta.
+     * @param context Contexto de la aplicación
      */
     public UserDatabaseAccess(Context context) {
         super(context, DB_NAME, null, DB_VERSION);
