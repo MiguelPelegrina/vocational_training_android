@@ -102,7 +102,8 @@ public class ListActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(layoutManager);
         if(Preferences.notificationPreference(this)) {
             Toasty.info(this, "Para ver detalles pulse sobre un personaje, podrá " +
-                    "modificarlo posteriormente\nPara añadir o borrar mantenga el dedo " +
+                    "modificarlo posteriormente", Toasty.LENGTH_LONG, true).show();
+            Toasty.info(this, "Para añadir o borrar mantenga el dedo " +
                     "pulsado y elija una opción", Toasty.LENGTH_LONG, true).show();
         }
 

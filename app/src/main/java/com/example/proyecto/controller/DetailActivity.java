@@ -154,26 +154,44 @@ public class DetailActivity extends AppCompatActivity {
             }
         });
 
-        //
+        // Esta parte del código corresponde a la biblioteca FilePicker. Esta nos permite elegir
+        // ficheros. En este caso en concreto nos permite añadir o modificar la imagen del personaje
+        // Nos creamos un objeto de la clase DialogProperties
         DialogProperties properties = new DialogProperties();
+        // Configuramos las variables de dicho objeto
+        // El modo de selección será de un único fichero
         properties.selection_mode = DialogConfigs.SINGLE_MODE;
+        // Solo se podrán elegir ficheros
         properties.selection_type = DialogConfigs.FILE_SELECT;
+        // Obtenemos el directorio de la sdExterna que guarda los datos del usuario
         File sdExterna = new File(Environment.getExternalStorageDirectory().getPath());
+        // Establecemos como directorios la ruta de la sdExterna
         properties.root = sdExterna;
         properties.error_dir = sdExterna;
         properties.offset = sdExterna;
+        // Establecemos las extensiones permitidas
         properties.extensions = new String[]{"jpg","png"};
+        // Nos creamos un objeto de la ventana de dialogo
         FilePickerDialog dialog = new FilePickerDialog(DetailActivity.this, properties);
+        // Modificamos su título
         dialog.setTitle("Eliga una imagen");
+        // Asignamos un oyente al dialogo
         dialog.setDialogSelectionListener(new DialogSelectionListener() {
             @Override
             public void onSelectedFilePaths(String[] files) {
+                // Cuando se elige un fichero obtenemos su uri local
                 uri = Uri.fromFile(new File(files[0]));
+                // Asignamos la uri al imageView
                 imgPersonajeGrande.setImageURI(uri);
+                // Modificamos nuestra variable booleana que registra cambios en las imagenes
                 imagenNueva = true;
+                // Comprobamos si se han modificado los datos para habilitar el boton de guardar al
+                // cambiar la imagen
                 update();
             }
         });
+        // Le asignamos al imageView que mostrará el dialog configurado previamente cuando se realice
+        // un onLongClick
         imgPersonajeGrande.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View view) {
@@ -186,6 +204,8 @@ public class DetailActivity extends AppCompatActivity {
         if(Preferences.notificationPreference(this)) {
             Toasty.info(DetailActivity.this, "Para poder guardar los cambios los campos" +
                     " no deben estar vacios").show();
+            Toasty.info(DetailActivity.this, "Puede modificar la imagen manteniendo " +
+                    " el dedo pulsado sobre ella").show();
         }
 
         switch (accion){
