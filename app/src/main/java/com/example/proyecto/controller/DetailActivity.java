@@ -12,6 +12,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Environment;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -26,6 +27,10 @@ import android.widget.ImageView;
 import android.widget.Spinner;
 
 import com.bumptech.glide.Glide;
+import com.developer.filepicker.controller.DialogSelectionListener;
+import com.developer.filepicker.model.DialogConfigs;
+import com.developer.filepicker.model.DialogProperties;
+import com.developer.filepicker.view.FilePickerDialog;
 import com.example.proyecto.R;
 import com.example.proyecto.Utilities.Preferences;
 import com.example.proyecto.io.APIConnectionBreakingBad;
@@ -34,6 +39,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.File;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -54,6 +60,7 @@ public class DetailActivity extends AppCompatActivity {
     private String name = "";
     private String actor = "";
     private Uri uri = Uri.parse("");
+    private boolean imagenNueva = false;
     private String fecha = "";
     private String estado = "Alive";
 
@@ -144,6 +151,35 @@ public class DetailActivity extends AppCompatActivity {
 
                         break;
                 }
+            }
+        });
+
+        //
+        DialogProperties properties = new DialogProperties();
+        properties.selection_mode = DialogConfigs.SINGLE_MODE;
+        properties.selection_type = DialogConfigs.FILE_SELECT;
+        File sdExterna = new File(Environment.getExternalStorageDirectory().getPath());
+        properties.root = sdExterna;
+        properties.error_dir = sdExterna;
+        properties.offset = sdExterna;
+        properties.extensions = new String[]{"jpg","png"};
+        FilePickerDialog dialog = new FilePickerDialog(DetailActivity.this, properties);
+        dialog.setTitle("Eliga una imagen");
+        dialog.setDialogSelectionListener(new DialogSelectionListener() {
+            @Override
+            public void onSelectedFilePaths(String[] files) {
+                uri = Uri.fromFile(new File(files[0]));
+                imgPersonajeGrande.setImageURI(uri);
+                imagenNueva = true;
+                update();
+            }
+        });
+        imgPersonajeGrande.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View view) {
+                dialog.show();
+
+                return false;
             }
         });
 
@@ -284,7 +320,8 @@ public class DetailActivity extends AppCompatActivity {
             if(name.equals(txtNombrePersonaje.getText().toString()) &&
                     actor.equals(txtActorPersonaje.getText().toString()) &&
                     fecha.equals(txtFechaNacimiento.getText().toString()) &&
-                    estado.equals(sbEstadoPersonaje.getSelectedItem().toString())){
+                    estado.equals(sbEstadoPersonaje.getSelectedItem().toString()) &&
+                    !imagenNueva){
                 diferentes = false;
             }
         }

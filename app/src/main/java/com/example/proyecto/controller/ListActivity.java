@@ -47,7 +47,6 @@ public class ListActivity extends AppCompatActivity {
     private Personaje personaje;
     private RecyclerView.ViewHolder viewHolder;
     private int position;
-    private int color;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -87,12 +86,6 @@ public class ListActivity extends AppCompatActivity {
                 boolean res = false;
                 if(actionMode == null){
                     viewHolder = (RecyclerView.ViewHolder) view.getTag();
-                    // TODO --> Mejorar o quitar
-                    /*Drawable background = view.getBackground();
-                    if (background instanceof ColorDrawable) {
-                        color = ((ColorDrawable) background).getColor();
-                    }
-                    view.setBackgroundColor(Color.YELLOW);*/
                     position = viewHolder.getAdapterPosition();
                     personaje = listaPersonajes.get(position);
                     actionMode = startSupportActionMode(actionCallback);
@@ -133,8 +126,13 @@ public class ListActivity extends AppCompatActivity {
                 if(resultCode == RESULT_OK){
                     name = data.getStringExtra("name");
                     actor = data.getStringExtra("actor");
-                    listaPersonajes.add(0, new Personaje(name, actor, Uri.parse(
-                            "android.resource://" + getPackageName() + "/" + R.drawable.image_not_found)));
+                    Uri imagen;
+                    if(!(imagen = Uri.parse(data.getStringExtra("uri"))).toString().equals("")){
+
+                    }else{
+                        imagen = Uri.parse("android.resource://" + getPackageName() + "/" + R.drawable.image_not_found);
+                    }
+                    listaPersonajes.add(0, new Personaje(name, actor, imagen));
                     recyclerAdapter.notifyDataSetChanged();
                 }
             }else{
