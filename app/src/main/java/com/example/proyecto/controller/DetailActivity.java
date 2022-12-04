@@ -61,6 +61,8 @@ public class DetailActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail);
+
+        // Asociamos los elemento del layout con el código
         constraintLayout = (ConstraintLayout) findViewById(R.id.activity_detail_constraint);
         imgPersonajeGrande = (ImageView) findViewById(R.id.imagenGrande);
         txtNombrePersonaje = (EditText) findViewById(R.id.editTextPersonNameDetalle);
