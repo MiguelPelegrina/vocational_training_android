@@ -31,7 +31,7 @@ public class UserDatabaseAccess extends SQLiteOpenHelper {
     private Context context;
 
     /**
-     * Constructor por par¡ametros de la clase UserDatabaseAccess. Si no existe se crea, sino se
+     * Constructor por parámetros de la clase UserDatabaseAccess. Si no existe se crea, sino se
      * conecta.
      * @param context Contexto de la aplicación
      */
@@ -51,11 +51,12 @@ public class UserDatabaseAccess extends SQLiteOpenHelper {
 
     @Override
     public void onUpgrade(SQLiteDatabase sqLiteDatabase, int oldVersion, int newVersion) {
-          switch (oldVersion){
+        // En función de la versión de la base de datos del usuario realizan modificaciones de la
+        // tabla hasta llegar a la versión actual
+        switch (oldVersion){
             case 1:
                 sqLiteDatabase.execSQL("ALTER TABLE " + DB_TABLE_NAME  +" ADD COLUMN " + PASSWORD_COLUMN +" TEXT");
         }
-
     }
 
     /**
@@ -82,7 +83,16 @@ public class UserDatabaseAccess extends SQLiteOpenHelper {
         return result;
     }
 
+    /**
+     * Método que comprueba la existencia de un usuario registrado en la base de datos
+     * @param parametrosBusqueda String de parámetros utilizados en la búsqueda del usuario. Si se
+     *                           introduce solo un valor, se busca por el nombre del usuario. Si se
+     *                           introducen dos parámetros, se busca tanto por el nombre como por
+     *                           la constraseña.
+     * @return Devuelve verdadero si existe el usuario introducido y falso si no existe
+     */
     public boolean getUser(String... parametrosBusqueda){
+        // Declaración e inicialización de variables
         boolean existe = false;
         String selection = "";
         String[] columns = new String[]{NAME_COLUMN, PASSWORD_COLUMN};
@@ -100,15 +110,20 @@ public class UserDatabaseAccess extends SQLiteOpenHelper {
                 break;
         }
 
+        // Realizamos la consulta y nos creamos un cursor que nos permite recorrer los resultados
+        // de la consulta
         Cursor cursor = database.query(DB_TABLE_NAME, columns ,selection, filter,null,null,null);
 
+        // Colocamos el cursor
         if(cursor.moveToFirst()){
+            // Si existe el usuario asignamos true a la variable de devolución
             if(cursor.getString(0) != null){
                 existe = true;
             }
+            // Cerramos el cursor
             cursor.close();
         }
-
+        // Cerrramos la conexión con la base de datos
         database.close();
 
         return existe;
@@ -130,8 +145,10 @@ public class UserDatabaseAccess extends SQLiteOpenHelper {
         // Nos creamos un cursor que recorrera los registros de consulta realizada
         Cursor cursor = database.query(DB_TABLE_NAME, columnas, null,null,null,null,null);
 
+        // Colocamos el cursor
         if (cursor.moveToFirst()){
             do{
+                // Obtenemos todos los datos
                 String name = cursor.getString(0);
                 String password = cursor.getString(1);
                 resultUsers.add(new User(name, password));
@@ -145,20 +162,5 @@ public class UserDatabaseAccess extends SQLiteOpenHelper {
         database.close();
 
         return resultUsers;
-    }
-
-    /**
-     * Metodo que nos permite sacar por el logcat la version actual de la base de datos
-     */
-    public void getVersionDB(){
-        Log(Integer.toString(this.getReadableDatabase().getVersion()));
-    }
-
-    /**
-     * Metodo que nos sirve para comprobar el funcionamiento correcto del programa
-     * @param msg
-     */
-    public void Log(String msg){
-        Log.d("DB", msg);
     }
 }
