@@ -12,7 +12,11 @@ import com.example.proyecto.R;
 import com.example.proyecto.Utilities.Preferences;
 import com.example.proyecto.fragments.SettingsFragment;
 
+/**
+ * Actividad que gestiona las preferencias del usuario
+ */
 public class SettingActivity extends AppCompatActivity {
+    // Declaración de variables
     private ConstraintLayout constraintLayout;
 
     @Override
@@ -22,6 +26,7 @@ public class SettingActivity extends AppCompatActivity {
 
         constraintLayout = findViewById(R.id.container_setting_preferences);
 
+        // Cargamos las preferencias
         Preferences.loadPreferences(this, constraintLayout);
         // Introducimos el fragment creado en el contenedor de la vista padre
         getSupportFragmentManager()

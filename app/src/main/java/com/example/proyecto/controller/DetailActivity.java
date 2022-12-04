@@ -191,12 +191,32 @@ public class DetailActivity extends AppCompatActivity {
 
     private class taskConnection extends AsyncTask<String, Void, String> {
         @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            // Antes de solicitar la información a la API deshabilitamos todos los campos con los
+            // que podría interactuar el usuario
+            txtNombrePersonaje.setEnabled(false);
+            txtActorPersonaje.setEnabled(false);
+            txtFechaNacimiento.setEnabled(false);
+            sbEstadoPersonaje.setEnabled(false);
+        }
+
+        @Override
         protected String doInBackground(String... strings) {
             String result = null;
 
             result = APIConnectionBreakingBad.getRequest(strings[1]);
 
             return result;
+        }
+
+        @Override
+        protected void onCancelled() {
+            super.onCancelled();
+            txtNombrePersonaje.setEnabled(false);
+            txtActorPersonaje.setEnabled(false);
+            txtFechaNacimiento.setEnabled(false);
+            sbEstadoPersonaje.setEnabled(false);
         }
 
         @Override
@@ -235,6 +255,10 @@ public class DetailActivity extends AppCompatActivity {
                     e.printStackTrace();
                 }
             }
+            txtNombrePersonaje.setEnabled(true);
+            txtActorPersonaje.setEnabled(true);
+            txtFechaNacimiento.setEnabled(true);
+            sbEstadoPersonaje.setEnabled(true);
         }
     }
 
