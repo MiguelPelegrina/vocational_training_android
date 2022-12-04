@@ -37,4 +37,14 @@ public class Preferences {
         }
        layout.setBackgroundColor(numeroColor);
     }
+
+    /**
+     * Método que informa sobre la preferencia de notificaciones informativas para el usuario
+     * @param context Contexto en el cual se encuentra en ese momento la aplicación
+     * @return Devuelve verdadero si las notificaciones están actividas y falso si están desactivadas
+     */
+    public static boolean notificationPreference(Context context){
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
+        return sharedPreferences.getBoolean("notificationPreference", true);
+    }
 }

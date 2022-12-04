@@ -1,5 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <PreferenceCategory android:title="Notificaciones">
+
+        <SwitchPreference
+            android:defaultValue="true"
+            android:key="notificationPreference"
+            android:title="Mostrar notificaciones informativas" />
+    </PreferenceCategory>
     <PreferenceCategory android:title="Diseño">
 
         <ListPreference

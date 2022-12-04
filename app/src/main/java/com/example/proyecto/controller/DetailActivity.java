@@ -147,8 +147,10 @@ public class DetailActivity extends AppCompatActivity {
             }
         });
 
-        Toasty.info(DetailActivity.this, "Para poder guardar los cambios los campos" +
-                " no deben estar vacios").show();
+        if(Preferences.notificationPreference(this)) {
+            Toasty.info(DetailActivity.this, "Para poder guardar los cambios los campos" +
+                    " no deben estar vacios").show();
+        }
 
         switch (accion){
             case "mod":

@@ -18,6 +18,7 @@ import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
 import com.example.proyecto.R;
+import com.example.proyecto.Utilities.Preferences;
 import com.example.proyecto.io.UserDatabaseAccess;
 import com.example.proyecto.model.User;
 
@@ -37,6 +38,7 @@ public class LoginActivity extends AppCompatActivity {
     // de forma exitosa
     private CheckBox saveLoginCheckBox;
     private SharedPreferences loginPreferences;
+    private SharedPreferences notificationPreferences;
     private SharedPreferences.Editor loginPreferencesEditor;
     private Boolean saveLogin;
 
@@ -74,8 +76,10 @@ public class LoginActivity extends AppCompatActivity {
                 .setTextSize(20)
                 .apply();
         // Informamos al usuario
-        Toasty.info(this,"Para poder hacer login debe registrarse primero",
-                Toasty.LENGTH_LONG, true).show();
+        if(Preferences.notificationPreference(this)){
+            Toasty.info(this,"Para poder hacer login debe registrarse primero",
+                    Toasty.LENGTH_LONG, true).show();
+        }
 
         // Se ha decidido incorporar el login y el registro en la misma actividad
         // Oyente que gestiona el evento OnClick sobre el botón de login
