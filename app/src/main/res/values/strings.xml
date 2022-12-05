@@ -20,4 +20,5 @@
     <!-- String relacionados con la vista detalle -->
     <string name="fecha_nacimiento">Nacimiento</string>
     <string name="estado">Estado</string>
+    <string name="guardar_cambios">Guardar cambios</string>
 </resources>

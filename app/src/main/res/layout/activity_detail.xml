@@ -152,17 +152,21 @@
         android:id="@+id/btnGuardar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:padding="30dp"
         android:background="#100E0E"
         android:enabled="false"
-        android:text="Guardar cambios"
+        android:padding="30dp"
+        android:text="@string/guardar_cambios"
         android:textColor="@android:color/white"
+        android:textSize="20sp"
         app:buttonColor="@color/background_color"
+        app:cornerRadius="50dp"
         app:glowColor="@color/glow_color"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/guideline10" />
+        app:layout_constraintTop_toTopOf="@+id/guideline10"
+        app:pressedGlowSize="25dp"
+        app:unpressedGlowSize="20dp" />
 
     <Spinner
         android:id="@+id/spEstado"
