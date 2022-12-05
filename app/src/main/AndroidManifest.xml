@@ -4,7 +4,9 @@
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-
+    <!-- Técnicamente no es necesario (la biblioteca externa gestiona este permiso por propia
+    cuenta) pero este sería el permiso necesario para tener acceso a los datos guardados en el móvil
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />-->
     <application
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"

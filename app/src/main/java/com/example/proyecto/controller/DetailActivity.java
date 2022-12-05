@@ -170,7 +170,7 @@ public class DetailActivity extends AppCompatActivity {
         properties.error_dir = sdExterna;
         properties.offset = sdExterna;
         // Establecemos las extensiones permitidas
-        properties.extensions = new String[]{"jpg","png"};
+        properties.extensions = new String[]{"jpg","jpeg","png"};
         // Nos creamos un objeto de la ventana de dialogo
         FilePickerDialog dialog = new FilePickerDialog(DetailActivity.this, properties);
         // Modificamos su título
@@ -180,9 +180,17 @@ public class DetailActivity extends AppCompatActivity {
             @Override
             public void onSelectedFilePaths(String[] files) {
                 // Cuando se elige un fichero obtenemos su uri local
-                uri = Uri.fromFile(new File(files[0]));
-                // Asignamos la uri al imageView
-                imgPersonajeGrande.setImageURI(uri);
+                // NO HE PODIDO COMPROBAR AÚN LO SUFICIENTE LA POSIBILIDAD DE EXCEPCIONES
+                //try {
+                    uri = Uri.fromFile(new File(files[0]));
+                    // Asignamos la uri al imageView
+                    imgPersonajeGrande.setImageURI(uri);
+                    // Controlamos las posibles excepciones
+                /*}catch(Exception e){
+                    Toasty.error(DetailActivity.this,"Solo eliga ficheros con la " +
+                            "extensión jpg o png").show();
+                }*/
+
                 // Modificamos nuestra variable booleana que registra cambios en las imagenes
                 imagenNueva = true;
                 // Comprobamos si se han modificado los datos para habilitar el boton de guardar al
