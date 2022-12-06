@@ -46,6 +46,6 @@ dependencies {
 
     //Hemos importado una biblioteca que permite elegir ficheros
     implementation 'com.github.TutorialsAndroid:FilePicker:v8.0.19'
-
+    // Biblioteca externa que permite añadir botones que 'brillan'
     implementation 'com.github.SanojPunchihewa:GlowButton:1.0.1'
 }
