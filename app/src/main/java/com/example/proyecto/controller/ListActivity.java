@@ -10,6 +10,8 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.app.SearchManager;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
@@ -19,6 +21,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.SearchView;
 import android.widget.Toast;
 
 import com.example.proyecto.R;
@@ -26,6 +29,7 @@ import com.example.proyecto.Utilities.Preferences;
 import com.example.proyecto.adapter.RecyclerAdapter;
 import com.example.proyecto.io.APIConnectionBreakingBad;
 import com.example.proyecto.model.Personaje;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -43,6 +47,7 @@ public class ListActivity extends AppCompatActivity {
     private RecyclerView recyclerView;
     private RecyclerAdapter recyclerAdapter;
     private ActionMode actionMode;
+    private FloatingActionButton floatingActionButton;
     // Variables auxiliares
     private Personaje personaje;
     private RecyclerView.ViewHolder viewHolder;
@@ -59,6 +64,16 @@ public class ListActivity extends AppCompatActivity {
         if(actionBar != null){
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
+
+        floatingActionButton = (FloatingActionButton) findViewById(R.id.floatingActionButton);
+        floatingActionButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent anadir = new Intent(ListActivity.this, DetailActivity.class);
+                anadir.putExtra("info", "add");
+                startActivityForResult(anadir, RESULTCODE_ADD_ACT);
+            }
+        });
 
         Preferences.loadPreferences(this, constraintLayout);
 
@@ -165,7 +180,35 @@ public class ListActivity extends AppCompatActivity {
         // para colocarlo en la vista
         getMenuInflater().inflate(R.menu.simple, menu);
 
-        return true;
+        SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+        SearchView searchView = (SearchView) menu.findItem(R.id.searchBar)
+                .getActionView();
+        if (searchView != null) {
+            searchView.setSearchableInfo(searchManager
+                    .getSearchableInfo(getComponentName()));
+            searchView.setIconifiedByDefault(true);
+
+            searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+                @Override
+                public boolean onQueryTextSubmit(String s) {
+                    StringBuilder sb = new StringBuilder(s.trim());
+                    if(s.contains(" ")){
+                        int auxPos = s.indexOf(" ");
+                        sb.replace(auxPos,auxPos+1,"+");
+                    }
+                    String aux = sb.toString();
+                    new taskConnection().execute("GET", "characters?=name="+aux);
+                    return true;
+                }
+
+                @Override
+                public boolean onQueryTextChange(String s) {
+                    return false;
+                }
+            });
+        }
+
+        return super.onCreateOptionsMenu(menu);
     }
 
     // Sobrescribimos el metodo onOptionsItemSelected para manejar las diferentes opciones del menu
@@ -204,12 +247,12 @@ public class ListActivity extends AppCompatActivity {
                     createAlertDialog("Borrar", "¿De verdad quiere borrar el personaje?", item).show();
                     mode.finish();
                     break;
-                case R.id.action_menu_item_anadir:
+                /*case R.id.action_menu_item_anadir:
                     Intent anadir = new Intent(ListActivity.this, DetailActivity.class);
                     anadir.putExtra("info", "add");
                     startActivityForResult(anadir, RESULTCODE_ADD_ACT);
                     mode.finish();
-                    break;
+                    break;*/
                 case R.id.action_menu_item_preferencias:
                     Intent i = new Intent(ListActivity.this, SettingActivity.class);
                     startActivity(i);
@@ -255,6 +298,10 @@ public class ListActivity extends AppCompatActivity {
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
+            }else{
+                // Si no se ha podido conectar con el servidor se informa al usuario
+                Toasty.error(ListActivity.this, "Error por parte del servidor. " +
+                        "Vuelva a intentarlo más tarde").show();
             }
         }
     }

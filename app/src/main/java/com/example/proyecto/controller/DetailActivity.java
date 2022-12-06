@@ -294,7 +294,6 @@ public class DetailActivity extends AppCompatActivity {
                     JSONArray jsonArray = new JSONArray(result);
                     JSONObject jsonObject = jsonArray.getJSONObject(0);
 
-                    // ELEGIR INFORMACIÓN QUE SE DESEA MOSTRAR --> todo?
                     name = jsonObject.getString("name");
                     txtNombrePersonaje.setText(name);
                     actor = jsonObject.getString("portrayed");
