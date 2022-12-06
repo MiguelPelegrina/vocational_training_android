@@ -7,6 +7,8 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 
+import es.dmoral.toasty.Toasty;
+
 /**
  * Clase que gestiona la conexión con la base de datos externa
  */
@@ -52,6 +54,13 @@ public class APIConnectionBreakingBad {
                 content = stringBuilder.toString();
                 // Cerramos el flujo de datos
                 reader.close();
+            }else{
+                // Esta comprobación se realiza en el caso en el cual se produce un error en el
+                // servidor al que le mandamos la petición REST
+                if(http.getResponseCode() == HttpURLConnection.HTTP_UNAVAILABLE ||
+                    http.getResponseCode() == HttpURLConnection.HTTP_GATEWAY_TIMEOUT){
+                    content = null;
+                }
             }
             // Tratamos las excepciones
         } catch (MalformedURLException e ) {
