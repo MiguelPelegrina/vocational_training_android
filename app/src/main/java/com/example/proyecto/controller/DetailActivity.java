@@ -263,10 +263,10 @@ public class DetailActivity extends AppCompatActivity {
             super.onPreExecute();
             // Antes de solicitar la información a la API deshabilitamos todos los campos con los
             // que podría interactuar el usuario
-            txtNombrePersonaje.setEnabled(false);
+            /*txtNombrePersonaje.setEnabled(false);
             txtActorPersonaje.setEnabled(false);
             txtFechaNacimiento.setEnabled(false);
-            sbEstadoPersonaje.setEnabled(false);
+            sbEstadoPersonaje.setEnabled(false);*/
         }
 
         @Override
@@ -281,10 +281,10 @@ public class DetailActivity extends AppCompatActivity {
         @Override
         protected void onCancelled() {
             super.onCancelled();
-            txtNombrePersonaje.setEnabled(false);
-            txtActorPersonaje.setEnabled(false);
-            txtFechaNacimiento.setEnabled(false);
-            sbEstadoPersonaje.setEnabled(false);
+            /*txtNombrePersonaje.setEnabled(true);
+            txtActorPersonaje.setEnabled(true);
+            txtFechaNacimiento.setEnabled(true);
+            sbEstadoPersonaje.setEnabled(true);*/
         }
 
         @Override
@@ -322,10 +322,10 @@ public class DetailActivity extends AppCompatActivity {
                     e.printStackTrace();
                 }
             }
-            txtNombrePersonaje.setEnabled(true);
+            /*txtNombrePersonaje.setEnabled(true);
             txtActorPersonaje.setEnabled(true);
             txtFechaNacimiento.setEnabled(true);
-            sbEstadoPersonaje.setEnabled(true);
+            sbEstadoPersonaje.setEnabled(true);*/
         }
     }
 

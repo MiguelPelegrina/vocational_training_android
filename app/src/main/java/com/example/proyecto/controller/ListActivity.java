@@ -118,8 +118,8 @@ public class ListActivity extends AppCompatActivity {
         if(Preferences.notificationPreference(this)) {
             Toasty.info(this, "Para ver detalles pulse sobre un personaje, podrá " +
                     "modificarlo posteriormente", Toasty.LENGTH_LONG, true).show();
-            Toasty.info(this, "Para añadir o borrar mantenga el dedo " +
-                    "pulsado y elija una opción", Toasty.LENGTH_LONG, true).show();
+            Toasty.info(this, "Para borrar un personaje mantenga el dedo " +
+                    "pulsado y elija la opción de borrar", Toasty.LENGTH_LONG, true).show();
         }
 
         new taskConnection().execute("GET", "characters");
@@ -138,32 +138,41 @@ public class ListActivity extends AppCompatActivity {
         String actor;
         Uri uri;
         if(data != null){
-            if(requestCode == RESULTCODE_ADD_ACT){
-                if(resultCode == RESULT_OK){
-                    name = data.getStringExtra("name");
-                    actor = data.getStringExtra("actor");
-                    Uri imagen;
-                    if(!(imagen = Uri.parse(data.getStringExtra("uri"))).toString().equals("")){
-
-                    }else{
-                        imagen = Uri.parse("android.resource://" + getPackageName() + "/" + R.drawable.image_not_found);
-                    }
-                    listaPersonajes.add(0, new Personaje(name, actor, imagen));
-                    recyclerAdapter.notifyDataSetChanged();
-                }
-            }else{
-                if(requestCode == RESULTCODE_MOD_ACT){
+            switch(requestCode){
+                case RESULTCODE_ADD_ACT:
                     if(resultCode == RESULT_OK){
                         name = data.getStringExtra("name");
                         actor = data.getStringExtra("actor");
-                        uri = Uri.parse(data.getStringExtra("uri"));
-                        personaje.setNombre(name);
-                        personaje.setActor(actor);
-                        personaje.setImagen(uri);
-                        recyclerAdapter.notifyDataSetChanged();;
+                        Uri imagen;
+                        if(!(imagen = Uri.parse(data.getStringExtra("uri"))).toString().equals("")){
+
+                        }else{
+                            imagen = Uri.parse("android.resource://" + getPackageName() + "/" + R.drawable.image_not_found);
+                        }
+                        listaPersonajes.add(0, new Personaje(name, actor, imagen));
+                        recyclerAdapter.notifyDataSetChanged();
                     }
-                }
+                    break;
+                case RESULTCODE_MOD_ACT:
+                    if(requestCode == RESULTCODE_MOD_ACT){
+                        if(resultCode == RESULT_OK){
+                            name = data.getStringExtra("name");
+                            actor = data.getStringExtra("actor");
+                            uri = Uri.parse(data.getStringExtra("uri"));
+                            personaje.setNombre(name);
+                            personaje.setActor(actor);
+                            personaje.setImagen(uri);
+                            recyclerAdapter.notifyDataSetChanged();;
+                        }
+                    }
+                    break;
+
             }
+            /*if(requestCode == RESULTCODE_ADD_ACT){
+
+            }else{
+
+            }*/
         }
     }
 
