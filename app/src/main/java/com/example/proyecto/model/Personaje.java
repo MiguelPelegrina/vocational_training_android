@@ -8,7 +8,7 @@ import java.io.Serializable;
 /**
  * Clase modelo de los elementos que se guardarán en el RecyclerView
  */
-public class Personaje implements Serializable{
+public class Personaje {
     // Atributos de la clase
     private String nombre;
     private String actor;

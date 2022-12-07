@@ -33,6 +33,7 @@ import com.developer.filepicker.view.FilePickerDialog;
 import com.example.proyecto.R;
 import com.example.proyecto.Utilities.Preferences;
 import com.example.proyecto.io.APIConnection;
+import com.example.proyecto.model.Personaje;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -56,11 +57,11 @@ public class DetailActivity extends AppCompatActivity {
     private Button btnGuardar;
     private CircularProgressDrawable progressDrawable;
     private String accion;
-    private String name = "";
-    private String actor = "";
-    private Uri uri = Uri.parse("");
     private boolean imagenNueva = false;
-    private String fecha = "";
+    private Uri uri;
+    private String name;
+    private String actor;
+    private String fecha;
     private String estado = "Alive";
 
     @Override
@@ -97,10 +98,8 @@ public class DetailActivity extends AppCompatActivity {
 
         // Obtenemos el Intent de la activity que inicio esta activity
         Intent intent = getIntent();
-
         accion = intent.getStringExtra("info");
         // Obtenemos el mensaje contenido dentro del Intent a través de la clave "info"
-        String nombre = intent.getStringExtra("name");
 
         TextWatcher textWatcher = new TextWatcher() {
             @Override
@@ -147,7 +146,6 @@ public class DetailActivity extends AppCompatActivity {
                         if(comprobarCampoFecha()){
                             volver();
                         }
-
                         break;
                 }
             }
@@ -215,14 +213,36 @@ public class DetailActivity extends AppCompatActivity {
                     " el dedo pulsado sobre ella", Toasty.LENGTH_LONG, true).show();
         }
 
+        name = intent.getStringExtra("name");
+        actor = intent.getStringExtra("actor");
+        uri = Uri.parse(intent.getStringExtra("uri"));
+        fecha = intent.getStringExtra("birthday");
+        estado = intent.getStringExtra("status");
+
         switch (accion){
             case "mod":
-                // MODIFICAR
-                new taskConnection().execute("GET", "characters?name="+nombre);
-                break;
-            case "modHP":
-                // MODIFICAR
-                new taskConnection().execute("GET", "");
+                txtNombrePersonaje.setText(name);
+                txtActorPersonaje.setText(actor);
+                imgPersonajeGrande.setImageURI(uri);
+                Glide.with(DetailActivity.this)
+                        .load(uri)
+                        .placeholder(progressDrawable)
+                        .error(R.drawable.image_not_found)
+                        .into(imgPersonajeGrande);
+                txtFechaNacimiento.setText(fecha);
+                switch (estado){
+                    case "Alive":
+                    case "true":
+                        sbEstadoPersonaje.setSelection(0);
+                        break;
+                    case "Presumed dead":
+                        sbEstadoPersonaje.setSelection(1);
+                        break;
+                    case "Deceased":
+                    case "false":
+                        sbEstadoPersonaje.setSelection(2);
+                        break;
+                }
                 break;
             case "add":
                 imgPersonajeGrande.setImageResource(R.drawable.image_not_found);
@@ -259,54 +279,6 @@ public class DetailActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
-    }
-
-    private class taskConnection extends AsyncTask<String, Void, String> {
-        @Override
-        protected String doInBackground(String... strings) {
-            String result = null;
-
-            result = APIConnection.getRequest(strings[1], "");
-
-            return result;
-        }
-
-        @Override
-        protected void onPostExecute(String result){
-            if(result != null){
-                try {
-                    JSONArray jsonArray = new JSONArray(result);
-                    JSONObject jsonObject = jsonArray.getJSONObject(0);
-
-                    name = jsonObject.getString("name");
-                    txtNombrePersonaje.setText(name);
-                    actor = jsonObject.getString("portrayed");
-                    txtActorPersonaje.setText(actor);
-                    uri = Uri.parse(jsonObject.getString("img"));
-                    Glide.with(DetailActivity.this)
-                            .load(uri)
-                            .placeholder(progressDrawable)
-                            .error(R.drawable.image_not_found)
-                            .into(imgPersonajeGrande);
-                    fecha = jsonObject.getString("birthday");
-                    txtFechaNacimiento.setText(fecha);
-                    estado = jsonObject.getString("status");
-                    switch (estado){
-                        case "Alive":
-                            sbEstadoPersonaje.setSelection(0);
-                            break;
-                        case "Presumed dead":
-                            sbEstadoPersonaje.setSelection(1);
-                            break;
-                        case "Deceased":
-                            sbEstadoPersonaje.setSelection(2);
-                            break;
-                    }
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
     }
 
     //Métodos auxiliares

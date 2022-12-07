@@ -17,6 +17,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -71,6 +72,7 @@ public class ListActivity extends AppCompatActivity {
             public void onClick(View view) {
                 Intent anadir = new Intent(ListActivity.this, DetailActivity.class);
                 anadir.putExtra("info", "add");
+                anadir.putExtra("uri", "android.resource://" + getPackageName() + "/" + R.drawable.image_not_found);
                 startActivityForResult(anadir, RESULTCODE_ADD_ACT);
             }
         });
@@ -89,7 +91,10 @@ public class ListActivity extends AppCompatActivity {
                 Intent i = new Intent(ListActivity.this, DetailActivity.class);
                 i.putExtra("info", "mod");
                 i.putExtra("name", personaje.getNombre());
-                i.putExtra("actor",personaje.getActor());
+                i.putExtra("actor", personaje.getActor());
+                i.putExtra("birthday", personaje.getFechaNacimiento());
+                i.putExtra("uri", personaje.getImagenUri().toString());
+                i.putExtra("status", personaje.getEstado());
                 i.putExtra("posicion", position);
                 startActivityForResult(i, RESULTCODE_MOD_ACT);
             }
@@ -136,7 +141,7 @@ public class ListActivity extends AppCompatActivity {
                 break;
         }
 
-        new taskConnection().execute("GET", endpoint);
+        new Connection().execute("GET", endpoint);
     }
 
     /**
@@ -159,15 +164,15 @@ public class ListActivity extends AppCompatActivity {
                     if(resultCode == RESULT_OK){
                         name = data.getStringExtra("name");
                         actor = data.getStringExtra("actor");
-                        Uri imagen;
-                        if(!(imagen = Uri.parse(data.getStringExtra("uri"))).toString().equals("")){
+                        if(!(uri = Uri.parse(data.getStringExtra("uri"))).toString().equals("")){
 
                         }else{
-                            imagen = Uri.parse("android.resource://" + getPackageName() + "/" + R.drawable.image_not_found);
+                            uri = Uri.parse("android.resource://" + getPackageName() + "/" + R.drawable.image_not_found);
                         }
+
                         fecha = data.getStringExtra("birthday");
                         estado = data.getStringExtra("status");
-                        listaPersonajes.add(0, new Personaje(name, actor, imagen, fecha, estado));
+                        listaPersonajes.add(0, new Personaje(name, actor, uri, fecha, estado));
                         recyclerAdapter.notifyDataSetChanged();
                     }
                     break;
@@ -219,7 +224,7 @@ public class ListActivity extends AppCompatActivity {
                         sb.replace(auxPos,auxPos+1,"+");
                     }
                     String aux = sb.toString();
-                    new taskConnection().execute("GET", "characters?=name="+aux);
+                    new Connection().execute("GET", "characters?=name="+aux);
                     return true;
                 }
 
@@ -285,7 +290,7 @@ public class ListActivity extends AppCompatActivity {
         }
     };
 
-    private class taskConnection extends AsyncTask<String, Void, String>{
+    private class Connection extends AsyncTask<String, Void, String>{
         @Override
         protected String doInBackground(String... strings) {
             String result = null;
@@ -298,7 +303,6 @@ public class ListActivity extends AppCompatActivity {
                     result = APIConnection.getRequest(strings[1], "hp");
                     break;
             }
-
 
             return result;
         }
