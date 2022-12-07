@@ -32,7 +32,7 @@ import com.developer.filepicker.model.DialogProperties;
 import com.developer.filepicker.view.FilePickerDialog;
 import com.example.proyecto.R;
 import com.example.proyecto.Utilities.Preferences;
-import com.example.proyecto.io.APIConnectionBreakingBad;
+import com.example.proyecto.io.APIConnection;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -220,7 +220,7 @@ public class DetailActivity extends AppCompatActivity {
                 new taskConnection().execute("GET", "characters?name="+nombre);
                 break;
             case "modHP":
-
+                new taskConnection().execute("GET", "");
                 break;
             case "add":
                 imgPersonajeGrande.setImageResource(R.drawable.image_not_found);
@@ -275,7 +275,7 @@ public class DetailActivity extends AppCompatActivity {
         protected String doInBackground(String... strings) {
             String result = null;
 
-            result = APIConnectionBreakingBad.getRequest(strings[1]);
+            result = APIConnection.getRequest(strings[1], "");
 
             return result;
         }

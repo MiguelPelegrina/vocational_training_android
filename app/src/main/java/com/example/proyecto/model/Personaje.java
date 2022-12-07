@@ -14,6 +14,7 @@ public class Personaje {
     private String actor;
     private Uri imagen;
 
+
     /**
      * Constructor por parámetros con todos los atributos
      * @param nombre Nombre del personaje

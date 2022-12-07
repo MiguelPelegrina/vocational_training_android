@@ -1,6 +1,7 @@
 package com.example.proyecto.controller;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
@@ -26,7 +27,11 @@ public class ChoiceActivity extends AppCompatActivity {
         imageViewBB = findViewById(R.id.imageViewBB);
         imageViewHP = findViewById(R.id.imageViewHP);
 
-
+        // Activamos el icono de "Volver"(flecha atrás)
+        ActionBar actionBar = getSupportActionBar();
+        if(actionBar != null){
+            actionBar.setDisplayHomeAsUpEnabled(true);
+        }
 
         Intent i = new Intent(ChoiceActivity.this, ListActivity.class);
         imageViewBB.setOnClickListener(new View.OnClickListener() {

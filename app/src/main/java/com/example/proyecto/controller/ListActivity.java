@@ -22,19 +22,16 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.SearchView;
-import android.widget.Toast;
 
 import com.example.proyecto.R;
 import com.example.proyecto.Utilities.Preferences;
 import com.example.proyecto.adapter.RecyclerAdapter;
-import com.example.proyecto.io.APIConnectionBreakingBad;
-import com.example.proyecto.io.APIConnectionHarryPotter;
+import com.example.proyecto.io.APIConnection;
 import com.example.proyecto.model.Personaje;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import org.json.JSONArray;
 import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.util.ArrayList;
 
@@ -297,10 +294,10 @@ public class ListActivity extends AppCompatActivity {
 
             switch(accion){
                 case "bb":
-                    result = APIConnectionBreakingBad.getRequest(strings[1]);
+                    result = APIConnection.getRequest(strings[1],"bb");
                     break;
                 case "hp":
-                    result = APIConnectionHarryPotter.getRequest(strings[1]);
+                    result = APIConnection.getRequest(strings[1], "hp");
                     break;
             }
 

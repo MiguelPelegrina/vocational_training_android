@@ -7,29 +7,35 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-import es.dmoral.toasty.Toasty;
-
 /**
  * Clase que gestiona la conexión con la base de datos externa
  */
-public class APIConnectionBreakingBad {
+public class APIConnection {
     // Atributos de la clase
     // URL base que no se modificará
-    private static final String URL_BASE = "https://www.breakingbadapi.com/api/";
+    private static final String URL_BASE_BB = "https://www.breakingbadapi.com/api/";
+    private static final String URL_BASE_HP = "https://hp-api.onrender.com/api/characters";
 
     /**
      * Método de clase que realiza una consulta a la API para obtener la información deseada
      * @param endpoint Parámetro que modifica la consulta realizada
      * @return String que contiene toda la información solicitada
      */
-    public static String getRequest(String endpoint){
+    public static String getRequest(String endpoint, String api){
         //Declaracion e inicializacion de variables
         HttpURLConnection http = null;
         String content = null;
-
+        URL url = null;
         try {
             // Nos formamos la URL más el endpoint introducido como parámetro
-            URL url = new URL(URL_BASE + endpoint);
+            switch (api){
+                case "bb":
+                    url = new URL(URL_BASE_BB + endpoint);
+                    break;
+                case "hp":
+                    url = new URL(URL_BASE_HP + endpoint);
+                    break;
+            }
             // Establecemos la conexión
             http = (HttpURLConnection) url.openConnection();
             // Establecemos la codificación de los datos del flujo
