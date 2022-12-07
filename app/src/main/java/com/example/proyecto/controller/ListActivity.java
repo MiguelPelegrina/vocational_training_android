@@ -169,7 +169,6 @@ public class ListActivity extends AppCompatActivity {
                         }else{
                             uri = Uri.parse("android.resource://" + getPackageName() + "/" + R.drawable.image_not_found);
                         }
-
                         fecha = data.getStringExtra("birthday");
                         estado = data.getStringExtra("status");
                         listaPersonajes.add(0, new Personaje(name, actor, uri, fecha, estado));
@@ -181,9 +180,13 @@ public class ListActivity extends AppCompatActivity {
                         name = data.getStringExtra("name");
                         actor = data.getStringExtra("actor");
                         uri = Uri.parse(data.getStringExtra("uri"));
+                        fecha = data.getStringExtra("birthday");
+                        estado = data.getStringExtra("status");
                         personaje.setNombre(name);
                         personaje.setActor(actor);
                         personaje.setImagen(uri);
+                        personaje.setFechaNacimiento(fecha);
+                        personaje.setEstado(estado);
                         recyclerAdapter.notifyDataSetChanged();;
                     }
                     break;
@@ -203,8 +206,8 @@ public class ListActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         // Usamos un inflater para construir la vista pasandole el menu por defecto como parámetro
         // para colocarlo en la vista
-        getMenuInflater().inflate(R.menu.buscador, menu);
-
+        getMenuInflater().inflate(R.menu.simple, menu);
+        /*
         SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
         SearchView searchView = (SearchView) menu.findItem(R.id.searchBar)
                 .getActionView();
@@ -231,7 +234,7 @@ public class ListActivity extends AppCompatActivity {
                     return false;
                 }
             });
-        }
+        }*/
 
         return super.onCreateOptionsMenu(menu);
     }

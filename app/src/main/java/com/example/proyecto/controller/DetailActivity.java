@@ -15,6 +15,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -62,7 +63,7 @@ public class DetailActivity extends AppCompatActivity {
     private String name;
     private String actor;
     private String fecha;
-    private String estado = "Alive";
+    private String estado;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -100,6 +101,11 @@ public class DetailActivity extends AppCompatActivity {
         Intent intent = getIntent();
         accion = intent.getStringExtra("info");
         // Obtenemos el mensaje contenido dentro del Intent a través de la clave "info"
+        name = intent.getStringExtra("name");
+        actor = intent.getStringExtra("actor");
+        uri = Uri.parse(intent.getStringExtra("uri"));
+        fecha = intent.getStringExtra("birthday");
+        estado = intent.getStringExtra("status");
 
         TextWatcher textWatcher = new TextWatcher() {
             @Override
@@ -213,12 +219,6 @@ public class DetailActivity extends AppCompatActivity {
                     " el dedo pulsado sobre ella", Toasty.LENGTH_LONG, true).show();
         }
 
-        name = intent.getStringExtra("name");
-        actor = intent.getStringExtra("actor");
-        uri = Uri.parse(intent.getStringExtra("uri"));
-        fecha = intent.getStringExtra("birthday");
-        estado = intent.getStringExtra("status");
-
         switch (accion){
             case "mod":
                 txtNombrePersonaje.setText(name);
@@ -248,6 +248,7 @@ public class DetailActivity extends AppCompatActivity {
                 imgPersonajeGrande.setImageResource(R.drawable.image_not_found);
                 break;
         }
+        update();
     }
 
     @Override
@@ -296,6 +297,11 @@ public class DetailActivity extends AppCompatActivity {
     private boolean comprobarCamposDiferentes(){
         boolean diferentes = true;
         if(accion.equals("mod")){
+            Log.d("datos", name);
+            Log.d("datos", actor);
+            Log.d("datos", fecha);
+            Log.d("datos", estado);
+            Log.d("datos", name);
             if(name.equals(txtNombrePersonaje.getText().toString()) &&
                     actor.equals(txtActorPersonaje.getText().toString()) &&
                     fecha.equals(txtFechaNacimiento.getText().toString()) &&
@@ -311,7 +317,8 @@ public class DetailActivity extends AppCompatActivity {
     @NonNull
     private String comprobarFecha(String stringFecha) throws ParseException {
         Date fecha = null;
-        SimpleDateFormat formato = new SimpleDateFormat("MM-dd-yyyy");
+        //SimpleDateFormat formato = new SimpleDateFormat("MM-dd-yyyy");
+        SimpleDateFormat formato = new SimpleDateFormat("dd-MM-yyyy");
 
         fecha = formato.parse(stringFecha);
 
@@ -368,9 +375,7 @@ public class DetailActivity extends AppCompatActivity {
         Intent returnIntent = new Intent();
         returnIntent.putExtra("name", txtNombrePersonaje.getText() + "");
         returnIntent.putExtra("actor", txtActorPersonaje.getText() + "");
-        if(uri != null){
-            returnIntent.putExtra("uri", uri.toString());
-        }
+        returnIntent.putExtra("uri", uri.toString());
         returnIntent.putExtra("birthday", txtFechaNacimiento.getText() + "");
         returnIntent.putExtra("status",sbEstadoPersonaje.getSelectedItem().toString());
 
