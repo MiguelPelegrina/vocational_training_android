@@ -8,12 +8,13 @@ import java.io.Serializable;
 /**
  * Clase modelo de los elementos que se guardarán en el RecyclerView
  */
-public class Personaje {
+public class Personaje implements Serializable{
     // Atributos de la clase
     private String nombre;
     private String actor;
     private Uri imagen;
-
+    private String fechaNacimiento;
+    private String estado;
 
     /**
      * Constructor por parámetros con todos los atributos
@@ -21,10 +22,12 @@ public class Personaje {
      * @param actor Nombre del actor o actriz
      * @param imagen Imagen del personaje
      */
-    public Personaje(String nombre, String actor, Uri imagen) {
+    public Personaje(String nombre, String actor, Uri imagen, String fechaNacimiento, String estado) {
         this.nombre = nombre;
         this.actor = actor;
         this.imagen = imagen;
+        this.fechaNacimiento = fechaNacimiento;
+        this.estado = estado;
     }
 
     //getter
@@ -40,6 +43,14 @@ public class Personaje {
         return imagen;
     }
 
+    public String getFechaNacimiento() {
+        return fechaNacimiento;
+    }
+
+    public String getEstado() {
+        return estado;
+    }
+
     //setter
     public void setNombre(String nombre) {
         this.nombre = nombre;
@@ -51,5 +62,13 @@ public class Personaje {
 
     public void setImagen(Uri imagen) {
         this.imagen = imagen;
+    }
+
+    public void setFechaNacimiento(String fechaNacimiento) {
+        this.fechaNacimiento = fechaNacimiento;
+    }
+
+    public void setEstado(String estado) {
+        this.estado = estado;
     }
 }

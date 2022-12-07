@@ -151,6 +151,8 @@ public class ListActivity extends AppCompatActivity {
         String name;
         String actor;
         Uri uri;
+        String fecha;
+        String estado;
         if(data != null){
             switch(requestCode){
                 case RESULTCODE_ADD_ACT:
@@ -163,7 +165,9 @@ public class ListActivity extends AppCompatActivity {
                         }else{
                             imagen = Uri.parse("android.resource://" + getPackageName() + "/" + R.drawable.image_not_found);
                         }
-                        listaPersonajes.add(0, new Personaje(name, actor, imagen));
+                        fecha = data.getStringExtra("birthday");
+                        estado = data.getStringExtra("status");
+                        listaPersonajes.add(0, new Personaje(name, actor, imagen, fecha, estado));
                         recyclerAdapter.notifyDataSetChanged();
                     }
                     break;
@@ -265,12 +269,6 @@ public class ListActivity extends AppCompatActivity {
                     createAlertDialog("Borrar", "¿De verdad quiere borrar el personaje?", item).show();
                     mode.finish();
                     break;
-                /*case R.id.action_menu_item_anadir:
-                    Intent anadir = new Intent(ListActivity.this, DetailActivity.class);
-                    anadir.putExtra("info", "add");
-                    startActivityForResult(anadir, RESULTCODE_ADD_ACT);
-                    mode.finish();
-                    break;*/
                 case R.id.action_menu_item_preferencias:
                     Intent i = new Intent(ListActivity.this, SettingActivity.class);
                     startActivity(i);
@@ -309,37 +307,31 @@ public class ListActivity extends AppCompatActivity {
         protected void onPostExecute(String result){
             if(result != null){
                 try {
-                    switch(accion){
-                        case "bb":
-                            JSONArray jsonArrayBB = new JSONArray(result);
+                    JSONArray jsonArray = new JSONArray(result);
+                    String name = "";
+                    String actor = "";
+                    Uri image = null;
+                    String fecha = "";
+                    String estado = "";
 
-                            String nameBB = "";
-                            String actorBB = "";
-                            Uri imgBB = null;
-                            for (int i = 0; i < jsonArrayBB.length(); i++){
-                                nameBB = jsonArrayBB.getJSONObject(i).getString("name");
-                                actorBB = jsonArrayBB.getJSONObject(i).getString("portrayed");
-                                imgBB = Uri.parse(jsonArrayBB.getJSONObject(i).getString("img"));
-                                listaPersonajes.add(new Personaje(nameBB, actorBB, imgBB));
-                            }
-                            break;
-                        case "hp":
-                            JSONArray jsonArrayHP = new JSONArray(result);
-
-                            String nameHP = "";
-                            String actorHP = "";
-                            Uri imgHP = null;
-
-                            for (int i = 0; i < jsonArrayHP.length(); i++){
-                                nameBB = jsonArrayHP.getJSONObject(i).getString("name");
-                                actorBB = jsonArrayHP.getJSONObject(i).getString("actor");
-                                imgBB = Uri.parse(jsonArrayHP.getJSONObject(i).getString("image"));
-                                listaPersonajes.add(new Personaje(nameBB, actorBB, imgBB));
-                            }
-
-                            break;
+                    for (int i = 0; i < jsonArray.length(); i++){
+                        name = jsonArray.getJSONObject(i).getString("name");
+                        switch(accion){
+                            case "bb":
+                                actor = jsonArray.getJSONObject(i).getString("portrayed");
+                                image = Uri.parse(jsonArray.getJSONObject(i).getString("img"));
+                                fecha = jsonArray.getJSONObject(i).getString("birthday");
+                                estado = jsonArray.getJSONObject(i).getString("status");
+                                break;
+                            case "hp":
+                                actor = jsonArray.getJSONObject(i).getString("actor");
+                                image = Uri.parse(jsonArray.getJSONObject(i).getString("image"));
+                                fecha = jsonArray.getJSONObject(i).getString("dateOfBirth");
+                                estado = String.valueOf(jsonArray.getJSONObject(i).getBoolean("alive"));
+                                break;
+                        }
+                        listaPersonajes.add(new Personaje(name, actor, image, fecha, estado));
                     }
-
                     recyclerAdapter.notifyDataSetChanged();
                 } catch (JSONException e) {
                     e.printStackTrace();
