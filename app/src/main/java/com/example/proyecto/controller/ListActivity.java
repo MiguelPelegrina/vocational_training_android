@@ -66,48 +66,62 @@ public class ListActivity extends AppCompatActivity {
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
 
+        // Asignamos al botón flotante el oyente.
         floatingActionButton = (FloatingActionButton) findViewById(R.id.floatingActionButton);
         floatingActionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                // Al pulsar el botón nos vamos a la actividad detalle que permite al usuario
+                // añadir un nuevo elemento al recyclerView
                 Intent anadir = new Intent(ListActivity.this, DetailActivity.class);
+                // Pasamos la información a la actividad de que se trata de añadir un nuevo elemento
                 anadir.putExtra("info", "add");
+                // Mandamos la imagen por defecto
                 anadir.putExtra("uri", "android.resource://" + getPackageName() + "/" + R.drawable.image_not_found);
                 startActivityForResult(anadir, RESULTCODE_ADD_ACT);
             }
         });
 
+        // Cargamos la preferencias
         Preferences.loadPreferences(this, constraintLayout);
-
+        // Obtenemos el recyclerView y le asignamos la lista de personajes
         recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
         recyclerAdapter = new RecyclerAdapter(listaPersonajes);
-
+        // Asignamos un onClickListener al recyclerAdapter para que nos lleve a la vista detalle del
+        // elemento elegido
         recyclerAdapter.setOnClickListener(new AdapterView.OnClickListener() {
             @Override
             public void onClick(View view) {
+                // Obtenemos el viewHolder, su posicion y el personaje elegido
                 viewHolder = (RecyclerView.ViewHolder) view.getTag();
                 position = viewHolder.getAdapterPosition();
                 personaje = listaPersonajes.get(position);
-                Intent i = new Intent(ListActivity.this, DetailActivity.class);
-                i.putExtra("info", "mod");
-                i.putExtra("name", personaje.getNombre());
-                i.putExtra("actor", personaje.getActor());
-                i.putExtra("birthday", personaje.getFechaNacimiento());
-                i.putExtra("uri", personaje.getImagenUri().toString());
-                i.putExtra("status", personaje.getEstado());
-                i.putExtra("posicion", position);
-                startActivityForResult(i, RESULTCODE_MOD_ACT);
+                // Configuramos el intent que nos lleva a la actividad que se encarga de mostrar
+                // los detalles de la vista a través de la información necesaria del objeto
+                Intent modificar = new Intent(ListActivity.this, DetailActivity.class);
+                modificar.putExtra("info", "mod");
+                modificar.putExtra("name", personaje.getNombre());
+                modificar.putExtra("actor", personaje.getActor());
+                modificar.putExtra("birthday", personaje.getFechaNacimiento());
+                modificar.putExtra("uri", personaje.getImagenUri().toString());
+                modificar.putExtra("status", personaje.getEstado());
+                //modificar.putExtra("posicion", position);
+                startActivityForResult(modificar, RESULTCODE_MOD_ACT);
             }
         });
 
+        // Asignamos el onLongClickListener encargado de llamar el menú de acción
         recyclerAdapter.setOnLongClickListener(new View.OnLongClickListener(){
             @Override
             public boolean onLongClick(View view) {
                 boolean res = false;
+                // Cuando no está creado aún el menú de acción
                 if(actionMode == null){
+                    // Obtenemos el viewHolder, su posicion y el personaje elegido
                     viewHolder = (RecyclerView.ViewHolder) view.getTag();
                     position = viewHolder.getAdapterPosition();
                     personaje = listaPersonajes.get(position);
+                    // Nos creamos el menú de acción
                     actionMode = startSupportActionMode(actionCallback);
                     res = true;
                 }
@@ -116,10 +130,13 @@ public class ListActivity extends AppCompatActivity {
             }
         });
 
+        // Nos creamos un LayoutManager, en este caso linear
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
-
+        // Configuramos el recyclerView asignandole el adapter y el layoutManager
         recyclerView.setAdapter(recyclerAdapter);
         recyclerView.setLayoutManager(layoutManager);
+
+        // En función de las preferencias informamos al usuario de las opciones que tiene
         if(Preferences.notificationPreference(this)) {
             Toasty.info(this, "Para ver detalles pulse sobre un personaje, podrá " +
                     "modificarlo posteriormente", Toasty.LENGTH_LONG, true).show();
@@ -129,9 +146,10 @@ public class ListActivity extends AppCompatActivity {
 
         // Obtenemos el Intent de la activity que inicio esta activity
         Intent intent = getIntent();
-
+        // Averiguamos si el usuario quiere ver la información de Breakind Bad y de Harry Potter
         accion = intent.getStringExtra("selection");
-
+        // En función de la información obtenida configuramos el endpoint de la petición que se
+        // vaya a lanzar
         switch(accion){
             case "bb":
                 endpoint = "characters";
@@ -140,7 +158,7 @@ public class ListActivity extends AppCompatActivity {
                 endpoint = "";
                 break;
         }
-
+        // Lanzamos la petición a la API REST
         new Connection().execute("GET", endpoint);
     }
 
@@ -187,7 +205,7 @@ public class ListActivity extends AppCompatActivity {
                         personaje.setImagen(uri);
                         personaje.setFechaNacimiento(fecha);
                         personaje.setEstado(estado);
-                        recyclerAdapter.notifyDataSetChanged();;
+                        recyclerAdapter.notifyDataSetChanged();
                     }
                     break;
 
@@ -207,34 +225,6 @@ public class ListActivity extends AppCompatActivity {
         // Usamos un inflater para construir la vista pasandole el menu por defecto como parámetro
         // para colocarlo en la vista
         getMenuInflater().inflate(R.menu.simple, menu);
-        /*
-        SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
-        SearchView searchView = (SearchView) menu.findItem(R.id.searchBar)
-                .getActionView();
-        if (searchView != null) {
-            searchView.setSearchableInfo(searchManager
-                    .getSearchableInfo(getComponentName()));
-            searchView.setIconifiedByDefault(true);
-
-            searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-                @Override
-                public boolean onQueryTextSubmit(String s) {
-                    StringBuilder sb = new StringBuilder(s.trim());
-                    if(s.contains(" ")){
-                        int auxPos = s.indexOf(" ");
-                        sb.replace(auxPos,auxPos+1,"+");
-                    }
-                    String aux = sb.toString();
-                    new Connection().execute("GET", "characters?=name="+aux);
-                    return true;
-                }
-
-                @Override
-                public boolean onQueryTextChange(String s) {
-                    return false;
-                }
-            });
-        }*/
 
         return super.onCreateOptionsMenu(menu);
     }
@@ -313,7 +303,7 @@ public class ListActivity extends AppCompatActivity {
             if(result != null){
                 try {
                     JSONArray jsonArray = new JSONArray(result);
-                    String name = "";
+                    String name;
                     String actor = "";
                     Uri image = null;
                     String fecha = "";

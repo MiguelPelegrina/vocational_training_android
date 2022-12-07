@@ -64,13 +64,14 @@ public class DetailActivity extends AppCompatActivity {
     private String actor;
     private String fecha;
     private String estado;
+    private Intent intent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail);
 
-        // Asociamos los elemento del layout con el código
+        // Asociamos los elementos del layout con el código
         constraintLayout = (ConstraintLayout) findViewById(R.id.activity_detail_constraint);
         imgPersonajeGrande = (ImageView) findViewById(R.id.imagenGrande);
         txtNombrePersonaje = (EditText) findViewById(R.id.editTextPersonNameDetalle);
@@ -79,6 +80,7 @@ public class DetailActivity extends AppCompatActivity {
         sbEstadoPersonaje = (Spinner) findViewById(R.id.spEstado);
         btnGuardar = (Button) findViewById(R.id.btnGuardar);
 
+        //
         ArrayAdapter adapter = ArrayAdapter.createFromResource(this, R.array.estados, android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         sbEstadoPersonaje.setAdapter(adapter);
@@ -98,7 +100,7 @@ public class DetailActivity extends AppCompatActivity {
         progressDrawable.start();
 
         // Obtenemos el Intent de la activity que inicio esta activity
-        Intent intent = getIntent();
+        intent = getIntent();
         accion = intent.getStringExtra("info");
         // Obtenemos el mensaje contenido dentro del Intent a través de la clave "info"
         name = intent.getStringExtra("name");
@@ -248,7 +250,6 @@ public class DetailActivity extends AppCompatActivity {
                 imgPersonajeGrande.setImageResource(R.drawable.image_not_found);
                 break;
         }
-        update();
     }
 
     @Override
@@ -297,15 +298,10 @@ public class DetailActivity extends AppCompatActivity {
     private boolean comprobarCamposDiferentes(){
         boolean diferentes = true;
         if(accion.equals("mod")){
-            Log.d("datos", name);
-            Log.d("datos", actor);
-            Log.d("datos", fecha);
-            Log.d("datos", estado);
-            Log.d("datos", name);
-            if(name.equals(txtNombrePersonaje.getText().toString()) &&
-                    actor.equals(txtActorPersonaje.getText().toString()) &&
-                    fecha.equals(txtFechaNacimiento.getText().toString()) &&
-                    estado.equals(sbEstadoPersonaje.getSelectedItem().toString()) &&
+            if(name.equals(txtNombrePersonaje.getText().toString().trim()) &&
+                    actor.equals(txtActorPersonaje.getText().toString().trim()) &&
+                    fecha.equals(txtFechaNacimiento.getText().toString().trim()) &&
+                    estado.equals(sbEstadoPersonaje.getSelectedItem().toString().trim()) &&
                     !imagenNueva){
                 diferentes = false;
             }
