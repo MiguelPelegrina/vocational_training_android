@@ -371,6 +371,9 @@ public class DetailActivity extends AppCompatActivity {
         if(uri != null){
             returnIntent.putExtra("uri", uri.toString());
         }
+        returnIntent.putExtra("birthday", txtFechaNacimiento.getText() + "");
+        returnIntent.putExtra("status",sbEstadoPersonaje.getSelectedItem().toString());
+
         setResult(DetailActivity.RESULT_OK, returnIntent);
 
         finish();

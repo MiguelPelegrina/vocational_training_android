@@ -177,16 +177,14 @@ public class ListActivity extends AppCompatActivity {
                     }
                     break;
                 case RESULTCODE_MOD_ACT:
-                    if(requestCode == RESULTCODE_MOD_ACT){
-                        if(resultCode == RESULT_OK){
-                            name = data.getStringExtra("name");
-                            actor = data.getStringExtra("actor");
-                            uri = Uri.parse(data.getStringExtra("uri"));
-                            personaje.setNombre(name);
-                            personaje.setActor(actor);
-                            personaje.setImagen(uri);
-                            recyclerAdapter.notifyDataSetChanged();;
-                        }
+                    if(resultCode == RESULT_OK){
+                        name = data.getStringExtra("name");
+                        actor = data.getStringExtra("actor");
+                        uri = Uri.parse(data.getStringExtra("uri"));
+                        personaje.setNombre(name);
+                        personaje.setActor(actor);
+                        personaje.setImagen(uri);
+                        recyclerAdapter.notifyDataSetChanged();;
                     }
                     break;
 
