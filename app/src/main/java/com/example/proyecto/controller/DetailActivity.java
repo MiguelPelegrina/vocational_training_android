@@ -15,7 +15,6 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -211,14 +210,17 @@ public class DetailActivity extends AppCompatActivity {
 
         if(Preferences.notificationPreference(this)) {
             Toasty.info(DetailActivity.this, "Para poder guardar los cambios los campos" +
-                    " no deben estar vacios").show();
+                    " no deben estar vacios", Toasty.LENGTH_LONG, true).show();
             Toasty.info(DetailActivity.this, "Puede modificar la imagen manteniendo " +
-                    " el dedo pulsado sobre ella").show();
+                    " el dedo pulsado sobre ella", Toasty.LENGTH_LONG, true).show();
         }
 
         switch (accion){
             case "mod":
                 new taskConnection().execute("GET", "characters?name="+nombre);
+                break;
+            case "modHP":
+
                 break;
             case "add":
                 imgPersonajeGrande.setImageResource(R.drawable.image_not_found);
@@ -385,8 +387,6 @@ public class DetailActivity extends AppCompatActivity {
 
         return valid;
     }
-
-
 
     @NonNull
     private AlertDialog createAlertDialog(String titulo, String mensaje){

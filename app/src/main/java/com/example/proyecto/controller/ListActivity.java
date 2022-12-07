@@ -28,11 +28,13 @@ import com.example.proyecto.R;
 import com.example.proyecto.Utilities.Preferences;
 import com.example.proyecto.adapter.RecyclerAdapter;
 import com.example.proyecto.io.APIConnectionBreakingBad;
+import com.example.proyecto.io.APIConnectionHarryPotter;
 import com.example.proyecto.model.Personaje;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import org.json.JSONArray;
 import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 
@@ -48,7 +50,8 @@ public class ListActivity extends AppCompatActivity {
     private RecyclerAdapter recyclerAdapter;
     private ActionMode actionMode;
     private FloatingActionButton floatingActionButton;
-    // Variables auxiliares
+    private String accion;
+    private String endpoint;
     private Personaje personaje;
     private RecyclerView.ViewHolder viewHolder;
     private int position;
@@ -122,7 +125,21 @@ public class ListActivity extends AppCompatActivity {
                     "pulsado y elija la opción de borrar", Toasty.LENGTH_LONG, true).show();
         }
 
-        new taskConnection().execute("GET", "characters");
+        // Obtenemos el Intent de la activity que inicio esta activity
+        Intent intent = getIntent();
+
+        accion = intent.getStringExtra("selection");
+
+        switch(accion){
+            case "bb":
+                endpoint = "characters";
+                break;
+            case "hp":
+                endpoint = "";
+                break;
+        }
+
+        new taskConnection().execute("GET", endpoint);
     }
 
     /**
@@ -168,11 +185,6 @@ public class ListActivity extends AppCompatActivity {
                     break;
 
             }
-            /*if(requestCode == RESULTCODE_ADD_ACT){
-
-            }else{
-
-            }*/
         }
     }
 
@@ -187,7 +199,7 @@ public class ListActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         // Usamos un inflater para construir la vista pasandole el menu por defecto como parámetro
         // para colocarlo en la vista
-        getMenuInflater().inflate(R.menu.simple, menu);
+        getMenuInflater().inflate(R.menu.buscador, menu);
 
         SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
         SearchView searchView = (SearchView) menu.findItem(R.id.searchBar)
@@ -283,7 +295,15 @@ public class ListActivity extends AppCompatActivity {
         protected String doInBackground(String... strings) {
             String result = null;
 
-            result = APIConnectionBreakingBad.getRequest(strings[1]);
+            switch(accion){
+                case "bb":
+                    result = APIConnectionBreakingBad.getRequest(strings[1]);
+                    break;
+                case "hp":
+                    result = APIConnectionHarryPotter.getRequest(strings[1]);
+                    break;
+            }
+
 
             return result;
         }
@@ -292,17 +312,37 @@ public class ListActivity extends AppCompatActivity {
         protected void onPostExecute(String result){
             if(result != null){
                 try {
-                    JSONArray jsonArray = new JSONArray(result);
+                    switch(accion){
+                        case "bb":
+                            JSONArray jsonArrayBB = new JSONArray(result);
 
-                    String name = "";
-                    String actor = "";
-                    Uri img = null;
-                    for (int i = 0; i < jsonArray.length(); i++){
-                        name = jsonArray.getJSONObject(i).getString("name");
-                        actor = jsonArray.getJSONObject(i).getString("portrayed");
-                        img = Uri.parse(jsonArray.getJSONObject(i).getString("img"));
-                        listaPersonajes.add(new Personaje(name, actor, img));
+                            String nameBB = "";
+                            String actorBB = "";
+                            Uri imgBB = null;
+                            for (int i = 0; i < jsonArrayBB.length(); i++){
+                                nameBB = jsonArrayBB.getJSONObject(i).getString("name");
+                                actorBB = jsonArrayBB.getJSONObject(i).getString("portrayed");
+                                imgBB = Uri.parse(jsonArrayBB.getJSONObject(i).getString("img"));
+                                listaPersonajes.add(new Personaje(nameBB, actorBB, imgBB));
+                            }
+                            break;
+                        case "hp":
+                            JSONArray jsonArrayHP = new JSONArray(result);
+
+                            String nameHP = "";
+                            String actorHP = "";
+                            Uri imgHP = null;
+
+                            for (int i = 0; i < jsonArrayHP.length(); i++){
+                                nameBB = jsonArrayHP.getJSONObject(i).getString("name");
+                                actorBB = jsonArrayHP.getJSONObject(i).getString("actor");
+                                imgBB = Uri.parse(jsonArrayHP.getJSONObject(i).getString("image"));
+                                listaPersonajes.add(new Personaje(nameBB, actorBB, imgBB));
+                            }
+
+                            break;
                     }
+
                     recyclerAdapter.notifyDataSetChanged();
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -341,9 +381,9 @@ public class ListActivity extends AppCompatActivity {
         if(borrar){
             listaPersonajes.remove(personaje);
             recyclerAdapter.notifyDataSetChanged();
-            Toast.makeText(ListActivity.this, "Se ha borrado el personaje", Toast.LENGTH_SHORT).show();
+            Toasty.success(ListActivity.this, "Se ha borrado el personaje", Toasty.LENGTH_LONG, true).show();
         }else{
-            Toast.makeText(ListActivity.this, "Operación cancelada", Toast.LENGTH_SHORT).show();
+            Toasty.info(ListActivity.this, "Operación cancelada", Toasty.LENGTH_LONG, true).show();
         }
     }
 }

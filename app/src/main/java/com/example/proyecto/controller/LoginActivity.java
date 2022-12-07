@@ -86,7 +86,7 @@ public class LoginActivity extends AppCompatActivity {
         btnLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(LoginActivity.this, ListActivity.class);
+                Intent intent = new Intent(LoginActivity.this, ChoiceActivity.class);
                 // Se realizarán todas las comprobaciones necesarias
                 // Comprobamos que los campos de texto no estén vacios
                 if(comprobarCampos()) {
