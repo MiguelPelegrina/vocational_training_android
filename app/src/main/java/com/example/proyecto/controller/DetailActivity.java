@@ -7,13 +7,17 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.swiperefreshlayout.widget.CircularProgressDrawable;
 
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.text.Editable;
+import android.text.InputType;
 import android.text.TextWatcher;
+import android.view.ContextMenu;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -57,6 +61,8 @@ public class DetailActivity extends AppCompatActivity {
     private String fecha;
     private String estado;
     private Intent intent;
+    private FilePickerDialog dialog;
+    private String enlaceWeb;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,6 +77,11 @@ public class DetailActivity extends AppCompatActivity {
         txtFechaNacimiento = (EditText) findViewById(R.id.editTextPersonajeDetalleNacimiento);
         sbEstadoPersonaje = (Spinner) findViewById(R.id.spEstado);
         btnGuardar = (Button) findViewById(R.id.btnGuardar);
+
+        // Registramos la imagen como menú de contexto
+        // De tal forma tendremos la opción de modificar o añadir una imagen a partir de un fichero
+        // almacenado previamente o un imagen elegida a través de una URI
+        registerForContextMenu(imgPersonajeGrande);
 
         // Rellenamos el spinner que guarda los posible estados de los personajes
         ArrayAdapter adapter = ArrayAdapter.createFromResource(this, R.array.estados, android.R.layout.simple_spinner_item);
@@ -188,7 +199,7 @@ public class DetailActivity extends AppCompatActivity {
         // Establecemos las extensiones permitidas
         properties.extensions = new String[]{"jpg","jpeg","png"};
         // Nos creamos un objeto de la ventana de dialogo
-        FilePickerDialog dialog = new FilePickerDialog(DetailActivity.this, properties);
+        dialog = new FilePickerDialog(DetailActivity.this, properties);
         // Modificamos su título
         dialog.setTitle("Eliga una imagen");
         // Asignamos un oyente al dialogo
@@ -206,7 +217,6 @@ public class DetailActivity extends AppCompatActivity {
                     Toasty.error(DetailActivity.this,"Solo eliga ficheros con la " +
                             "extensión jpg o png").show();
                 }*/
-
                 // Modificamos nuestra variable booleana que registra cambios en las imagenes
                 imagenNueva = true;
                 // Comprobamos si se han modificado los datos para habilitar el boton de guardar al
@@ -216,15 +226,16 @@ public class DetailActivity extends AppCompatActivity {
         });
         // Le asignamos al imageView que mostrará el dialog configurado previamente cuando se realice
         // un onLongClick
-        imgPersonajeGrande.setOnLongClickListener(new View.OnLongClickListener() {
+        /*imgPersonajeGrande.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View view) {
                 dialog.show();
 
                 return false;
             }
-        });
+        });*/
 
+        // En función de las preferencias se mostrarán notificaciones informativas
         if(Preferences.notificationPreference(this)) {
             Toasty.info(DetailActivity.this, "Para poder guardar los cambios los campos" +
                     " no deben estar vacios", Toasty.LENGTH_LONG, true).show();
@@ -261,6 +272,27 @@ public class DetailActivity extends AppCompatActivity {
                 imgPersonajeGrande.setImageResource(R.drawable.image_not_found);
                 break;
         }
+    }
+
+    @Override
+    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+        super.onCreateContextMenu(menu, v, menuInfo);
+        getMenuInflater().inflate(R.menu.flotante, menu);
+        menu.setHeaderTitle("Elección de imagen");
+    }
+
+    @Override
+    public boolean onContextItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()){
+            case R.id.elegirFichero:
+                dialog.show();
+                break;
+            case R.id.elegirUri:
+                createInputDialog().show();
+                break;
+        }
+
+        return true;
     }
 
     @Override
@@ -397,6 +429,34 @@ public class DetailActivity extends AppCompatActivity {
             }
         });
 
+        return builder.create();
+    }
+
+
+    private AlertDialog createInputDialog(){
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Introduzca la ruta de una imagen");
+        final EditText input = new EditText(this);
+        input.setInputType(InputType.TYPE_CLASS_TEXT);
+        builder.setView(input);
+        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                enlaceWeb = input.getText().toString();
+                Glide.with(DetailActivity.this)
+                        .load(enlaceWeb)
+                        .placeholder(progressDrawable)
+                        .error(R.drawable.image_not_found)
+                        .into(imgPersonajeGrande);
+                imagenNueva = true;
+            }
+        });
+        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.cancel();
+            }
+        });
         return builder.create();
     }
 

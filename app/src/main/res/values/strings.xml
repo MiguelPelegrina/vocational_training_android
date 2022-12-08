@@ -24,4 +24,6 @@
     <string name="search">Search</string>
     <string name="breaking_bad">Breaking Bad</string>
     <string name="harry_potter">Harry Potter</string>
+    <string name="elegir_fichero_almacenado">Elegir fichero almacenado</string>
+    <string name="introducir_enlace_web">Introducir enlace web</string>
 </resources>

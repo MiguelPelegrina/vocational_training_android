@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/elegirFichero"
+        android:title="@string/elegir_fichero_almacenado" />
+    <item
+        android:id="@+id/elegirUri"
+        android:title="@string/introducir_enlace_web" />
+</menu>
