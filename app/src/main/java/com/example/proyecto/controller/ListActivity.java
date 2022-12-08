@@ -265,10 +265,12 @@ public class ListActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()){
+            // Si queremos modificar las preferencias
             case R.id.item_preferencias:
                 Intent ver = new Intent(ListActivity.this, SettingActivity.class);
                 startActivity(ver);
                 break;
+                // Si queremos volver a la actividad anterior
             case android.R.id.home:
                 onBackPressed();
                 break;
@@ -277,6 +279,7 @@ public class ListActivity extends AppCompatActivity {
         return true;
     }
 
+    // Configuramos el menú de acción
     private ActionMode.Callback actionCallback = new ActionMode.Callback() {
         @Override
         public boolean onCreateActionMode(ActionMode mode, Menu menu) {
@@ -294,7 +297,8 @@ public class ListActivity extends AppCompatActivity {
         public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
             switch(item.getItemId()){
                 case R.id.action_menu_item_borrar:
-                    createAlertDialog("Borrar", "¿De verdad quiere borrar el personaje?", item).show();
+                    createAlertDialog("Borrar", "¿De verdad quiere borrar el " +
+                            "personaje? " + personaje.getNombre(), item).show();
                     mode.finish();
                     break;
                 case R.id.action_menu_item_preferencias:

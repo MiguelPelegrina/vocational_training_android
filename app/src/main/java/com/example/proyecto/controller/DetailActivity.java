@@ -10,12 +10,10 @@ import androidx.swiperefreshlayout.widget.CircularProgressDrawable;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -33,12 +31,6 @@ import com.developer.filepicker.model.DialogProperties;
 import com.developer.filepicker.view.FilePickerDialog;
 import com.example.proyecto.R;
 import com.example.proyecto.Utilities.Preferences;
-import com.example.proyecto.io.APIConnection;
-import com.example.proyecto.model.Personaje;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.io.File;
 import java.text.ParseException;
@@ -80,7 +72,7 @@ public class DetailActivity extends AppCompatActivity {
         sbEstadoPersonaje = (Spinner) findViewById(R.id.spEstado);
         btnGuardar = (Button) findViewById(R.id.btnGuardar);
 
-        //
+        // Rellenamos el spinner que guarda los posible estados de los personajes
         ArrayAdapter adapter = ArrayAdapter.createFromResource(this, R.array.estados, android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         sbEstadoPersonaje.setAdapter(adapter);
@@ -91,8 +83,10 @@ public class DetailActivity extends AppCompatActivity {
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
 
+        // Cargamos las preferencias
         Preferences.loadPreferences(this, constraintLayout);
 
+        // Configuramos el CircularProgressDrawable que indicará que se está cargando una imagen
         progressDrawable = new CircularProgressDrawable(this);
         progressDrawable.setStrokeWidth(15f);
         progressDrawable.setStyle(CircularProgressDrawable.LARGE);
@@ -101,13 +95,15 @@ public class DetailActivity extends AppCompatActivity {
 
         // Obtenemos el Intent de la activity que inicio esta activity
         intent = getIntent();
+        // Obtenemos toda la información pasada a través del intent
         accion = intent.getStringExtra("info");
-        // Obtenemos el mensaje contenido dentro del Intent a través de la clave "info"
         name = intent.getStringExtra("name");
         actor = intent.getStringExtra("actor");
         uri = Uri.parse(intent.getStringExtra("uri"));
         fecha = intent.getStringExtra("birthday");
         estado = intent.getStringExtra("status");
+        // Esta parte es necesaria para adaptar el contenido del spinner a ambas APIs ya que una lo
+        // guarda como variable boleana y la otro como "enumerado" de tres opciones
         if(accion.equals("mod")){
             if(estado.equals("true")){
                 estado = "Alive";
@@ -118,6 +114,11 @@ public class DetailActivity extends AppCompatActivity {
             }
         }
 
+        // El textWatcher está implementado como habilitador del botón de guardar:
+        // La idea es que mientras que el botón solo se habilite cuando
+        // 1. Los campos NO estén vacios
+        // 2. La información se haya modificado de alguna manera en alguno de los campos, incluyendo
+        // la imagen
         TextWatcher textWatcher = new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
@@ -134,6 +135,7 @@ public class DetailActivity extends AppCompatActivity {
                 update();
             }
         };
+        // Asignamos el oyente configurado a todos los componentes de texto y al spinner
         txtNombrePersonaje.addTextChangedListener(textWatcher);
         txtActorPersonaje.addTextChangedListener(textWatcher);
         txtFechaNacimiento.addTextChangedListener(textWatcher);
@@ -148,15 +150,15 @@ public class DetailActivity extends AppCompatActivity {
                 update();
             }
         });
+
+        //
         btnGuardar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 switch(accion){
                     case "mod":
-                        if(comprobarCamposDiferentes()){
-                            if(comprobarCampoFecha()){
-                                createAlertDialog("Modificar", "¿De verdad quiere modificar los datos del personaje?").show();
-                            }
+                        if(comprobarCampoFecha()){
+                            createAlertDialog().show();
                         }
                         break;
                     case "add":
@@ -319,9 +321,17 @@ public class DetailActivity extends AppCompatActivity {
         return diferentes;
     }
 
+    /**
+     * Método encargado de comprobar que la fecha introducida sea correcta
+     * @param stringFecha
+     * @return Devuelva un String con la fecha comprobado
+     * @throws ParseException Excepcion que se lanza cuando el formato de la fecha
+     * introducido no corresponde al deseado
+     */
     @NonNull
     private String comprobarFecha(String stringFecha) throws ParseException {
         Date fecha = null;
+        //TODO si vuelve a funcionar la API de BB
         //SimpleDateFormat formato = new SimpleDateFormat("MM-dd-yyyy");
         SimpleDateFormat formato = new SimpleDateFormat("dd-MM-yyyy");
 
@@ -332,16 +342,24 @@ public class DetailActivity extends AppCompatActivity {
         return stringFecha;
     }
 
+    /**
+     * Método encargado de comprobar que el campo de texto de la fecha sea válido y en el caso de
+     * desconocer la fecha que se tenga que escribir "unknown". Ya que el formato de la fecha
+     * puede llegar a ser poco intuitivo se informa al usuario sobre la correcta edición del campo
+     * @return
+     */
     private boolean comprobarCampoFecha(){
         boolean valid = false;
-
+        // Aceptamos el String unknown, independientemente de que esté en mayúscula o minúscula
         if(txtFechaNacimiento.getText().toString().equalsIgnoreCase("unknown")){
             valid = true;
         }else{
             try {
+                // Comprobamos la fecha indicada
                 comprobarFecha(txtFechaNacimiento.getText().toString());
                 valid = true;
             } catch (ParseException e) {
+                //TODO si vuelve a funcionar la API de BB
                 //Toasty.error(DetailActivity.this,"Introducza una fecha válida según el " +
                         //"formato MM-dd-yyyy").show();
                 Toasty.error(DetailActivity.this,"Introducza una fecha válida según el " +
@@ -352,11 +370,15 @@ public class DetailActivity extends AppCompatActivity {
         return valid;
     }
 
+    /**
+     *
+     * @return
+     */
     @NonNull
-    private AlertDialog createAlertDialog(String titulo, String mensaje){
+    private AlertDialog createAlertDialog(){
         AlertDialog.Builder builder = new AlertDialog.Builder(DetailActivity.this);
 
-        builder.setMessage(mensaje).setTitle(titulo);
+        builder.setMessage("¿De verdad quiere modificar los datos del personaje?").setTitle("Modificar");
 
         builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
             @Override
@@ -378,21 +400,32 @@ public class DetailActivity extends AppCompatActivity {
         return builder.create();
     }
 
+    /**
+     * Método encargado de preparar el intent devuelta hacia la ListActivity desde la cual se
+     * inicio esta actividad
+     */
     private void volver(){
+        // Configuramos el intent
         Intent returnIntent = new Intent();
         returnIntent.putExtra("name", txtNombrePersonaje.getText() + "");
         returnIntent.putExtra("actor", txtActorPersonaje.getText() + "");
         returnIntent.putExtra("uri", uri.toString());
         returnIntent.putExtra("birthday", txtFechaNacimiento.getText() + "");
         returnIntent.putExtra("status",sbEstadoPersonaje.getSelectedItem().toString());
-
+        // Damos la actividad como finalizada de forma correcta
         setResult(DetailActivity.RESULT_OK, returnIntent);
-
+        // Terminamos esta actividad
         finish();
     }
 
+    /**
+     * Método encargado de comprobar que los campos de vista no estén vacios y que hayan modificado
+     * con respecto a la información cargada inicialmente
+     */
     private void update(){
+        // Una vez que hayamos comprobado que los campos no estén vacios
         if(!comprobarCamposVacios()){
+            // Comprobamos que los campos sean diferentes
             if(comprobarCamposDiferentes()){
                 btnGuardar.setEnabled(true);
             }else{
