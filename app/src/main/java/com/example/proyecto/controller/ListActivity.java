@@ -10,6 +10,7 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.app.ProgressDialog;
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -53,6 +54,8 @@ public class ListActivity extends AppCompatActivity {
     private Personaje personaje;
     private RecyclerView.ViewHolder viewHolder;
     private int position;
+    private Connection connection;
+    private ProgressDialog progressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -158,8 +161,19 @@ public class ListActivity extends AppCompatActivity {
                 endpoint = "";
                 break;
         }
+
+        progressDialog = new ProgressDialog(ListActivity.this);
+        progressDialog.setMessage("Cargando los datos.");
+        progressDialog.setCancelable(true);
+        progressDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
+            @Override
+            public void onCancel(DialogInterface dialogInterface) {
+                connection.cancel(true);
+            }
+        });
         // Lanzamos la petición a la API REST
-        new Connection().execute("GET", endpoint);
+        connection = new Connection();
+        connection.execute("GET", endpoint);
     }
 
     /**
@@ -283,6 +297,12 @@ public class ListActivity extends AppCompatActivity {
 
     private class Connection extends AsyncTask<String, Void, String>{
         @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            progressDialog.show();
+        }
+
+        @Override
         protected String doInBackground(String... strings) {
             String result = null;
 
@@ -296,6 +316,12 @@ public class ListActivity extends AppCompatActivity {
             }
 
             return result;
+        }
+
+        @Override
+        protected void onCancelled() {
+            super.onCancelled();
+            Toasty.error(ListActivity.this, "Peitción cancelada", Toasty.LENGTH_LONG, true).show();
         }
 
         @Override
@@ -327,6 +353,7 @@ public class ListActivity extends AppCompatActivity {
                         }
                         listaPersonajes.add(new Personaje(name, actor, image, fecha, estado));
                     }
+                    progressDialog.dismiss();
                     recyclerAdapter.notifyDataSetChanged();
                 } catch (JSONException e) {
                     e.printStackTrace();

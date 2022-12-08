@@ -22,7 +22,7 @@
         android:layout_height="wrap_content"
         android:clickable="true"
         android:contentDescription="@string/anadir"
-        android:tint="#000000"
+        android:tint="@color/black"
         app:backgroundTint="@color/background_color"
         app:fabSize="auto"
         app:layout_constraintBottom_toBottomOf="@+id/recyclerView"
