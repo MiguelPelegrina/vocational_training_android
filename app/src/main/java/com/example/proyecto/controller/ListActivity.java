@@ -69,7 +69,7 @@ public class ListActivity extends AppCompatActivity {
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
 
-        // Asignamos al botón flotante el oyente.
+        // Asignamos al botón flotante un oyente.
         floatingActionButton = (FloatingActionButton) findViewById(R.id.floatingActionButton);
         floatingActionButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -162,38 +162,47 @@ public class ListActivity extends AppCompatActivity {
                 break;
         }
 
+        // Configuramos a un ProgressDialog de tal forma que avisa al usuario de que se están
+        // cargando los datos
         progressDialog = new ProgressDialog(ListActivity.this);
-        progressDialog.setMessage("Cargando los datos.");
+        progressDialog.setMessage("Cargando los datos de los personajes.");
         progressDialog.setCancelable(true);
+        // Asignamos un oyente al dialogo para poder cancelar el hilo
         progressDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
             @Override
             public void onCancel(DialogInterface dialogInterface) {
                 connection.cancel(true);
             }
         });
-        // Lanzamos la petición a la API REST
+        // Lanzamos la petición a la API
         connection = new Connection();
         connection.execute("GET", endpoint);
     }
 
     /**
-     * Método que recibe información de una actividad lanzada anteriormente
-     * @param requestCode Codigo que identifica qué actividad envía el mensaje.
+     * Método que se ejecuta cuando finaliza una activida lanzada anteriormente
+     * @param requestCode Código que identifica qué actividad envía el mensaje.
      * @param resultCode Código que identifica si el mensaje que ha recibido es correcto o no.
      * @param data Contiene el mensaje.
      */
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+        // Declaración de variables
         String name;
         String actor;
         Uri uri;
         String fecha;
         String estado;
+        // Si hay datos
         if(data != null){
+            // Comprobamos el código utilizado al lanzar la actividad
             switch(requestCode){
+                // Si queriamos añadir un elemento
                 case RESULTCODE_ADD_ACT:
+                    // Si el resultado es correcto
                     if(resultCode == RESULT_OK){
+                        // Obtenemos los datos y los asignamos a las variables
                         name = data.getStringExtra("name");
                         actor = data.getStringExtra("actor");
                         if(!(uri = Uri.parse(data.getStringExtra("uri"))).toString().equals("")){
@@ -203,22 +212,30 @@ public class ListActivity extends AppCompatActivity {
                         }
                         fecha = data.getStringExtra("birthday");
                         estado = data.getStringExtra("status");
+                        // Con los datos devueltos nos creamos un personaje nuevo que insertamos en
+                        // el recyclerView y notificamos al recyclerAdapter
                         listaPersonajes.add(0, new Personaje(name, actor, uri, fecha, estado));
                         recyclerAdapter.notifyDataSetChanged();
+                        Toasty.success(ListActivity.this, "Personaje añadido").show();
                     }
                     break;
+                    // Si queriamos modificar un elemento
                 case RESULTCODE_MOD_ACT:
+                    // Si el resultado es correcto
                     if(resultCode == RESULT_OK){
+                        // Obtenemos los datos y los asignamos a las variables
                         name = data.getStringExtra("name");
                         actor = data.getStringExtra("actor");
                         uri = Uri.parse(data.getStringExtra("uri"));
                         fecha = data.getStringExtra("birthday");
                         estado = data.getStringExtra("status");
+                        // Modificamos los datos del personaje
                         personaje.setNombre(name);
                         personaje.setActor(actor);
                         personaje.setImagen(uri);
                         personaje.setFechaNacimiento(fecha);
                         personaje.setEstado(estado);
+                        // Notificamos al recyclerAdapter
                         recyclerAdapter.notifyDataSetChanged();
                     }
                     break;
@@ -230,6 +247,7 @@ public class ListActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        // Cargamos las preferencias
         Preferences.loadPreferences(this, constraintLayout);
     }
 

@@ -3,6 +3,7 @@ package com.example.proyecto.controller;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -12,10 +13,14 @@ import android.view.View;
 import android.widget.ImageView;
 
 import com.example.proyecto.R;
+import com.example.proyecto.Utilities.Preferences;
 
 import java.util.List;
 
+import es.dmoral.toasty.Toasty;
+
 public class ChoiceActivity extends AppCompatActivity {
+    private ConstraintLayout constraintLayout;
     private ImageView imageViewBB;
     private ImageView imageViewHP;
 
@@ -23,6 +28,7 @@ public class ChoiceActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_choice);
+        constraintLayout = (ConstraintLayout) findViewById(R.id.constraint_layout_choice);
 
         imageViewBB = findViewById(R.id.imageViewBB);
         imageViewHP = findViewById(R.id.imageViewHP);
@@ -50,6 +56,18 @@ public class ChoiceActivity extends AppCompatActivity {
             }
         });
 
+        // En función de las preferencias informamos al usuario de las opciones que tiene
+        if(Preferences.notificationPreference(this)) {
+            Toasty.info(this, "Elija una de las dos bibliotecas que quiera consultar",
+                    Toasty.LENGTH_LONG, true).show();
+        }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        // Cargamos las preferencias
+        Preferences.loadPreferences(this, constraintLayout);
     }
 
     // Sobreescribimos el metodo onCreateOptionsMenu para crearnos un menu personalizada
