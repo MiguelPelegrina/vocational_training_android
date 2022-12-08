@@ -108,11 +108,13 @@ public class DetailActivity extends AppCompatActivity {
         uri = Uri.parse(intent.getStringExtra("uri"));
         fecha = intent.getStringExtra("birthday");
         estado = intent.getStringExtra("status");
-        if(estado.equals("true")){
-            estado = "Alive";
-        }else{
-            if(estado.equals("false")){
-                estado = "Dead";
+        if(accion.equals("mod")){
+            if(estado.equals("true")){
+                estado = "Alive";
+            }else{
+                if(estado.equals("false")){
+                    estado = "Dead";
+                }
             }
         }
 

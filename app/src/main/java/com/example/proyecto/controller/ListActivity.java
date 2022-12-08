@@ -321,7 +321,7 @@ public class ListActivity extends AppCompatActivity {
         @Override
         protected void onCancelled() {
             super.onCancelled();
-            Toasty.error(ListActivity.this, "Peitción cancelada", Toasty.LENGTH_LONG, true).show();
+            Toasty.error(ListActivity.this, "Petición cancelada", Toasty.LENGTH_LONG, true).show();
         }
 
         @Override
