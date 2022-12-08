@@ -108,6 +108,13 @@ public class DetailActivity extends AppCompatActivity {
         uri = Uri.parse(intent.getStringExtra("uri"));
         fecha = intent.getStringExtra("birthday");
         estado = intent.getStringExtra("status");
+        if(estado.equals("true")){
+            estado = "Alive";
+        }else{
+            if(estado.equals("false")){
+                estado = "Dead";
+            }
+        }
 
         TextWatcher textWatcher = new TextWatcher() {
             @Override
@@ -326,15 +333,17 @@ public class DetailActivity extends AppCompatActivity {
     private boolean comprobarCampoFecha(){
         boolean valid = false;
 
-        if(txtFechaNacimiento.getText().toString().trim().equalsIgnoreCase("Unknown")){
+        if(txtFechaNacimiento.getText().toString().equalsIgnoreCase("unknown")){
             valid = true;
         }else{
             try {
-                comprobarFecha(txtFechaNacimiento.getText().toString().trim());
+                comprobarFecha(txtFechaNacimiento.getText().toString());
                 valid = true;
             } catch (ParseException e) {
+                //Toasty.error(DetailActivity.this,"Introducza una fecha válida según el " +
+                        //"formato MM-dd-yyyy").show();
                 Toasty.error(DetailActivity.this,"Introducza una fecha válida según el " +
-                        "formato MM-dd-yyyy").show();
+                        "formato dd-MM-yyyy o escribe unknown si desconoce la fecha").show();
             }
         }
 
