@@ -1,29 +1,24 @@
 <resources>
     <string name="app_name">Proyecto</string>
-    <!-- String relacionados con el login y el registro -->
     <string name="password">Contrasena</string>
     <string name="login">Login</string>
     <string name="registro">Registro</string>
     <string name="name">Nombre</string>
-    <!-- String relacionados con las preferencias -->
     <string name="preferencias">Preferencias</string>
     <string name="email">Correo electrónico</string>
     <string name="colores">Elija el color de fondo</string>
     <string name="guardarPreferencias">Guardar datos del usuario</string>
-    <!-- String relacionados con el custom_item_list -->
-    <string name="imagen">Imagen</string>
+        <string name="imagen">Imagen</string>
     <string name="nombrePersonaje">Nombre</string>
     <string name="actor">Actor/Actriz</string>
-    <!-- String relacionados con el action_menu_item -->
     <string name="borrar">Borrar</string>
     <string name="anadir">Añadir</string>
-    <!-- String relacionados con la vista detalle -->
     <string name="fecha_nacimiento">Nacimiento</string>
     <string name="estado">Estado</string>
     <string name="guardar_cambios">Guardar cambios</string>
     <string name="search">Search</string>
     <string name="breaking_bad">Breaking Bad</string>
     <string name="harry_potter">Harry Potter</string>
-    <string name="elegir_fichero_almacenado">Elegir fichero almacenado</string>
-    <string name="introducir_enlace_web">Introducir enlace web</string>
+    <string name="elegir_fichero_almacenado">Elegir fichero</string>
+    <string name="introducir_enlace_web">Introducir enlace</string>
 </resources>

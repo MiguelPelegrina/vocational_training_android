@@ -224,16 +224,6 @@ public class DetailActivity extends AppCompatActivity {
                 update();
             }
         });
-        // Le asignamos al imageView que mostrará el dialog configurado previamente cuando se realice
-        // un onLongClick
-        /*imgPersonajeGrande.setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View view) {
-                dialog.show();
-
-                return false;
-            }
-        });*/
 
         // En función de las preferencias se mostrarán notificaciones informativas
         if(Preferences.notificationPreference(this)) {
@@ -442,13 +432,14 @@ public class DetailActivity extends AppCompatActivity {
         builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                enlaceWeb = input.getText().toString();
+                uri = Uri.parse(input.getText().toString());
                 Glide.with(DetailActivity.this)
-                        .load(enlaceWeb)
+                        .load(uri)
                         .placeholder(progressDrawable)
                         .error(R.drawable.image_not_found)
                         .into(imgPersonajeGrande);
                 imagenNueva = true;
+                update();
             }
         });
         builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
