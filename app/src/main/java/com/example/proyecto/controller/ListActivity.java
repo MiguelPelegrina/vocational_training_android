@@ -296,7 +296,7 @@ public class ListActivity extends AppCompatActivity {
             switch(item.getItemId()){
                 case R.id.action_menu_item_borrar:
                     // Pedimos la confirmación del usuario al querer borrar un personaje
-                    createAlertDialog("Borrar", "¿De verdad quiere borrar el " +
+                    createAlertDialog("¿De verdad quiere borrar el " +
                             "personaje " + personaje.getNombre() +"?").show();
                     mode.finish();
                     break;
@@ -419,16 +419,15 @@ public class ListActivity extends AppCompatActivity {
     }
 
     /**
-     * Método encargado de crear un AlertDialog
-     * @param titulo Título del AlertDialog
+     * Método encargado de crear un AlertDialog para comprobar la eliminación de un personaje
      * @param mensaje Mensaje del AlertDialog
      * @return Devuelve un objeto de la clase AlertDialog
      */
-    public AlertDialog createAlertDialog(String titulo, String mensaje){
+    private AlertDialog createAlertDialog(String mensaje){
         // Obtenemos una instancia de un AlertDialog.Builder
         AlertDialog.Builder builder = new AlertDialog.Builder(ListActivity.this);
         // Configuramos el mensaje y el título
-        builder.setMessage(mensaje).setTitle(titulo);
+        builder.setMessage(mensaje).setTitle("Borrar");
         // Configuramos el botón de No
         builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
             @Override
@@ -437,7 +436,7 @@ public class ListActivity extends AppCompatActivity {
                 borrarPersonaje(false);
             }
         });
-
+        // Configuramos el botón de Si
         builder.setPositiveButton("Si", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {

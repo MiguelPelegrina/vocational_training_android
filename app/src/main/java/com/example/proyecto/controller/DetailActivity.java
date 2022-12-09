@@ -146,37 +146,41 @@ public class DetailActivity extends AppCompatActivity {
                 update();
             }
         };
-        // Asignamos el oyente configurado a todos los componentes de texto y al spinner
+        // Asignamos el oyente configurado a todos los componentes de texto
         txtNombrePersonaje.addTextChangedListener(textWatcher);
         txtActorPersonaje.addTextChangedListener(textWatcher);
         txtFechaNacimiento.addTextChangedListener(textWatcher);
+        // Asignamos un oyente al spinner de tal forma que se comprueba si se han cambiado los datos
+        // al elegir un elemento del spinner
         sbEstadoPersonaje.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                 update();
             }
-
             @Override
             public void onNothingSelected(AdapterView<?> adapterView) {
                 update();
             }
         });
 
-        //
+        // Asignamos al botón de guardar un oyente
         btnGuardar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                switch(accion){
-                    case "mod":
-                        if(comprobarCampoFecha()){
+                // Comprobamos que la fecha sea válida
+                if(comprobarCampoFecha()){
+                // En función de la acción que se quiere realizar
+                    switch(accion) {
+                        // Comprobamos que el usuario de verdad quiere modificar los datos de un
+                        // personaje ya que esto supone una pérdida de información
+                        case "mod":
                             createAlertDialog().show();
-                        }
-                        break;
-                    case "add":
-                        if(comprobarCampoFecha()){
+                            break;
+                        // Si añade el personaje creado y volvemos a la actividad anterior
+                        case "add":
                             volver();
-                        }
-                        break;
+                            break;
+                    }
                 }
             }
         });
@@ -233,6 +237,9 @@ public class DetailActivity extends AppCompatActivity {
                     " el dedo pulsado sobre ella", Toasty.LENGTH_LONG, true).show();
         }
 
+        // En función del tipo de acción que se quiere realizar (añadir un personaje o modificar
+        // los datos de un personaje ya existente) rellenamos los campos con la información del
+        // intent que llama a esta actividad o dejamos los campos vacios
         switch (accion){
             case "mod":
                 txtNombrePersonaje.setText(name);
@@ -244,6 +251,10 @@ public class DetailActivity extends AppCompatActivity {
                         .error(R.drawable.image_not_found)
                         .into(imgPersonajeGrande);
                 txtFechaNacimiento.setText(fecha);
+                // En función de los datos recibidos de la API se elige un estado u otro. En este
+                // caso ambas APIs trabajan con valores diferentes: una utiliza un booleano y la
+                // otra un "enumerado" con tres valores (Dead, Alive, Presumed Dead). Esto nos
+                // obliga a unir diferentes casos de la siguiente forma
                 switch (estado){
                     case "Alive":
                     case "true":
@@ -259,6 +270,7 @@ public class DetailActivity extends AppCompatActivity {
                 }
                 break;
             case "add":
+                // Colocamos una imagen por defecto
                 imgPersonajeGrande.setImageResource(R.drawable.image_not_found);
                 break;
         }
@@ -267,17 +279,21 @@ public class DetailActivity extends AppCompatActivity {
     @Override
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
         super.onCreateContextMenu(menu, v, menuInfo);
+        // Nos creamos el contextMenu y escribimos el título
         getMenuInflater().inflate(R.menu.flotante, menu);
         menu.setHeaderTitle("Elección de imagen");
     }
 
     @Override
     public boolean onContextItemSelected(@NonNull MenuItem item) {
+        // En función del elemento elegido del menú de contexto
         switch (item.getItemId()){
             case R.id.elegirFichero:
+                // Permitimos buscar una imagen en el propio dispositivo
                 dialog.show();
                 break;
             case R.id.elegirUri:
+                // Mostramos un inputDialog que permita introducir la URI de una imagen
                 createInputDialog().show();
                 break;
         }
@@ -288,6 +304,7 @@ public class DetailActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        // Volvemos a cargar las preferencias al volver a esta actividad
         Preferences.loadPreferences(this, constraintLayout);
     }
 
@@ -303,12 +320,15 @@ public class DetailActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        // En función del elemento elegido del menú
         switch (item.getItemId()){
             case R.id.item_preferencias:
+                // Nos vamos a las preferencias
                 Intent i = new Intent(DetailActivity.this, SettingActivity.class);
                 startActivity(i);
                 break;
             case android.R.id.home:
+                // O nos vamos de vuelta a la ventana anterior
                 onBackPressed();
                 return true;
         }
@@ -317,9 +337,13 @@ public class DetailActivity extends AppCompatActivity {
     }
 
     //Métodos auxiliares
+    /**
+     * Método que comprueba que los campos de texto no estén vacios
+     * @return Devuelve verdadero si los campos están vacios y falso si lo campos no están vacios
+     */
     private boolean comprobarCamposVacios() {
         boolean vacios = true;
-
+        // Comprobamos que los campos estén vacios, independientemente de espacios en blanco
         if(!txtNombrePersonaje.getText().toString().trim().equals("") &&
                 !txtActorPersonaje.getText().toString().trim().equals("") &&
                 !txtFechaNacimiento.getText().toString().trim().equals("")){
@@ -328,9 +352,15 @@ public class DetailActivity extends AppCompatActivity {
         return vacios;
     }
 
+    /**
+     * Método que comprueba que los campos de texto sean diferentes
+     * @return Devuelve falso si los campos son diferentes y verdadero si lo campos son iguales
+     */
     private boolean comprobarCamposDiferentes(){
         boolean diferentes = true;
+        // Si se pretende modificar un personaje
         if(accion.equals("mod")){
+            // Comprobamos que los datos sean diferentes a los cargados inicialmente
             if(name.equals(txtNombrePersonaje.getText().toString().trim()) &&
                     actor.equals(txtActorPersonaje.getText().toString().trim()) &&
                     fecha.equals(txtFechaNacimiento.getText().toString().trim()) &&
@@ -353,12 +383,13 @@ public class DetailActivity extends AppCompatActivity {
     @NonNull
     private String comprobarFecha(String stringFecha) throws ParseException {
         Date fecha = null;
+        // Nos creamos un formato de fecha válido en función de como se guarden en la API
         //TODO si vuelve a funcionar la API de BB
         //SimpleDateFormat formato = new SimpleDateFormat("MM-dd-yyyy");
         SimpleDateFormat formato = new SimpleDateFormat("dd-MM-yyyy");
-
+        // Parseamos la fecha a Date
         fecha = formato.parse(stringFecha);
-
+        // Volvemos a parsear la fecha a String
         stringFecha = formato.format(fecha);
 
         return stringFecha;
@@ -381,7 +412,7 @@ public class DetailActivity extends AppCompatActivity {
                 comprobarFecha(txtFechaNacimiento.getText().toString());
                 valid = true;
             } catch (ParseException e) {
-                //TODO si vuelve a funcionar la API de BB
+                // TODO si vuelve a funcionar la API de BB
                 //Toasty.error(DetailActivity.this,"Introducza una fecha válida según el " +
                         //"formato MM-dd-yyyy").show();
                 Toasty.error(DetailActivity.this,"Introducza una fecha válida según el " +
@@ -393,51 +424,67 @@ public class DetailActivity extends AppCompatActivity {
     }
 
     /**
-     *
-     * @return
+     * Método encargado de crear un AlertDialog para comprobar la modificación de los datos de un
+     * personaje
+     * @return Devuelve un objeto de la clase AlertDialog
      */
     @NonNull
     private AlertDialog createAlertDialog(){
+        // Obtenemos una instancia de un AlertDialog.Builder
         AlertDialog.Builder builder = new AlertDialog.Builder(DetailActivity.this);
-
+        // Configuramos el mensaje y el título
         builder.setMessage("¿De verdad quiere modificar los datos del personaje?").setTitle("Modificar");
-
+        // Configuramos el botón de No
         builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
+                // Se cancela la operación de eliminar el personaje
                 Toasty.error(DetailActivity.this, "Modificación cancelada",
                         Toasty.LENGTH_SHORT,true).show();
             }
         });
-
+        // Configuramos el botón de Si
         builder.setPositiveButton("Si", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
+                // Se finaliza la operación de modificar los datos del personaje
                 Toasty.success(DetailActivity.this, "Modificación realizada",
                         Toasty.LENGTH_SHORT, true).show();
+                // Iniciamos la vuelta a la ListActivity y guardamos los datos modificamos
                 volver();
             }
         });
-
+        // Devolvemos el objeto creado por el builder
         return builder.create();
     }
 
-
+    /**
+     * Método encargado de crear un AlertDialog que permite la entrada de información
+     * @return Devuelve un objeto de la clase AlertDialog
+     */
     private AlertDialog createInputDialog(){
+        // Obtenemos una instancia de un AlertDialog.Builder
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        // Modificamos el título
         builder.setTitle("Introduzca la ruta de una imagen");
+        // Declaramos e inicializamos un EditText
         final EditText input = new EditText(this);
         input.setInputType(InputType.TYPE_CLASS_TEXT);
+        // Insertamos el EditText en el objeto de la clase AlertDialog que nos vamos a crear
         builder.setView(input);
+        // Configuramos el botón de OK
         builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
+                // Parseamos el String a una uri
                 uri = Uri.parse(input.getText().toString());
+                // Cargamos la imagen
                 Glide.with(DetailActivity.this)
                         .load(uri)
                         .placeholder(progressDrawable)
                         .error(R.drawable.image_not_found)
                         .into(imgPersonajeGrande);
+                // Avisamos que la imagen se cambiado
                 imagenNueva = true;
                 update();
             }
