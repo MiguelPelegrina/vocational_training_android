@@ -523,9 +523,11 @@ public class DetailActivity extends AppCompatActivity {
     private void update(){
         // Una vez que hayamos comprobado que los campos no estén vacios
         if(!comprobarCamposVacios()){
-            // Comprobamos que los campos sean diferentes
+            // Comprobamos que los campos sean diferentes. Si son diferentes habilitamos el botón
+            // de guardar
             if(comprobarCamposDiferentes()){
                 btnGuardar.setEnabled(true);
+                // Sino el botón se deshabilita
             }else{
                 btnGuardar.setEnabled(false);
             }
