@@ -11,19 +11,15 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.app.ProgressDialog;
-import android.app.SearchManager;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.SearchView;
 
 import com.example.proyecto.R;
 import com.example.proyecto.Utilities.Preferences;
@@ -49,7 +45,7 @@ public class ListActivity extends AppCompatActivity {
     private RecyclerAdapter recyclerAdapter;
     private ActionMode actionMode;
     private FloatingActionButton floatingActionButton;
-    private String accion;
+    private String eleccion;
     private String endpoint;
     private Personaje personaje;
     private RecyclerView.ViewHolder viewHolder;
@@ -150,10 +146,10 @@ public class ListActivity extends AppCompatActivity {
         // Obtenemos el Intent de la activity que inicio esta activity
         Intent intent = getIntent();
         // Averiguamos si el usuario quiere ver la información de Breakind Bad y de Harry Potter
-        accion = intent.getStringExtra("selection");
+        eleccion = intent.getStringExtra("selection");
         // En función de la información obtenida configuramos el endpoint de la petición que se
         // vaya a lanzar
-        switch(accion){
+        switch(eleccion){
             case "bb":
                 endpoint = "characters";
                 break;
@@ -198,7 +194,7 @@ public class ListActivity extends AppCompatActivity {
         if(data != null){
             // Comprobamos el código utilizado al lanzar la actividad
             switch(requestCode){
-                // Si queriamos añadir un elemento
+                // Si queriamos AÑADIR un elemento
                 case RESULTCODE_ADD_ACT:
                     // Si el resultado es correcto
                     if(resultCode == RESULT_OK){
@@ -219,7 +215,7 @@ public class ListActivity extends AppCompatActivity {
                         Toasty.success(ListActivity.this, "Personaje añadido").show();
                     }
                     break;
-                    // Si queriamos modificar un elemento
+                    // Si queriamos MODIFICAR un elemento
                 case RESULTCODE_MOD_ACT:
                     // Si el resultado es correcto
                     if(resultCode == RESULT_OK){
@@ -267,8 +263,8 @@ public class ListActivity extends AppCompatActivity {
         switch (item.getItemId()){
             // Si queremos modificar las preferencias
             case R.id.item_preferencias:
-                Intent ver = new Intent(ListActivity.this, SettingActivity.class);
-                startActivity(ver);
+                Intent preferencias = new Intent(ListActivity.this, SettingActivity.class);
+                startActivity(preferencias);
                 break;
                 // Si queremos volver a la actividad anterior
             case android.R.id.home:
@@ -283,8 +279,9 @@ public class ListActivity extends AppCompatActivity {
     private ActionMode.Callback actionCallback = new ActionMode.Callback() {
         @Override
         public boolean onCreateActionMode(ActionMode mode, Menu menu) {
+            // Inflamos el menú
             mode.getMenuInflater().inflate(R.menu.action, menu);
-            mode.setTitle("Gestión de elementos");
+            mode.setTitle("Gestión de personajes");
             return true;
         }
 
@@ -295,15 +292,18 @@ public class ListActivity extends AppCompatActivity {
 
         @Override
         public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
+            // En función del botón del menú elegido
             switch(item.getItemId()){
                 case R.id.action_menu_item_borrar:
+                    // Pedimos la confirmación del usuario al querer borrar un personaje
                     createAlertDialog("Borrar", "¿De verdad quiere borrar el " +
-                            "personaje? " + personaje.getNombre(), item).show();
+                            "personaje " + personaje.getNombre() +"?").show();
                     mode.finish();
                     break;
                 case R.id.action_menu_item_preferencias:
-                    Intent i = new Intent(ListActivity.this, SettingActivity.class);
-                    startActivity(i);
+                    // Lanzamos un intent a la actividad de las preferencias
+                    Intent preferencias = new Intent(ListActivity.this, SettingActivity.class);
+                    startActivity(preferencias);
                     mode.finish();
                     break;
             }
@@ -317,18 +317,33 @@ public class ListActivity extends AppCompatActivity {
         }
     };
 
+    /**
+     * Clase que hereda de AsyncTask y que se encarga de ejecutar la petición de información a la
+     * API a través de un hilo secundario
+     */
     private class Connection extends AsyncTask<String, Void, String>{
+        /**
+         * Método a ejecutar antes de lanzar la petición
+         */
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
+            // Mostramos el progressDialog de tal forma que el usuario que se están cargando los
+            // datos de los personajes
             progressDialog.show();
         }
 
+        /**
+         * Método ejecutado en el hilo secundariio
+         * @param strings
+         * @return
+         */
         @Override
         protected String doInBackground(String... strings) {
             String result = null;
 
-            switch(accion){
+            // En función de la API seleccionada lanzamos la petición a una biblioteca u otra
+            switch(eleccion){
                 case "bb":
                     result = APIConnection.getRequest(strings[1],"bb");
                     break;
@@ -343,13 +358,20 @@ public class ListActivity extends AppCompatActivity {
         @Override
         protected void onCancelled() {
             super.onCancelled();
+            // Avisamos al usuario que se ha cancelado el hilo
             Toasty.error(ListActivity.this, "Petición cancelada", Toasty.LENGTH_LONG, true).show();
         }
 
+        /**
+         * Método encargado de gestionar los datos devueltos posteriormente a la petición
+         * @param result
+         */
         @Override
         protected void onPostExecute(String result){
+            // Si la API devuelve un respuesta válida
             if(result != null){
                 try {
+                    // Declaramos e inicializamos las variables
                     JSONArray jsonArray = new JSONArray(result);
                     String name;
                     String actor = "";
@@ -357,25 +379,33 @@ public class ListActivity extends AppCompatActivity {
                     String fecha = "";
                     String estado = "";
 
+                    // Recorremos el JSONArray que nos guarda los resultados de la petición
                     for (int i = 0; i < jsonArray.length(); i++){
+                        // Obtenemos el nombre, que es común en ambas APIs
                         name = jsonArray.getJSONObject(i).getString("name");
-                        switch(accion){
+                        // En función de la API elegida
+                        switch(eleccion){
                             case "bb":
+                                // Asignamos la información de la API
                                 actor = jsonArray.getJSONObject(i).getString("portrayed");
                                 image = Uri.parse(jsonArray.getJSONObject(i).getString("img"));
                                 fecha = jsonArray.getJSONObject(i).getString("birthday");
                                 estado = jsonArray.getJSONObject(i).getString("status");
                                 break;
                             case "hp":
+                                // Asignamos la información de la API
                                 actor = jsonArray.getJSONObject(i).getString("actor");
                                 image = Uri.parse(jsonArray.getJSONObject(i).getString("image"));
                                 fecha = jsonArray.getJSONObject(i).getString("dateOfBirth");
                                 estado = String.valueOf(jsonArray.getJSONObject(i).getBoolean("alive"));
                                 break;
                         }
+                        // Añadimos un personaje nuevo a la lista
                         listaPersonajes.add(new Personaje(name, actor, image, fecha, estado));
                     }
+                    // Cerramos el progressDialog que indicaba el progreso
                     progressDialog.dismiss();
+                    // Notificamos al adapter que se han producido cambios
                     recyclerAdapter.notifyDataSetChanged();
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -388,29 +418,42 @@ public class ListActivity extends AppCompatActivity {
         }
     }
 
-    public AlertDialog createAlertDialog(String titulo, String mensaje, MenuItem item){
+    /**
+     * Método encargado de crear un AlertDialog
+     * @param titulo Título del AlertDialog
+     * @param mensaje Mensaje del AlertDialog
+     * @return Devuelve un objeto de la clase AlertDialog
+     */
+    public AlertDialog createAlertDialog(String titulo, String mensaje){
+        // Obtenemos una instancia de un AlertDialog.Builder
         AlertDialog.Builder builder = new AlertDialog.Builder(ListActivity.this);
-
+        // Configuramos el mensaje y el título
         builder.setMessage(mensaje).setTitle(titulo);
-
+        // Configuramos el botón de No
         builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
-                borrarPersonaje(false, item);
+                // Se cancela la operación de eliminar el personaje
+                borrarPersonaje(false);
             }
         });
 
         builder.setPositiveButton("Si", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
-                borrarPersonaje(true, item);
+                // Se finaliza la operación de eliminar el personaje
+                borrarPersonaje(true);
             }
         });
-
+        // Devolvemos el objeto creado por el builder
         return builder.create();
     }
 
-    private void borrarPersonaje(boolean borrar, MenuItem item){
+    /**
+     * Método encargado de borrar el personaje elegido del recyclerView
+     * @param borrar Boleano que indica si se quiere borrar el personaje o no
+     */
+    private void borrarPersonaje(boolean borrar){
         if(borrar){
             listaPersonajes.remove(personaje);
             recyclerAdapter.notifyDataSetChanged();
