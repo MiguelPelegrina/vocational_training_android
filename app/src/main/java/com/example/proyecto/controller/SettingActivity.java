@@ -24,14 +24,14 @@ public class SettingActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_setting);
 
-        constraintLayout = findViewById(R.id.container_setting_preferences);
+        constraintLayout = findViewById(R.id.layout_setting_preferences);
 
         // Cargamos las preferencias
         Preferences.loadPreferences(this, constraintLayout);
         // Introducimos el fragment creado en el contenedor de la vista padre
         getSupportFragmentManager()
                 .beginTransaction()
-                .replace(R.id.container_setting_preferences, new SettingsFragment())
+                .replace(R.id.layout_setting_preferences, new SettingsFragment())
                 .commit();
 
         // Activamos el icono de "Volver"
