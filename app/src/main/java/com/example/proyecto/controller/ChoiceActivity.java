@@ -13,9 +13,7 @@ import android.view.View;
 import android.widget.ImageView;
 
 import com.example.proyecto.R;
-import com.example.proyecto.Utilities.Preferences;
-
-import java.util.List;
+import com.example.proyecto.uilities.Preferences;
 
 import es.dmoral.toasty.Toasty;
 

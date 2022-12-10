@@ -16,14 +16,13 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Looper;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 
 import com.example.proyecto.R;
-import com.example.proyecto.Utilities.Preferences;
+import com.example.proyecto.uilities.Preferences;
 import com.example.proyecto.adapter.RecyclerAdapter;
 import com.example.proyecto.io.APIConnection;
 import com.example.proyecto.model.Personaje;

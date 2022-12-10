@@ -9,7 +9,7 @@ import android.os.Bundle;
 import android.view.MenuItem;
 
 import com.example.proyecto.R;
-import com.example.proyecto.Utilities.Preferences;
+import com.example.proyecto.uilities.Preferences;
 import com.example.proyecto.fragments.SettingsFragment;
 
 /**

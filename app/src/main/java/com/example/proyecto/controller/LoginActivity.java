@@ -1,24 +1,18 @@
 package com.example.proyecto.controller;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.swiperefreshlayout.widget.CircularProgressDrawable;
 
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.sqlite.SQLiteConstraintException;
-import android.media.Image;
 import android.os.Bundle;
 import android.view.View;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
-import android.widget.ImageView;
 
-import com.bumptech.glide.Glide;
 import com.example.proyecto.R;
-import com.example.proyecto.Utilities.Preferences;
+import com.example.proyecto.uilities.Preferences;
 import com.example.proyecto.io.UserDatabaseAccess;
 import com.example.proyecto.model.User;
 
@@ -124,7 +118,7 @@ public class LoginActivity extends AppCompatActivity {
                     }
                 }else{
                     Toasty.error(LoginActivity.this,
-                            "Debe introducidr datos válidos", Toasty.LENGTH_LONG,
+                            "Debe introducir datos válidos", Toasty.LENGTH_LONG,
                             true).show();
                 }
             }
