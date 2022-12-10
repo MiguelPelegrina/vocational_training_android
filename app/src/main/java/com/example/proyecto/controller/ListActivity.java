@@ -16,6 +16,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Looper;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -51,6 +52,7 @@ public class ListActivity extends AppCompatActivity {
     private RecyclerView.ViewHolder viewHolder;
     private int position;
     private Connection connection;
+    private Thread hilo;
     private ProgressDialog progressDialog;
 
     @Override
@@ -73,7 +75,7 @@ public class ListActivity extends AppCompatActivity {
                 // Al pulsar el botón nos vamos a la actividad detalle que permite al usuario
                 // añadir un nuevo elemento al recyclerView
                 Intent anadir = new Intent(ListActivity.this, DetailActivity.class);
-                // Pasamos la información a la actividad de que se trata de añadir un nuevo elemento
+                // Pasamos a la actividad la información de que se trata de añadir un nuevo elemento
                 anadir.putExtra("info", "add");
                 // Mandamos la imagen por defecto
                 anadir.putExtra("uri", "android.resource://" + getPackageName() + "/" + R.drawable.image_not_found);
@@ -147,32 +149,74 @@ public class ListActivity extends AppCompatActivity {
         Intent intent = getIntent();
         // Averiguamos si el usuario quiere ver la información de Breakind Bad y de Harry Potter
         eleccion = intent.getStringExtra("selection");
-        // En función de la información obtenida configuramos el endpoint de la petición que se
-        // vaya a lanzar
-        switch(eleccion){
-            case "bb":
-                endpoint = "characters";
-                break;
-            case "hp":
-                endpoint = "";
-                break;
-        }
-
         // Configuramos a un ProgressDialog de tal forma que avisa al usuario de que se están
         // cargando los datos
         progressDialog = new ProgressDialog(ListActivity.this);
         progressDialog.setMessage("Cargando los datos de los personajes.");
         progressDialog.setCancelable(true);
-        // Asignamos un oyente al dialogo para poder cancelar el hilo
+        // Asignamos un oyente al dialogo para poder cancelar el AsyncTask
         progressDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
             @Override
             public void onCancel(DialogInterface dialogInterface) {
                 connection.cancel(true);
             }
         });
-        // Lanzamos la petición a la API
-        connection = new Connection();
-        connection.execute("GET", endpoint);
+
+        // En función de la API elegida lanzamos la petición a la API
+        switch(eleccion){
+            // Si se solicita información a la API de Breaking Bad lanzamos un hilo
+            case "bb":
+                // Instanciamos el hilo
+                hilo = new Thread(new Runnable() {
+                    // Sobrecargamos el método run()
+                    @Override
+                    public void run() {
+                        // Realizamos la petición
+                        String result = APIConnection.getRequest("characters","bb");
+                        // Si obtenemos un resulato válido
+                        if(result != null){
+                            try {
+                                // Declaramos e inicializamos las variables
+                                JSONArray jsonArray = new JSONArray(result);
+                                // Recorremos el JSONArray que nos guarda los resultados de la petición
+                                for (int i = 0; i < jsonArray.length(); i++){
+                                    // Asignamos la información obtenida a través de la API
+                                    String name = jsonArray.getJSONObject(i).getString("name");
+                                    String actor = jsonArray.getJSONObject(i).getString("portrayed");
+                                    Uri image = Uri.parse(jsonArray.getJSONObject(i).getString("img"));
+                                    String fecha = jsonArray.getJSONObject(i).getString("birthday");
+                                    String estado = jsonArray.getJSONObject(i).getString("status");
+                                    // Añadimos un personaje nuevo a la lista
+                                    listaPersonajes.add(new Personaje(name, actor, image, fecha, estado));
+                                }
+                                // Notificamos al adapter que se han producido cambios
+                                recyclerAdapter.notifyDataSetChanged();
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                        }else{
+                            // Si no se ha podido conectar con el servidor se informa al usuario a
+                            // través de un elemento de la vista
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    Toasty.error(ListActivity.this, "Error por " +
+                                            "parte del servidor de la API de Breaking Bad. " +
+                                            "Vuelva a intentarlo más tarde").show();
+                                }
+                            });
+                        }
+                    }
+                });
+                // Lanzamos el hilo
+                hilo.start();
+                break;
+            // Si se solicita información a la API de Harry Potter ejecutamos un AsyncTask
+            case "hp":
+                connection = new Connection();
+                connection.execute("GET", "");
+                break;
+        }
     }
 
     /**
@@ -201,9 +245,10 @@ public class ListActivity extends AppCompatActivity {
                         // Obtenemos los datos y los asignamos a las variables
                         name = data.getStringExtra("name");
                         actor = data.getStringExtra("actor");
-                        if(!(uri = Uri.parse(data.getStringExtra("uri"))).toString().equals("")){
-
-                        }else{
+                        uri = Uri.parse(data.getStringExtra("uri"));
+                        // Comprobamos si se ha modificada la imagen. Si no es así, asignamos la
+                        // imagen por defecto
+                        if(uri.toString().equals("")){
                             uri = Uri.parse("android.resource://" + getPackageName() + "/" + R.drawable.image_not_found);
                         }
                         fecha = data.getStringExtra("birthday");
@@ -235,7 +280,6 @@ public class ListActivity extends AppCompatActivity {
                         recyclerAdapter.notifyDataSetChanged();
                     }
                     break;
-
             }
         }
     }
@@ -268,10 +312,15 @@ public class ListActivity extends AppCompatActivity {
                 break;
                 // Si queremos volver a la actividad anterior
             case android.R.id.home:
+                // Si el hilo que carga la petición está instanciado
+                if(hilo != null){
+                    // Lo interrupimos
+                    hilo.interrupt();
+                }
                 onBackPressed();
                 break;
         }
-        //return super.onOptionsItemSelected(item);
+
         return true;
     }
 
@@ -342,15 +391,8 @@ public class ListActivity extends AppCompatActivity {
         protected String doInBackground(String... strings) {
             String result = null;
 
-            // En función de la API seleccionada lanzamos la petición a una biblioteca u otra
-            switch(eleccion){
-                case "bb":
-                    result = APIConnection.getRequest(strings[1],"bb");
-                    break;
-                case "hp":
-                    result = APIConnection.getRequest(strings[1], "hp");
-                    break;
-            }
+            // Lanzamos la petición a la API de Harry Potter
+            result = APIConnection.getRequest(strings[1], "hp");
 
             return result;
         }
@@ -373,33 +415,16 @@ public class ListActivity extends AppCompatActivity {
                 try {
                     // Declaramos e inicializamos las variables
                     JSONArray jsonArray = new JSONArray(result);
-                    String name;
-                    String actor = "";
-                    Uri image = null;
-                    String fecha = "";
-                    String estado = "";
-
                     // Recorremos el JSONArray que nos guarda los resultados de la petición
                     for (int i = 0; i < jsonArray.length(); i++){
                         // Obtenemos el nombre, que es común en ambas APIs
-                        name = jsonArray.getJSONObject(i).getString("name");
+                        String name = jsonArray.getJSONObject(i).getString("name");
                         // En función de la API elegida
-                        switch(eleccion){
-                            case "bb":
-                                // Asignamos la información de la API
-                                actor = jsonArray.getJSONObject(i).getString("portrayed");
-                                image = Uri.parse(jsonArray.getJSONObject(i).getString("img"));
-                                fecha = jsonArray.getJSONObject(i).getString("birthday");
-                                estado = jsonArray.getJSONObject(i).getString("status");
-                                break;
-                            case "hp":
-                                // Asignamos la información de la API
-                                actor = jsonArray.getJSONObject(i).getString("actor");
-                                image = Uri.parse(jsonArray.getJSONObject(i).getString("image"));
-                                fecha = jsonArray.getJSONObject(i).getString("dateOfBirth");
-                                estado = String.valueOf(jsonArray.getJSONObject(i).getBoolean("alive"));
-                                break;
-                        }
+                        // Asignamos la información de la API
+                        String actor = jsonArray.getJSONObject(i).getString("actor");
+                        Uri image = Uri.parse(jsonArray.getJSONObject(i).getString("image"));
+                        String fecha = jsonArray.getJSONObject(i).getString("dateOfBirth");
+                        String estado = String.valueOf(jsonArray.getJSONObject(i).getBoolean("alive"));
                         // Añadimos un personaje nuevo a la lista
                         listaPersonajes.add(new Personaje(name, actor, image, fecha, estado));
                     }
