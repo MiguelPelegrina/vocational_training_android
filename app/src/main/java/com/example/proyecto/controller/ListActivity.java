@@ -157,7 +157,12 @@ public class ListActivity extends AppCompatActivity {
         progressDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
             @Override
             public void onCancel(DialogInterface dialogInterface) {
-                connection.cancel(true);
+                if(connection != null){
+                    connection.cancel(true);
+                }
+                if(hilo.isAlive()){
+                    hilo.interrupt();
+                }
             }
         });
 
@@ -165,6 +170,13 @@ public class ListActivity extends AppCompatActivity {
         switch(eleccion){
             // Si se solicita información a la API de Breaking Bad lanzamos un hilo
             case "bb":
+                // Mostramos un progressDialog que indica que se está cargando información
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        progressDialog.show();
+                    }
+                });
                 // Instanciamos el hilo
                 hilo = new Thread(new Runnable() {
                     // Sobrecargamos el método run()
@@ -190,6 +202,14 @@ public class ListActivity extends AppCompatActivity {
                                 }
                                 // Notificamos al adapter que se han producido cambios
                                 recyclerAdapter.notifyDataSetChanged();
+                                // Dejamos de mostrar el progressDialog porque se han finalizado la
+                                // petición
+                                runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        progressDialog.dismiss();
+                                    }
+                                });
                             } catch (JSONException e) {
                                 e.printStackTrace();
                             }
@@ -311,11 +331,6 @@ public class ListActivity extends AppCompatActivity {
                 break;
                 // Si queremos volver a la actividad anterior
             case android.R.id.home:
-                // Si el hilo que carga la petición está instanciado
-                if(hilo != null){
-                    // Lo interrupimos
-                    hilo.interrupt();
-                }
                 onBackPressed();
                 break;
         }
